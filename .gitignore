@@ -6,7 +6,7 @@ __pycache__/
 *.pdf
 !Smith, John.pdf
 *.html
-!README.html
+!INSTRUCTIONS.html
 *.csv
 !resume_template_BLANK.csv
 !resume_template_GUIDED.csv
