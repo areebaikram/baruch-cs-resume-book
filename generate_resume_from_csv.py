@@ -258,6 +258,7 @@ def parse_csv(path):
 # --------------------------------------------------------------------------- #
 
 PLACEHOLDER_PATTERNS = [
+    r"^\[.*\]$",          # anything still wrapped in the template's square brackets
     r"\[[^\]]*\b(your|insert|delete|leave|optional|relevant|soft skills|certifications)\b[^\]]*\]",
     r"\{[^}]*\b(your|insert)\b[^}]*\}",
     r"\bX\.XX\b",

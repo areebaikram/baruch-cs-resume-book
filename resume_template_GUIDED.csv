@@ -1,0 +1,43 @@
+﻿Section,Field,Value
+CONTACT,Name,[First Last]
+CONTACT,Phone,[123-456-7890]
+CONTACT,Email,[first.last@baruchmail.cuny.edu]
+CONTACT,LinkedIn,[linkedin.com/in/your-profile - delete this row if none]
+CONTACT,GitHub,[github.com/your-username - delete this row if empty]
+EDUCATION,Institution,CUNY Baruch College
+EDUCATION,Location,"New York, NY"
+EDUCATION,Degree,[Bachelor of Science in Computer Science]
+EDUCATION,Minor,"[Minor name, e.g. Mathematics - delete this row if none]"
+EDUCATION,Dates,[Expected May 20XX]
+EDUCATION,GPA,[X.XX/4.0 - delete this row if below 3.4]
+EDUCATION,Coursework,"[Course 1, Course 2, Course 3 - delete this row if you would rather not list courses]"
+AWARDS,Award,"[Award name, e.g. Dean's List - delete all AWARDS rows if none]"
+AWARDS,Dates,[Mon. 20XX]
+EXPERIENCE,Company,[Company name]
+EXPERIENCE,Location,"[City, State]"
+EXPERIENCE,Title,[Job title]
+EXPERIENCE,Dates,"[Mon. 20XX - Mon. 20XX, or Mon. 20XX - Present]"
+EXPERIENCE,Bullet,[Did X by doing Y which resulted in Z]
+EXPERIENCE,Bullet,[Did X by doing Y which resulted in Z]
+EXPERIENCE,Bullet,[Did X by doing Y which resulted in Z - delete this row if you only have two bullets]
+EXPERIENCE,Company,[Second job: company name - delete this whole block if you have only one job]
+EXPERIENCE,Location,"[City, State]"
+EXPERIENCE,Title,[Job title]
+EXPERIENCE,Dates,[Mon. 20XX - Mon. 20XX]
+EXPERIENCE,Bullet,[Did X by doing Y which resulted in Z]
+EXPERIENCE,Bullet,[Did X by doing Y which resulted in Z]
+LEADERSHIP,Organization,[Club or organization name - delete all LEADERSHIP rows if none]
+LEADERSHIP,Location,"[City, State]"
+LEADERSHIP,Title,"[Your role, e.g. Vice President]"
+LEADERSHIP,Dates,[Mon. 20XX - Present]
+LEADERSHIP,Bullet,[Did X by doing Y which resulted in Z]
+LEADERSHIP,Bullet,[Did X by doing Y which resulted in Z]
+PROJECTS,Project,[Project name - delete all PROJECTS rows if none]
+PROJECTS,Technologies,"[Language, Framework, Tool]"
+PROJECTS,Dates,[Mon. 20XX]
+PROJECTS,Website,[github.com/your-username/project - delete this row if none]
+PROJECTS,Bullet,[Did X by doing Y which resulted in Z]
+PROJECTS,Bullet,[Did X by doing Y which resulted in Z]
+SKILLS,Skills,"[Languages, frameworks, tools, e.g. Python, Java, React, Git, AWS]"
+SKILLS,Certifications,[Certification name - delete this row if none]
+SKILLS,Interests,"[Specific interests, e.g. marathon running (completed 3 marathons); chess (club tournament director)]"
