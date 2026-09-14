@@ -1,0 +1,44 @@
+﻿Section,Field,Value
+CONTACT,Name,Your Full Name
+CONTACT,Phone,123-456-7890
+CONTACT,Email,your.email@baruchmail.cuny.edu
+CONTACT,LinkedIn,linkedin.com/in/yourprofile
+CONTACT,GitHub,github.com/yourusername
+EDUCATION,Institution,CUNY Baruch College
+EDUCATION,Location,"New York, NY"
+EDUCATION,Degree,Bachelor of Science in Computer Science
+EDUCATION,Minor,[Your Minor - delete this row if none]
+EDUCATION,Dates,Expected Month 20XX
+EDUCATION,GPA,[Your GPA]/4.0 - delete this row if below 3.4
+EDUCATION,Coursework,[Relevant coursework - delete this row if you would rather not list courses]
+AWARDS,Award,Award Name
+AWARDS,Dates,Mon. 20XX
+EXPERIENCE,Company,Company Name
+EXPERIENCE,Location,"City, State"
+EXPERIENCE,Title,Job Title
+EXPERIENCE,Dates,Mon. 20XX - Mon. 20XX
+EXPERIENCE,Bullet,Did X by doing Y which resulted in Z
+EXPERIENCE,Bullet,Did X by doing Y which resulted in Z
+EXPERIENCE,Bullet,Did X by doing Y which resulted in Z
+EXPERIENCE,Company,Company Name
+EXPERIENCE,Location,"City, State"
+EXPERIENCE,Title,Job Title
+EXPERIENCE,Dates,Mon. 20XX - Mon. 20XX
+EXPERIENCE,Bullet,Did X by doing Y which resulted in Z
+EXPERIENCE,Bullet,Did X by doing Y which resulted in Z
+EXPERIENCE,Bullet,Did X by doing Y which resulted in Z
+LEADERSHIP,Organization,Organization Name
+LEADERSHIP,Location,"City, State"
+LEADERSHIP,Title,Position Title
+LEADERSHIP,Dates,Mon. 20XX - Mon. 20XX
+LEADERSHIP,Bullet,Did X by doing Y which resulted in Z
+LEADERSHIP,Bullet,Did X by doing Y which resulted in Z
+PROJECTS,Project,Project Name
+PROJECTS,Technologies,"Language, Framework, Tool"
+PROJECTS,Dates,Mon. 20XX
+PROJECTS,Website,github.com/yourusername/project
+PROJECTS,Bullet,Did X by doing Y which resulted in Z
+PROJECTS,Bullet,Did X by doing Y which resulted in Z
+SKILLS,Skills,"Hard skills relating to your field, e.g. languages, frameworks, tools"
+SKILLS,Certifications,[Certifications - delete this row if none]
+SKILLS,Interests,"Specific personal interests, e.g. marathon running (completed 3 marathons)"

@@ -1,0 +1,12 @@
+# macOS / Python
+.DS_Store
+__pycache__/
+
+# Student output: keep only the shipped example
+*.pdf
+!Smith, John.pdf
+*.html
+!README.html
+*.csv
+!resume_template_BLANK.csv
+!example_resume.csv

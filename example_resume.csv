@@ -1,0 +1,55 @@
+﻿Section,Field,Value
+CONTACT,Name,John Smith
+CONTACT,Phone,212-555-1234
+CONTACT,Email,john.smith@baruchmail.cuny.edu
+CONTACT,LinkedIn,linkedin.com/in/johnsmith
+CONTACT,GitHub,github.com/johnsmith
+EDUCATION,Institution,CUNY Baruch College
+EDUCATION,Location,"New York, NY"
+EDUCATION,Degree,Bachelor of Science in Computer Science
+EDUCATION,Minor,Mathematics
+EDUCATION,Dates,Expected May 2027
+EDUCATION,GPA,3.7/4.0
+EDUCATION,Coursework,"Data Structures and Algorithms, Operating Systems, Database Management Systems, Computer Architecture"
+AWARDS,Award,Presidential Scholarship
+AWARDS,Dates,Sep. 2024
+AWARDS,Award,2nd Place at Baruch Hackathon
+AWARDS,Dates,Mar. 2026
+EXPERIENCE,Company,Goldman Sachs
+EXPERIENCE,Location,"New York, NY"
+EXPERIENCE,Title,Software Engineering Summer Analyst
+EXPERIENCE,Dates,Jun. 2026 - Aug. 2026
+EXPERIENCE,Bullet,Developed an automated reconciliation service in Python which reduced manual processing time by 45%
+EXPERIENCE,Bullet,Built a REST API with Spring Boot and PostgreSQL that serves 2 million daily trade records to 3 internal dashboards
+EXPERIENCE,Bullet,Wrote unit and integration tests which raised code coverage from 60% to 90% on the team's core module
+EXPERIENCE,Company,Baruch College Career Center
+EXPERIENCE,Location,"New York, NY"
+EXPERIENCE,Title,Student Assistant
+EXPERIENCE,Dates,Sep. 2025 - Present
+EXPERIENCE,Bullet,Assisted 200+ students with resume reviews by providing detailed feedback which improved their interview callback rate
+EXPERIENCE,Bullet,Automated employer contact tracking by writing Excel macros which saved the office 5 hours per week
+EXPERIENCE,Company,Trader Joe's
+EXPERIENCE,Location,"Brooklyn, NY"
+EXPERIENCE,Title,Crew Member
+EXPERIENCE,Dates,Jan. 2024 - Aug. 2025
+EXPERIENCE,Bullet,Reorganized the stockroom layout by grouping high-turnover items near the floor which cut restocking time by 20%
+RESEARCH,Company,"Baruch College, Department of Mathematics"
+RESEARCH,Location,"New York, NY"
+RESEARCH,Title,Undergraduate Research Assistant
+RESEARCH,Dates,Jan. 2026 - May 2026
+RESEARCH,Bullet,Implemented a link-prediction model for citation graphs in PyTorch which raised AUC from 85% to 94% over the baseline
+LEADERSHIP,Organization,Baruch Computer Science Club
+LEADERSHIP,Location,"New York, NY"
+LEADERSHIP,Title,Vice President
+LEADERSHIP,Dates,Sep. 2025 - Present
+LEADERSHIP,Bullet,Led weekly technical workshops for 30+ members on Git and data structures which doubled active membership
+LEADERSHIP,Bullet,Organized a 24-hour hackathon with $2
+PROJECTS,Project,NYC Subway Shortest Path
+PROJECTS,Technologies,"Python, Flask, JavaScript"
+PROJECTS,Dates,Mar. 2026
+PROJECTS,Website,github.com/johnsmith/subway
+PROJECTS,Bullet,Built a route-finding web app using Dijkstra's algorithm on a graph of 472 stations which returns routes in under 50 ms
+PROJECTS,Bullet,Designed a Flask backend and responsive frontend which lets users query any station pair and view the route on a map
+SKILLS,Skills,"Python, C++, Java, JavaScript, SQL, Git, Linux, AWS"
+SKILLS,Certifications,AWS Certified Cloud Practitioner
+SKILLS,Interests,"Competitive programming (Codeforces rating 1600), marathon running (completed 3 marathons), chess (club tournament director)"

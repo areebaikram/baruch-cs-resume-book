@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baruch CS Resume Book - Instructions</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.55;
+         max-width: 860px; margin: 0 auto; padding: 32px 20px; color: #222; }
+  h1 { color: #003366; border-bottom: 3px solid #003366; padding-bottom: 8px; }
+  h2 { color: #003366; margin-top: 34px; }
+  h3 { margin-bottom: 4px; }
+  .step { background: #f5f5f5; padding: 16px 20px; margin: 16px 0; border-left: 4px solid #003366; }
+  .tip  { background: #e8f4f8; padding: 12px 16px; margin: 12px 0; border-left: 4px solid #2196F3; }
+  code { background: #eee; padding: 2px 5px; border-radius: 3px; font-family: Menlo, Consolas, monospace; font-size: 0.95em; }
+  pre  { background: #2d2d2d; color: #f8f8f2; padding: 12px 16px; border-radius: 5px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 0.95em; }
+  th, td { border: 1px solid #ddd; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background: #003366; color: #fff; }
+  .good { color: #2e7d32; font-weight: bold; } .bad { color: #c62828; font-weight: bold; }
+  ul { padding-left: 22px; }
+  body { overflow-wrap: anywhere; }
+  @media (max-width: 700px) { table { display: block; overflow-x: auto; } }
+</style>
+</head>
+<body>
+
+<h1>Baruch CS Resume Book: Instructions</h1>
+
+<p>You fill in a spreadsheet. A script turns it into a one-page PDF in the resume-book format.
+Plan on 30 to 60 minutes for the writing.</p>
+
+<h2>What you need</h2>
+<ul>
+  <li><strong>Python 3.</strong> Check with <code>python3 --version</code> (Mac) or <code>python --version</code> (Windows).
+      If missing, install from <a href="https://www.python.org/downloads/" target="_blank">python.org</a>. On Windows, tick "Add Python to PATH" in the installer.</li>
+  <li><strong>Google Chrome or Microsoft Edge</strong> installed.</li>
+  <li><strong>Excel, Numbers, or Google Sheets.</strong></li>
+</ul>
+
+<h2>Before you write: what goes in a bullet</h2>
+<p>Every bullet: <strong>Did X by doing Y which resulted in Z.</strong> Be specific. Use numbers where you honestly can.</p>
+<ul>
+  <li><span class="bad">Weak:</span> Worked on database optimization</li>
+  <li><span class="good">Better:</span> Optimized database queries by adding indexes which reduced page load time by 40%</li>
+  <li><span class="bad">Weak:</span> Cashier at a grocery store</li>
+  <li><span class="good">Better:</span> Reorganized the stockroom layout by grouping high-turnover items near the floor which cut restocking time by 20%</li>
+</ul>
+<ul>
+  <li>Include non-tech jobs. Stay truthful: you may be asked about anything on the page.</li>
+  <li>Interests must be specific. <span class="bad">Not:</span> reading, chess. <span class="good">Yes:</span> reading Russian literature (Dostoevsky, Gogol); chess (club tournament director).</li>
+  <li>Most recent job first.</li>
+  <li>Only list courses you are comfortable being asked about.</li>
+  <li>Use a professional email address.</li>
+</ul>
+
+<h2>Step 1: Make your own copy of the template</h2>
+<div class="step">
+  <ol>
+    <li>Open <code>resume_template_BLANK.csv</code> in Excel, Numbers, or Google Sheets.</li>
+    <li>Save it in the same folder as the script, named with your last name, for example <code>Chen_resume.csv</code>:
+      <ul>
+        <li><strong>Excel:</strong> File &rarr; Save As &rarr; format <strong>CSV UTF-8 (Comma delimited)</strong>.</li>
+        <li><strong>Numbers:</strong> File &rarr; Export To &rarr; CSV &rarr; open <strong>Advanced Options</strong> &rarr; Text Encoding <strong>Unicode (UTF-8)</strong>.</li>
+        <li><strong>Google Sheets:</strong> File &rarr; Import &rarr; upload the file, and <strong>untick</strong> "Convert text to numbers, dates, and formulas". When done, File &rarr; Download &rarr; Comma Separated Values (.csv), then move the download into the script's folder and rename it.</li>
+      </ul>
+    </li>
+  </ol>
+</div>
+
+<h2>Step 2: Fill it in</h2>
+<div class="step">
+  <p>When you open the file, it looks like this (the first few rows):</p>
+  <table>
+    <tr><th>Section</th><th>Field</th><th>Value</th></tr>
+    <tr><td>CONTACT</td><td>Name</td><td>Your Full Name</td></tr>
+    <tr><td>CONTACT</td><td>Phone</td><td>123-456-7890</td></tr>
+    <tr><td>CONTACT</td><td>Email</td><td>your.email@baruchmail.cuny.edu</td></tr>
+    <tr><td>...</td><td></td><td></td></tr>
+    <tr><td>EXPERIENCE</td><td>Company</td><td>Company Name</td></tr>
+    <tr><td>EXPERIENCE</td><td>Title</td><td>Job Title</td></tr>
+    <tr><td>EXPERIENCE</td><td>Bullet</td><td>Did X by doing Y which resulted in Z</td></tr>
+    <tr><td>EXPERIENCE</td><td>Bullet</td><td>Did X by doing Y which resulted in Z</td></tr>
+  </table>
+  <p><strong>Section and Field are labels. You only type in the third column, Value.</strong>
+  Each row is one piece of your resume: Section says which part it belongs to, Field says which piece, and Value is what it says.
+  Replace the placeholder text in Value with your own and leave the other two columns as they are. Never change the first row.</p>
+  <p>Open <code>example_resume.csv</code> next to the blank template to see a finished version.</p>
+
+  <h3>There are only three things you ever do to a row</h3>
+  <ol>
+    <li><strong>Fill it in.</strong> Replace the placeholder in Value with your own text. This is most of the work.</li>
+    <li><strong>Delete it.</strong> Don't need a row? Delete it, and whatever it was for is simply left off the resume.
+      No awards: delete all the AWARDS rows. Only two bullets for a job: delete the third Bullet row. No minor: delete the Minor row.</li>
+    <li><strong>Add one.</strong> Need a second job, club, project, or award? Copy all the rows of the first one and paste them directly below. That's it; there is nothing to renumber.
+      Need another bullet? Copy a Bullet row and paste it under the others.</li>
+  </ol>
+  <p>The script knows where one job ends and the next begins because every job starts with a Company row (every school with an Institution row, every award with an Award row, every project with a Project row). So keep that row first in each block, which happens automatically when you copy a block.</p>
+
+  <h3>The complete list of sections and fields</h3>
+  <p>These are the only words the script accepts in the Section and Field columns (capitalization and spaces do not matter). A row with anything else is ignored, and the script tells you which line.</p>
+  <table>
+    <tr><th>Section</th><th>Prints as</th><th>Required fields</th><th>Optional fields</th><th>Can have several blocks?</th></tr>
+    <tr><td>CONTACT</td><td>the header</td><td>Name, Phone, Email</td><td>LinkedIn, GitHub, Website, Last Name</td><td>No</td></tr>
+    <tr><td>EDUCATION</td><td>Education</td><td>Institution, Location, Degree, Dates</td><td>Minor, GPA, Coursework, Honors</td><td>Yes, one per school</td></tr>
+    <tr><td>AWARDS</td><td>Awards</td><td>Award, Dates</td><td>Details</td><td>Yes, one per award</td></tr>
+    <tr><td>EXPERIENCE</td><td>Experience</td><td>Company, Location, Title, Dates, Bullet</td><td>more Bullet rows</td><td>Yes, one per job</td></tr>
+    <tr><td>RESEARCH</td><td>Research Experience</td><td>Company, Location, Title, Dates, Bullet</td><td>more Bullet rows</td><td>Yes, one per position</td></tr>
+    <tr><td>PUBLICATIONS</td><td>Publications</td><td>Title, Venue, Dates</td><td>Authors</td><td>Yes, one per paper</td></tr>
+    <tr><td>LEADERSHIP</td><td rowspan="2">Leadership and Projects (or just Leadership, or just Projects, if you only have one of the two)</td><td>Organization, Location, Title, Dates, Bullet</td><td>more Bullet rows</td><td>Yes, one per club or role</td></tr>
+    <tr><td>PROJECTS</td><td>Project, Technologies, Dates, Bullet</td><td>Website, more Bullet rows</td><td>Yes, one per project</td></tr>
+    <tr><td>SKILLS</td><td>Skills, Interests, and Certifications</td><td>Skills</td><td>Certifications, Interests</td><td>No</td></tr>
+  </table>
+  <p>Within a section every block uses the same fields. Required fields must be in every block; optional ones can be left out of any block. Only the number of Bullet rows varies.</p>
+  <p>RESEARCH and PUBLICATIONS are not in the blank template. To add research, copy a job block and change its Section to RESEARCH. For a publication, add the rows
+  <code>PUBLICATIONS,Title,...</code>, <code>PUBLICATIONS,Venue,...</code>, <code>PUBLICATIONS,Dates,...</code>.</p>
+
+  <h3>Where things go</h3>
+  <ul>
+    <li><strong>EXPERIENCE:</strong> jobs, internships, fellowships, tutoring, teaching or course assistant work.</li>
+    <li><strong>RESEARCH:</strong> only research done with a professor, lab, or institute (for example an REU or a research assistant position). A class project is not research.</li>
+    <li><strong>PUBLICATIONS:</strong> a paper, poster, or talk you authored at a conference, journal, or symposium.</li>
+    <li><strong>LEADERSHIP:</strong> clubs, executive boards, volunteering where you had a role.</li>
+    <li><strong>PROJECTS:</strong> personal, class, and hackathon projects.</li>
+    <li>Nothing else exists. Volunteering, competitions, teaching, and "additional experience" all go in one of the sections above.</li>
+  </ul>
+
+  <h3>Order on the page</h3>
+  <p>Education always prints first and Skills always last. The sections in between print in the order they appear in your file: to move Research above Experience, cut its rows and paste them above the Experience rows. The default order in the template is Awards, Experience, Leadership and Projects; if you add Research or Publications, the usual place is between Experience and Leadership and Projects. When to change it:</p>
+  <ul>
+    <li>Put Research or Publications before Experience if you are aiming at graduate school or research roles, or if the research is stronger than your jobs.</li>
+    <li>Put Leadership and Projects before Experience if your jobs are all non-technical and your projects are your best technical evidence.</li>
+    <li>Put Awards near the top only if they are impressive on their own.</li>
+    <li>Otherwise leave the order alone.</li>
+  </ul>
+
+  <h3>What you cannot do</h3>
+  <ul>
+    <li>Rename a section or invent a new one. The headings are fixed so that every resume in the book matches.</li>
+    <li>Add a field that is not in the table.</li>
+    <li>Change fonts, margins, or layout. The script does all of that.</li>
+  </ul>
+  <p>If you think your situation needs something the format cannot do, email us before submitting instead of improvising.</p>
+
+  <h3>Rules</h3>
+  <ul>
+    <li>Dates: <code>Jun. 2025 - Aug. 2025</code>, <code>Sep. 2024 - Present</code>, or <code>Expected May 2027</code>. If Excel changes "May 2025" to "May-25", ignore it.</li>
+    <li>No periods at the end of bullets. No bold, italics, or bullet symbols.</li>
+    <li>GPA only if 3.4 or higher. Otherwise delete the row.</li>
+    <li>Name in Latin letters.</li>
+    <li>Last name more than one word? Add a row <code>CONTACT,Last Name,Van Der Berg</code> so the file is named correctly.</li>
+  </ul>
+</div>
+
+<h2>Step 3: Run the script</h2>
+<div class="step">
+  <p><strong>Mac:</strong> open Terminal and run these two commands (drag the folder into the window to fill in the path):</p>
+  <pre>cd "/path/to/CSV_VERSION"
+python3 generate_resume_from_csv.py Chen_resume.csv</pre>
+  <p><strong>Windows:</strong> extract the zip first (right-click &rarr; Extract All). Then open Command Prompt and run:</p>
+  <pre>cd "C:\path\to\CSV_VERSION"
+python generate_resume_from_csv.py Chen_resume.csv</pre>
+  <p>The last line it prints is either:</p>
+  <ul>
+    <li><span class="good">DONE</span>: the PDF is one page with no warnings. It is named after you, e.g. <code>Chen, Mei.pdf</code>, next to your CSV.</li>
+    <li><span class="bad">NOT DONE</span>: either the PDF ran to two pages (shorten or remove bullets) or there are <strong>WARNINGS</strong> listed above it, each naming a line in your CSV. Fix them and run the script again. Do not submit a NOT DONE resume.</li>
+  </ul>
+  <p>An <span class="bad">ERROR</span> means nothing was generated; the message says what to fix.</p>
+</div>
+
+<h2>Step 4: Check and submit</h2>
+<div class="step">
+  <ul>
+    <li>&#9744; Name, phone, and email are correct. Links work when clicked.</li>
+    <li>&#9744; No spelling or grammar errors. Someone else has proofread it.</li>
+    <li>&#9744; You can talk about everything on it in an interview.</li>
+  </ul>
+  <p>Submit <strong>both</strong> the PDF and your CSV at the link in the email. To change anything, edit the CSV and run the script again; never edit the PDF.</p>
+</div>
+
+<h2>Troubleshooting</h2>
+<h3>"command not found: python3" or "'python' is not recognized"</h3>
+<p>Windows: try <code>py</code> instead of <code>python</code>. Otherwise install Python (see What you need).</p>
+<h3>"file not found"</h3>
+<p>Your terminal is not in the folder with the CSV (see Step 3), or the file name has spaces: put it in quotes, <code>"Mei Chen resume.csv"</code>.</p>
+<h3>"This is not a CSV file" or "The first row must be exactly: Section,Field,Value"</h3>
+<p>You saved as .xlsx or .numbers, or changed the first row. Save again as CSV (Step 1) with the first row intact.</p>
+<h3>"is not a valid field in ..." or "unknown section ... was ignored"</h3>
+<p>The Section or Field column on that line is not one of the words in the table in Step 2. Fix the spelling or move the row to the right section.</p>
+<h3>Text shows up under the wrong job, or "already has a ... value, so this row REPLACED it"</h3>
+<p>Every job must start with its Company row (school: Institution, award: Award, project: Project). Check that the block has one and that it comes first.</p>
+<h3>Strange characters in accented names (&#381;, &Atilde;&copy;, a dash inside a word)</h3>
+<p>The file was saved in the wrong format. Save again exactly as in Step 1, choosing UTF-8.</p>
+<h3>"Font file not found"</h3>
+<p>The <code>fonts</code> folder must be next to the script. On Windows, extract the zip (right-click &rarr; Extract All) and run from the extracted folder.</p>
+<h3>"Chrome or Edge was not found"</h3>
+<p>The script opens the resume in your browser instead. Open that .html file in Chrome or Edge (not Safari or Firefox). The green box above the resume lists the print settings; use them to save as PDF.</p>
+
+<hr style="margin: 36px 0; border: none; border-top: 2px solid #ddd;">
+<p style="text-align:center; color:#666;"><small>Baruch College CS Resume Book, Fall 2026</small></p>
+</body>
+</html>
