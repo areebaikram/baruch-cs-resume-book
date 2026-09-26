@@ -57,10 +57,11 @@ Plan on 30 to 60 minutes for the writing.</p>
 <h2>Step 1: Make your own copy of the template</h2>
 <div class="step">
   <ol>
-    <li>Open one of the two templates in Excel, Numbers, or Google Sheets. They produce the same resume; pick whichever you prefer:
+    <li>Open one of the three templates in Excel, Numbers, or Google Sheets. They produce the same resume; pick whichever you prefer:
       <ul>
         <li><code>resume_template_BLANK.csv</code>: short placeholders, less to read.</li>
         <li><code>resume_template_GUIDED.csv</code>: every Value spells out exactly what goes there and when to delete the row, in [square brackets]. The script refuses to finish while any brackets are left, so you cannot forget one.</li>
+        <li><code>resume_template_FULL.csv</code>: like GUIDED, but with <strong>every</strong> section and field the script accepts already in place (Research, Publications, Honors, a second school, a Website, spoken Languages, ...). Start here if you have research or publications, then delete the blocks you do not need.</li>
       </ul>
     </li>
     <li>Save it in the same folder as the script, named with your last name, for example <code>Chen_resume.csv</code>:
@@ -117,8 +118,19 @@ Plan on 30 to 60 minutes for the writing.</p>
     <tr><td>SKILLS</td><td>Skills, Interests, and Certifications</td><td>Skills</td><td>Certifications, Interests</td><td>No</td></tr>
   </table>
   <p>Within a section every block uses the same fields. Required fields must be in every block; optional ones can be left out of any block. Only the number of Bullet rows varies.</p>
-  <p>RESEARCH and PUBLICATIONS are not in the blank template. To add research, copy a job block and change its Section to RESEARCH. For a publication, add the rows
+  <p>RESEARCH and PUBLICATIONS are not in the BLANK or GUIDED templates; they are in <code>resume_template_FULL.csv</code>. To add research to another template, copy a job block and change its Section to RESEARCH. For a publication, add the rows
   <code>PUBLICATIONS,Title,...</code>, <code>PUBLICATIONS,Venue,...</code>, <code>PUBLICATIONS,Dates,...</code>.</p>
+
+  <h3>Links</h3>
+  <p>LinkedIn, GitHub, Website, and a project's Website are printed as clickable links. Type the address with or without <code>https://</code>; the script shows it without the <code>https://www.</code> part.
+  If the address is long, you can choose the text that is shown instead, using the form <code>[text](address)</code>:</p>
+  <table>
+    <tr><th>You type</th><th>Resume shows</th></tr>
+    <tr><td><code>github.com/mchen/subway-routes</code></td><td>github.com/mchen/subway-routes</td></tr>
+    <tr><td><code>[GitHub repo](github.com/mchen/subway-routes)</code></td><td><a href="#">GitHub repo</a></td></tr>
+    <tr><td><code>[Live demo](https://subway-routes.vercel.app/app/index.html)</code></td><td><a href="#">Live demo</a></td></tr>
+  </table>
+  <p>The same form works inside a bullet, e.g. <code>Published the results as an [interactive dashboard](example.com/dashboard) used by 3 teams</code>. Keep the shown text short and honest about where the link goes.</p>
 
   <h3>Where things go</h3>
   <ul>
@@ -151,6 +163,7 @@ Plan on 30 to 60 minutes for the writing.</p>
   <ul>
     <li>Dates: <code>Jun. 2025 - Aug. 2025</code>, <code>Sep. 2024 - Present</code>, or <code>Expected May 2027</code>. If Excel changes "May 2025" to "May-25", ignore it.</li>
     <li>No periods at the end of bullets. No bold, italics, or bullet symbols.</li>
+    <li>Math: there is no LaTeX. Type symbols directly (&alpha;, &sum;, &le;, &sup2;, &radic;) using your keyboard's character viewer or by copying them; they print correctly in the resume font. Keep equations out of a resume where you can and describe the result in words instead.</li>
     <li>GPA only if 3.4 or higher. Otherwise delete the row.</li>
     <li>Name in Latin letters.</li>
     <li>Last name more than one word? Add a row <code>CONTACT,Last Name,Van Der Berg</code> so the file is named correctly.</li>
@@ -167,11 +180,16 @@ python3 generate_resume_from_csv.py Chen_resume.csv</pre>
 python generate_resume_from_csv.py Chen_resume.csv</pre>
   <p>The last line it prints is either:</p>
   <ul>
-    <li><span class="good">DONE</span>: the PDF is one page with no warnings. It is named after you, e.g. <code>Chen, Mei.pdf</code>, next to your CSV.</li>
+    <li><span class="good">DONE</span>: the PDF is one page with no warnings. It is named after you, e.g. <code>Chen, Mei.pdf</code>, next to your CSV. A <code>.html</code> file with the same resume is also left next to it; see below.</li>
     <li><span class="bad">NOT DONE</span>: either the PDF ran to two pages (shorten or remove bullets) or there are <strong>WARNINGS</strong> listed above it, each naming a line in your CSV. Fix them and run the script again. Do not submit a NOT DONE resume.</li>
   </ul>
   <p>An <span class="bad">ERROR</span> means nothing was generated; the message says what to fix.</p>
 </div>
+
+<h2>The HTML file</h2>
+<p>Besides the PDF, the script leaves <code>Chen_resume.html</code> next to your CSV: the same resume as a single self-contained web page (fonts included, nothing else to upload).
+Opened from your computer it shows a box at the top with the page-length check and a red dashed line where page one ends; those disappear when the file is served from a website, so you can put it on a personal site as is.
+Submit the PDF, not the HTML file.</p>
 
 <h2>Step 4: Check and submit</h2>
 <div class="step">
@@ -194,6 +212,8 @@ python generate_resume_from_csv.py Chen_resume.csv</pre>
 <p>The Section or Field column on that line is not one of the words in the table in Step 2. Fix the spelling or move the row to the right section.</p>
 <h3>Text shows up under the wrong job, or "already has a ... value, so this row REPLACED it"</h3>
 <p>Every job must start with its Company row (school: Institution, award: Award, project: Project). Check that the block has one and that it comes first.</p>
+<h3>A link shows the wrong text, or brackets appear on the resume</h3>
+<p>The link form is exactly <code>[text](address)</code>: square brackets around the text, then round brackets around the address, with no space between <code>]</code> and <code>(</code>.</p>
 <h3>Strange characters in accented names (&#381;, &Atilde;&copy;, a dash inside a word)</h3>
 <p>The file was saved in the wrong format. Save again exactly as in Step 1, choosing UTF-8.</p>
 <h3>"Font file not found"</h3>

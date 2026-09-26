@@ -10,4 +10,5 @@ __pycache__/
 *.csv
 !resume_template_BLANK.csv
 !resume_template_GUIDED.csv
+!resume_template_FULL.csv
 !example_resume.csv

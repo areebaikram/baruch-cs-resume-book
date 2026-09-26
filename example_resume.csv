@@ -43,11 +43,11 @@ LEADERSHIP,Location,"New York, NY"
 LEADERSHIP,Title,Vice President
 LEADERSHIP,Dates,Sep. 2025 - Present
 LEADERSHIP,Bullet,Led weekly technical workshops for 30+ members on Git and data structures which doubled active membership
-LEADERSHIP,Bullet,Organized a 24-hour hackathon with $2
+LEADERSHIP,Bullet,"Organized a 24-hour hackathon with $2,000 in sponsor prizes which drew 80 participants from 4 CUNY campuses"
 PROJECTS,Project,NYC Subway Shortest Path
 PROJECTS,Technologies,"Python, Flask, JavaScript"
 PROJECTS,Dates,Mar. 2026
-PROJECTS,Website,github.com/johnsmith/subway
+PROJECTS,Website,[GitHub repo](github.com/johnsmith/subway)
 PROJECTS,Bullet,Built a route-finding web app using Dijkstra's algorithm on a graph of 472 stations which returns routes in under 50 ms
 PROJECTS,Bullet,Designed a Flask backend and responsive frontend which lets users query any station pair and view the route on a map
 SKILLS,Skills,"Python, C++, Java, JavaScript, SQL, Git, Linux, AWS"

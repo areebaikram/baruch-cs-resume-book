@@ -5,8 +5,12 @@ Baruch CS Resume Book generator.
 Reads a CSV (Section, Field, Value), writes an HTML file that matches
 the official CS resume-book template, and (if Chrome or Edge is installed)
 prints it to "LastName, FirstName.pdf" with no dialog, so every student's PDF
-has identical fonts, margins, and page size. Exit code 2 means the resume ran
-past one page.
+has identical fonts, margins, and page size. The HTML file is kept next to the
+PDF (it is self-contained and can go on a personal website). Exit code 2 means
+the resume ran past one page.
+
+Links: any URL field, and any URL inside a bullet, may be written as
+[display text](url) to control what is shown, e.g. [GitHub repo](github.com/me/proj).
 
 Usage:
     python3 generate_resume_from_csv.py YOUR_NAME_resume.csv
@@ -25,7 +29,7 @@ import sys
 import webbrowser
 from collections import defaultdict
 
-VERSION = "4.0 (Fall 2026)"
+VERSION = "4.1 (Fall 2026)"
 
 # --------------------------------------------------------------------------- #
 # CSV reading
@@ -278,7 +282,7 @@ PLACEHOLDER_PATTERNS = [
     r"List certifications here",
 ]
 
-MONTHS = "(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\.?"
+MONTHS = r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\.?"
 DATE_TOKEN = rf"(?:{MONTHS}\s+\d{{4}}|Present|Current|Expected\s+{MONTHS}\s+\d{{4}}|Expected\s+(Spring|Summer|Fall|Winter)\s+\d{{4}}|\d{{4}})"
 DATE_RE = re.compile(rf"^\s*{DATE_TOKEN}(\s*[-–—]\s*{DATE_TOKEN})?\s*$", re.IGNORECASE)
 
@@ -305,8 +309,10 @@ def validate(data):
         errors.append("Need at least one EXPERIENCE, RESEARCH, LEADERSHIP, or PROJECTS entry.")
 
     for where, value in all_values(data):
+        # [display text](url) links are not placeholders; check the text without them.
+        checked = MD_LINK_RE.sub(lambda m: m.group(1), value)
         for pat in PLACEHOLDER_PATTERNS:
-            if re.search(pat, value, flags=re.IGNORECASE):
+            if re.search(pat, checked, flags=re.IGNORECASE):
                 warnings.append(f'{where} still has placeholder text: "{value}"')
                 break
 
@@ -424,14 +430,41 @@ def tidy_bullet(s):
     return s
 
 
+# [display text](url), as in Markdown. The URL may omit https://.
+MD_LINK_RE = re.compile(r"\[([^\]]+)\]\(\s*((?:https?://)?[^\s()]+?)\s*\)")
+
+
+def split_link(value):
+    """'[GitHub repo](github.com/me/proj)' -> ('GitHub repo', 'github.com/me/proj').
+    A plain URL -> (None, url)."""
+    m = MD_LINK_RE.fullmatch(value.strip())
+    if m:
+        return m.group(1).strip(), m.group(2)
+    return None, value.strip()
+
+
 def link_html(value, kind):
-    """Turn a URL or email into a real hyperlink (kept when saving to PDF)."""
-    value = value.strip()
+    """Turn a URL or email into a real hyperlink (kept when saving to PDF).
+
+    Accepts either a bare URL (shown without the https://www. prefix) or
+    [display text](url) to show shorter text in place of a long URL."""
+    text, value = split_link(value)
     if kind == "email":
-        return f'<a href="mailto:{esc(value)}">{esc(value)}</a>'
+        return f'<a href="mailto:{esc(value)}">{esc(text or value)}</a>'
     href = value if re.match(r"^https?://", value, re.I) else "https://" + value
-    display = re.sub(r"^https?://(www\.)?", "", value, flags=re.I).rstrip("/")
+    display = text or re.sub(r"^https?://(www\.)?", "", value, flags=re.I).rstrip("/")
     return f'<a href="{esc(href)}">{esc(display)}</a>'
+
+
+def rich(text):
+    """Escape text for HTML, turning any [display text](url) inside it into a link."""
+    out, pos = [], 0
+    for m in MD_LINK_RE.finditer(text):
+        out.append(esc(text[pos:m.start()]))
+        out.append(link_html(m.group(0), "url"))
+        pos = m.end()
+    out.append(esc(text[pos:]))
+    return "".join(out)
 
 
 def sorted_entries(d):
@@ -465,7 +498,7 @@ def entry_block(left1, right1, left2, right2, bullets, extra_lines=()):
     if bullets:
         h.append("  <ul>")
         for b in bullets:
-            h.append(f"    <li>{esc(b)}</li>")
+            h.append(f"    <li>{rich(b)}</li>")
         h.append("  </ul>")
     h.append("</div>")
     return "\n".join(h)
@@ -546,7 +579,7 @@ class HTMLGenerator:
             h.append('  <div class="row"><span class="title">%s</span><span class="right dates">%s</span></div>'
                      % (esc(f.get("Award", "")), esc(tidy_dates(f.get("Dates", "")))))
             if f.get("Details"):
-                h.append(f'  <div class="line">{esc(f["Details"])}</div>')
+                h.append(f'  <div class="line">{rich(f["Details"])}</div>')
             h.append("</div>")
         return "\n".join(h)
 
@@ -600,7 +633,7 @@ class HTMLGenerator:
             b = bullets_of(f)
             if b:
                 h.append("  <ul>")
-                h.extend(f"    <li>{esc(x)}</li>" for x in b)
+                h.extend(f"    <li>{rich(x)}</li>" for x in b)
                 h.append("  </ul>")
             h.append("</div>")
         return "\n".join(h)
@@ -610,7 +643,7 @@ class HTMLGenerator:
         for label in ("Skills", "Certifications", "Languages", "Strengths", "Interests"):
             v = self.d.skills.get(label, "")
             if v:
-                h.append(f'<div class="line"><span class="label">{label}:</span> {esc(v)}</div>')
+                h.append(f'<div class="line"><span class="label">{label}:</span> {rich(v)}</div>')
         return "\n".join(h)
 
     # ---- page chrome ---------------------------------------------------- #
@@ -748,7 +781,13 @@ class HTMLGenerator:
       banner.innerHTML = '<strong>Fits on one page.</strong> Save it as a PDF:' + settings;
     }
   }
-  if (document.fonts && document.fonts.ready) {
+  // On a website (not opened as a local file) show just the resume:
+  // no banner, no page-end guide.
+  if (location.protocol !== 'file:') {
+    document.getElementById('banner').style.display = 'none';
+    var pe = document.querySelector('.page-end');
+    if (pe) pe.style.display = 'none';
+  } else if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(checkLength);
   } else {
     window.addEventListener('load', checkLength);
@@ -955,12 +994,10 @@ def main():
             open_file(pdf_path)
         sys.exit(3)
 
-    try:
-        os.remove(html_path)    # preview no longer needed; the PDF is the deliverable
-    except OSError:
-        pass
     print("\nDONE: your resume fits on one page with no warnings.")
     print("Submit the PDF above together with your CSV.")
+    print(f"The HTML file ({os.path.basename(html_path)}) is a self-contained web version of the "
+          "same resume, if you want one for a personal website.")
     if not quiet:
         open_file(pdf_path)
 
