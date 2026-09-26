@@ -58,13 +58,8 @@ Plan on 30 to 60 minutes for the writing.</p>
 <h2>Step 1: Make your own copy of the template</h2>
 <div class="step">
   <ol>
-    <li>Open one of the three templates in Excel, Numbers, or Google Sheets. They produce the same resume; pick whichever you prefer:
-      <ul>
-        <li><code>resume_template_BLANK.csv</code>: short placeholders, less to read.</li>
-        <li><code>resume_template_GUIDED.csv</code>: every Value spells out exactly what goes there and when to delete the row, in [square brackets]. The script refuses to finish while any brackets are left, so you cannot forget one.</li>
-        <li><code>resume_template_FULL.csv</code>: like GUIDED, but with <strong>every</strong> section and field the script accepts already in place (Research, Publications, Honors, a second school, a Website, spoken Languages, ...). Start here if you have research or publications, then delete the blocks you do not need.</li>
-      </ul>
-    </li>
+    <li>Open <code>resume_template_GUIDED.csv</code> in Excel, Numbers, or Google Sheets. Every Value spells out exactly what goes there and when to delete the row, in [square brackets]. The script refuses to finish while any brackets are left, so you cannot forget one.
+      <br>If you have publications, a second school, a personal website, or spoken languages to list, open <code>resume_template_FULL.csv</code> instead: it has every section and field the script accepts already in place, and you delete the blocks you do not need. Both produce the same resume.</li>
     <li>Save it in the same folder as the script, named with your last name, for example <code>Chen_resume.csv</code>:
       <ul>
         <li><strong>Excel:</strong> File &rarr; Save As &rarr; format <strong>CSV UTF-8 (Comma delimited)</strong>.</li>
@@ -119,7 +114,7 @@ Plan on 30 to 60 minutes for the writing.</p>
     <tr><td>SKILLS</td><td>Skills, Interests, and Certifications</td><td>Skills</td><td>Certifications, Interests</td><td>No</td></tr>
   </table>
   <p>Within a section every block uses the same fields. Required fields must be in every block; optional ones can be left out of any block. Only the number of Bullet rows varies.</p>
-  <p>RESEARCH and PUBLICATIONS are not in the BLANK or GUIDED templates; they are in <code>resume_template_FULL.csv</code>. To add research to another template, copy a job block and change its Section to RESEARCH. For a publication, add the rows
+  <p>PUBLICATIONS, Honors, a second school, Website, and Languages are only in <code>resume_template_FULL.csv</code>. To add a publication to the GUIDED template instead, add the rows
   <code>PUBLICATIONS,Title,...</code>, <code>PUBLICATIONS,Venue,...</code>, <code>PUBLICATIONS,Dates,...</code>.</p>
 
   <h3>Links</h3>
@@ -158,7 +153,7 @@ Plan on 30 to 60 minutes for the writing.</p>
   </ul>
 
   <h3>Order on the page</h3>
-  <p>Education always prints first and Skills always last. The sections in between print in the order they appear in your file: to move Research above Experience, cut its rows and paste them above the Experience rows. The default order in the template is Awards, Experience, Leadership and Projects; if you add Research or Publications, the usual place is between Experience and Leadership and Projects. When to change it:</p>
+  <p>Education always prints first and Skills always last. The sections in between print in the order they appear in your file: to move Research above Experience, cut its rows and paste them above the Experience rows. The default order in the templates is Awards, Experience, Research, Leadership and Projects; if you add Publications, the usual place is right after Research. When to change it:</p>
   <ul>
     <li>Put Research or Publications before Experience if you are aiming at graduate school or research roles, or if the research is stronger than your jobs.</li>
     <li>Put Leadership and Projects before Experience if your jobs are all non-technical and your projects are your best technical evidence.</li>

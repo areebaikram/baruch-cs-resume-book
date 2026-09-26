@@ -26,6 +26,12 @@ EXPERIENCE,Title,[Job title]
 EXPERIENCE,Dates,[Mon. 20XX - Mon. 20XX]
 EXPERIENCE,Bullet,[Did X by doing Y which resulted in Z]
 EXPERIENCE,Bullet,[Did X by doing Y which resulted in Z]
+RESEARCH,Company,"[Lab, department, or institute, e.g. Baruch College, Department of Mathematics - delete all RESEARCH rows if none]"
+RESEARCH,Location,"[City, State]"
+RESEARCH,Title,"[Your role, e.g. Undergraduate Research Assistant]"
+RESEARCH,Dates,[Mon. 20XX - Mon. 20XX]
+RESEARCH,Bullet,[Did X by doing Y which resulted in Z]
+RESEARCH,Bullet,[Did X by doing Y which resulted in Z]
 LEADERSHIP,Organization,[Club or organization name - delete all LEADERSHIP rows if none]
 LEADERSHIP,Location,"[City, State]"
 LEADERSHIP,Title,"[Your role, e.g. Vice President]"
