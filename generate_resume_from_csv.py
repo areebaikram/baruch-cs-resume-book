@@ -12,6 +12,10 @@ the resume ran past one page.
 Links: any URL field, and any URL inside a bullet, may be written as
 [display text](url) to control what is shown, e.g. [GitHub repo](github.com/me/proj).
 
+Math (optional): LaTeX between \\( and \\), or between $ signs, is typeset with
+the bundled KaTeX, e.g. "proved an \\(O(n \\log n)\\) bound". Money like $2,000
+is left alone. Nothing to install; the katex folder next to the script is used.
+
 Usage:
     python3 generate_resume_from_csv.py YOUR_NAME_resume.csv
 """
@@ -309,12 +313,16 @@ def validate(data):
         errors.append("Need at least one EXPERIENCE, RESEARCH, LEADERSHIP, or PROJECTS entry.")
 
     for where, value in all_values(data):
-        # [display text](url) links are not placeholders; check the text without them.
-        checked = MD_LINK_RE.sub(lambda m: m.group(1), value)
+        # [display text](url) links and math are not placeholders; check the text without them.
+        checked = strip_math(MD_LINK_RE.sub(lambda m: m.group(1), value))
         for pat in PLACEHOLDER_PATTERNS:
             if re.search(pat, checked, flags=re.IGNORECASE):
                 warnings.append(f'{where} still has placeholder text: "{value}"')
                 break
+        if TEX_CMD_RE.search(checked):
+            warnings.append(
+                f'{where} has a LaTeX command outside math delimiters: "{value}". '
+                "Put math between \\( and \\), e.g. \\(O(n \\log n)\\).")
 
     for name in LIST_SECTIONS:
         for entry, fields in getattr(data, name).items():
@@ -456,15 +464,79 @@ def link_html(value, kind):
     return f'<a href="{esc(href)}">{esc(display)}</a>'
 
 
+# Inline LaTeX: \( ... \) always; $ ... $ only when it cannot be money:
+# no space just inside either $, and the closing $ is not followed by a digit.
+MATH_RE = re.compile(
+    r"\\\((.+?)\\\)"                                   # \( ... \)
+    r"|(?<![\w$\\])\$(?=\S)(.+?)(?<=\S)\$(?![\d$])",   # $ ... $
+    re.DOTALL)
+# A LaTeX command outside math delimiters, e.g. a stray \alpha: worth a warning.
+TEX_CMD_RE = re.compile(r"\\[A-Za-z]{2,}")
+MATH_USED = [False]     # set while generating, read when writing <head> and <script>
+
+
+def math_html(tex, display=False):
+    MATH_USED[0] = True
+    cls = "math display" if display else "math"
+    return f'<span class="{cls}" data-tex="{esc(tex)}">{esc(tex)}</span>'
+
+
 def rich(text):
-    """Escape text for HTML, turning any [display text](url) inside it into a link."""
+    r"""Escape text for HTML, turning [display text](url) into links and
+    \( ... \) or $ ... $ into KaTeX math."""
     out, pos = [], 0
     for m in MD_LINK_RE.finditer(text):
-        out.append(esc(text[pos:m.start()]))
+        out.append(rich_math(text[pos:m.start()]))
         out.append(link_html(m.group(0), "url"))
+        pos = m.end()
+    out.append(rich_math(text[pos:]))
+    return "".join(out)
+
+
+def rich_math(text):
+    out, pos = [], 0
+    for m in MATH_RE.finditer(text):
+        out.append(esc(text[pos:m.start()]))
+        out.append(math_html(m.group(1) if m.group(1) is not None else m.group(2)))
         pos = m.end()
     out.append(esc(text[pos:]))
     return "".join(out)
+
+
+def strip_math(text):
+    """The text with math removed, for validation checks."""
+    return MATH_RE.sub(" ", text)
+
+
+class MissingKatexError(Exception):
+    pass
+
+
+def embedded_katex():
+    """Return (css, js) for KaTeX with its woff2 fonts inlined, so the HTML stays
+    self-contained. Only called when a resume contains math."""
+    kdir = os.path.join(SCRIPT_DIR, "katex")
+    css_path, js_path = os.path.join(kdir, "katex.min.css"), os.path.join(kdir, "katex.min.js")
+    if not (os.path.exists(css_path) and os.path.exists(js_path)):
+        raise MissingKatexError(
+            "Your resume contains math, but the 'katex' folder was not found next to the script. "
+            "Extract the whole zip and run the script from the extracted folder, or remove the math.")
+    with open(css_path, encoding="utf-8") as f:
+        css = f.read()
+    # Keep only the woff2 sources, as data URIs; drop the woff and ttf fallbacks.
+    css = re.sub(r",\s*url\(fonts/[^)]+\.(?:woff|ttf)\)\s*format\(['\"](?:woff|truetype)['\"]\)", "", css)
+
+    def inline(m):
+        path = os.path.join(kdir, "fonts", m.group(1))
+        if not os.path.exists(path):
+            raise MissingKatexError(f"KaTeX font file not found: {path}")
+        with open(path, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode("ascii")
+        return f"url(data:font/woff2;base64,{b64})"
+    css = re.sub(r"url\(fonts/([^)]+\.woff2)\)", inline, css)
+    with open(js_path, encoding="utf-8") as f:
+        js = f.read()
+    return css, js
 
 
 def sorted_entries(d):
@@ -489,10 +561,10 @@ def bullets_of(fields):
 def entry_block(left1, right1, left2, right2, bullets, extra_lines=()):
     h = ['<div class="entry">']
     h.append('  <div class="row"><span class="title">%s</span><span class="right">%s</span></div>'
-             % (esc(left1), esc(right1)))
+             % (rich(left1), esc(right1)))
     if left2 or right2:
         h.append('  <div class="row"><span class="subtitle">%s</span><span class="right dates">%s</span></div>'
-                 % (esc(left2), esc(right2)))
+                 % (rich(left2), esc(right2)))
     for line in extra_lines:
         h.append(f'  <div class="line">{line}</div>')
     if bullets:
@@ -509,7 +581,8 @@ class HTMLGenerator:
         self.d = data
 
     def generate(self):
-        parts = [self.head(), '<div class="page">', self.contact()]
+        MATH_USED[0] = False
+        parts = ['<div class="page">', self.contact()]
         parts.append(self.education())
         # Movable sections print in the order they first appear in the CSV.
         # LEADERSHIP and PROJECTS share one heading, placed where the first of
@@ -535,7 +608,7 @@ class HTMLGenerator:
         parts.append('<div class="page-end"></div>')
         parts.append("</div>")
         parts.append(self.tail())
-        return "\n".join(parts)
+        return self.head() + "\n" + "\n".join(parts)
 
     # ---- sections ------------------------------------------------------- #
 
@@ -564,9 +637,9 @@ class HTMLGenerator:
             if f.get("GPA"):
                 extra.append(f"GPA: {esc(f['GPA'])}")
             if f.get("Coursework"):
-                extra.append(f"Relevant Coursework: {esc(f['Coursework'])}")
+                extra.append(f"Relevant Coursework: {rich(f['Coursework'])}")
             if f.get("Honors"):
-                extra.append(esc(f["Honors"]))
+                extra.append(rich(f["Honors"]))
             h.append(entry_block(f.get("Institution", ""), f.get("Location", ""),
                                  degree, tidy_dates(f.get("Dates", "")),
                                  bullets_of(f), extra))
@@ -596,8 +669,8 @@ class HTMLGenerator:
         for _, f in sorted_entries(self.d.publications):
             h.append('<div class="entry">')
             h.append('  <div class="row"><span class="title">%s</span><span class="right dates">%s</span></div>'
-                     % (esc(f.get("Title", "")), esc(tidy_dates(f.get("Dates", "")))))
-            sub = esc(f.get("Venue", ""))
+                     % (rich(f.get("Title", "")), esc(tidy_dates(f.get("Dates", "")))))
+            sub = rich(f.get("Venue", ""))
             if f.get("Authors"):
                 sub += (". " if sub else "") + esc(f["Authors"])
             if sub:
@@ -627,9 +700,9 @@ class HTMLGenerator:
                 right_html = link_html(link, "url")
             h.append('<div class="entry">')
             h.append('  <div class="row"><span class="title">%s</span><span class="right">%s</span></div>'
-                     % (esc(f.get("Company", "")), right_html))
+                     % (rich(f.get("Company", "")), right_html))
             h.append('  <div class="row"><span class="subtitle">%s</span><span class="right dates">%s</span></div>'
-                     % (esc(f.get("Title", "")), esc(tidy_dates(f.get("Dates", "")))))
+                     % (rich(f.get("Title", "")), esc(tidy_dates(f.get("Dates", "")))))
             b = bullets_of(f)
             if b:
                 h.append("  <ul>")
@@ -649,7 +722,11 @@ class HTMLGenerator:
     # ---- page chrome ---------------------------------------------------- #
 
     def head(self):
-        name = self.d.contact.get("Name", "Student")
+        katex_css = ""
+        if MATH_USED[0]:
+            css, _ = embedded_katex()
+            katex_css = ("<style>\n" + css + "\n  .katex { font-size: 1.05em; }\n"
+                         "  .math.display { display: block; text-align: center; }\n</style>\n")
         return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -736,13 +813,21 @@ class HTMLGenerator:
   .banner ul {{ margin: 6px 0 0 0; padding-left: 18pt; }}
   .banner li {{ margin: 0; }}
 </style>
-</head>
+{katex_css}</head>
 <body>
 <div class="banner" id="banner"><strong>Checking page length…</strong></div>
 """
 
     def tail(self):
-        return """
+        katex_js = ""
+        if MATH_USED[0]:
+            _, js = embedded_katex()
+            katex_js = ("<script>\n" + js + "\n</script>\n<script>\n"
+                        "  document.querySelectorAll('.math').forEach(function (el) {\n"
+                        "    katex.render(el.getAttribute('data-tex'), el,\n"
+                        "      { throwOnError: false, displayMode: el.classList.contains('display') });\n"
+                        "  });\n</script>")
+        return katex_js + """
 <script>
   // Warn if the resume runs past one page. 1in = 96px in every browser.
   function checkLength() {
@@ -942,7 +1027,7 @@ def main():
 
     try:
         content = HTMLGenerator(data).generate()
-    except MissingFontError as e:
+    except (MissingFontError, MissingKatexError) as e:
         print(f"\nERROR: {e}")
         sys.exit(1)
     with open(html_path, "w", encoding="utf-8") as f:

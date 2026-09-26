@@ -132,6 +132,20 @@ Plan on 30 to 60 minutes for the writing.</p>
   </table>
   <p>The same form works inside a bullet, e.g. <code>Published the results as an [interactive dashboard](example.com/dashboard) used by 3 teams</code>. Keep the shown text short and honest about where the link goes.</p>
 
+  <h3>Math (optional)</h3>
+  <p>If you have math research, you can write LaTeX math anywhere in a Value and it is typeset properly (with KaTeX, which is bundled in the folder; nothing to install). Put it between <code>\(</code> and <code>\)</code>, or between two <code>$</code> signs:</p>
+  <table>
+    <tr><th>You type</th><th>Resume shows</th></tr>
+    <tr><td><code>Proved an \(O(n \log n)\) bound on the mixing time</code></td><td>Proved an <i>O</i>(<i>n</i> log <i>n</i>) bound on the mixing time</td></tr>
+    <tr><td><code>Bounded the spectral gap $\lambda_2 \le 1 - \frac{c}{n}$</code></td><td>Bounded the spectral gap <i>&lambda;</i><sub>2</sub> &le; 1 &minus; <sup><i>c</i></sup>&frasl;<sub><i>n</i></sub></td></tr>
+  </table>
+  <ul>
+    <li>Dollar amounts are safe: <code>$2,000 in prizes</code> and <code>$5 tickets</code> are left alone. If a dollar amount ever gets mistaken for math, use <code>\(</code> ... <code>\)</code> for your math instead.</li>
+    <li>A LaTeX command outside math, like a stray <code>\alpha</code>, gives a warning so you notice it.</li>
+    <li>Only inline math; no display equations, no <code>\begin</code> environments. A resume bullet is a sentence, so keep the math to a symbol or a short expression.</li>
+    <li>Most people do not need this. Plain text (&alpha;, &sum;, &le;) works fine too.</li>
+  </ul>
+
   <h3>Where things go</h3>
   <ul>
     <li><strong>EXPERIENCE:</strong> jobs, internships, fellowships, tutoring, teaching or course assistant work.</li>
@@ -163,7 +177,7 @@ Plan on 30 to 60 minutes for the writing.</p>
   <ul>
     <li>Dates: <code>Jun. 2025 - Aug. 2025</code>, <code>Sep. 2024 - Present</code>, or <code>Expected May 2027</code>. If Excel changes "May 2025" to "May-25", ignore it.</li>
     <li>No periods at the end of bullets. No bold, italics, or bullet symbols.</li>
-    <li>Math: there is no LaTeX. Type symbols directly (&alpha;, &sum;, &le;, &sup2;, &radic;) using your keyboard's character viewer or by copying them; they print correctly in the resume font. Keep equations out of a resume where you can and describe the result in words instead.</li>
+    <li>Math (optional): LaTeX between <code>\(</code> and <code>\)</code>, or between <code>$</code> signs, is typeset properly. See "Math" below.</li>
     <li>GPA only if 3.4 or higher. Otherwise delete the row.</li>
     <li>Name in Latin letters.</li>
     <li>Last name more than one word? Add a row <code>CONTACT,Last Name,Van Der Berg</code> so the file is named correctly.</li>
