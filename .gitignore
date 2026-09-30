@@ -8,6 +8,6 @@ __pycache__/
 *.html
 !INSTRUCTIONS.html
 *.csv
-!resume_template_GUIDED.csv
-!resume_template_FULL.csv
-!example_resume.csv
+!Lastname, Firstname (GUIDED).csv
+!Lastname, Firstname (FULL).csv
+!Smith, John.csv

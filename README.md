@@ -6,7 +6,7 @@ Fill in a spreadsheet, get a one-page PDF in the Baruch College CS Resume Book f
 
 1. Download the zip from the **Releases** page on the right and unzip it.
 2. Open `INSTRUCTIONS.html` inside the folder. It has the full instructions.
-3. Fill in `resume_template_GUIDED.csv` (or `resume_template_FULL.csv` if you have publications or need a rarer field), run the script, submit the PDF and the CSV.
+3. Fill in `Lastname, Firstname (GUIDED).csv` (or `Lastname, Firstname (FULL).csv` if you have publications or need a rarer field), run the script, submit the PDF and the CSV.
 
 You need Python 3 and Google Chrome or Microsoft Edge. Nothing else to install.
 
@@ -15,9 +15,9 @@ You need Python 3 and Google Chrome or Microsoft Edge. Nothing else to install.
 | File | What it is |
 |---|---|
 | `INSTRUCTIONS.html` | Student instructions. Start here. |
-| `resume_template_GUIDED.csv` | The template. Every value spells out what goes there and when to delete the row. Includes a Research block. |
-| `resume_template_FULL.csv` | Same, but with every section and every field the script accepts (Publications, Honors, a second school, Website, Languages, ...). Delete what you do not need. |
-| `example_resume.csv` and `Smith, John.pdf` | A filled-in example and the PDF it produces. |
+| `Lastname, Firstname (GUIDED).csv` | The template. Every value spells out what goes there and when to delete the row. Includes a Research block. |
+| `Lastname, Firstname (FULL).csv` | Same, but with every section and every field the script accepts (Publications, Honors, a second school, Website, Languages, ...). Delete what you do not need. |
+| `Smith, John.csv` and `Smith, John.pdf` | A filled-in example and the PDF it produces. |
 | `generate_resume_from_csv.py` | The script. Run it on your CSV. |
 | `fonts/` | EB Garamond, bundled so every resume renders the same. |
 | `katex/` | KaTeX, used only when a resume contains LaTeX math. |

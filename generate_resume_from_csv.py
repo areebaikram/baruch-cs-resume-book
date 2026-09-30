@@ -17,7 +17,7 @@ the bundled KaTeX, e.g. "proved an \\(O(n \\log n)\\) bound". Money like $2,000
 is left alone. Nothing to install; the katex folder next to the script is used.
 
 Usage:
-    python3 generate_resume_from_csv.py YOUR_NAME_resume.csv
+    python3 generate_resume_from_csv.py "Lastname, Firstname.csv"
 """
 
 import base64
@@ -494,13 +494,20 @@ def rich(text):
 
 
 def rich_math(text):
-    out, pos = [], 0
-    for m in MATH_RE.finditer(text):
-        out.append(esc(text[pos:m.start()]))
-        out.append(math_html(m.group(1) if m.group(1) is not None else m.group(2)))
-        pos = m.end()
-    out.append(esc(text[pos:]))
-    return "".join(out)
+    # Stash each formula as a space-free token, then wrap every word holding one
+    # in a no-break span, so punctuation touching the math, like "(" in "($r \geq 3$)"
+    # or "-round" in "$r$-round", never lands on a different line from it.
+    maths = []
+
+    def stash(m):
+        maths.append(m.group(1) if m.group(1) is not None else m.group(2))
+        return f"\x00{len(maths) - 1}\x00"
+
+    def word(chunk):
+        out = re.sub(r"\x00(\d+)\x00", lambda m: math_html(maths[int(m.group(1))]), esc(chunk))
+        return f'<span class="nobr">{out}</span>' if "\x00" in chunk else out
+
+    return "".join(word(c) for c in re.split(r"(\s+)", MATH_RE.sub(stash, text)))
 
 
 def strip_math(text):
@@ -726,7 +733,8 @@ class HTMLGenerator:
         if MATH_USED[0]:
             css, _ = embedded_katex()
             katex_css = ("<style>\n" + css + "\n  .katex { font-size: 1.05em; }\n"
-                         "  .math.display { display: block; text-align: center; }\n</style>\n")
+                         "  .math.display { display: block; text-align: center; }\n"
+                         "  .nobr { white-space: nowrap; }\n</style>\n")
         return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -989,12 +997,12 @@ def open_file(path):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python3 generate_resume_from_csv.py YOUR_NAME_resume.csv")
+        print('Usage: python3 generate_resume_from_csv.py "Lastname, Firstname.csv"')
         sys.exit(1)
 
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     if not args:
-        print("Usage: python3 generate_resume_from_csv.py YOUR_NAME_resume.csv")
+        print('Usage: python3 generate_resume_from_csv.py "Lastname, Firstname.csv"')
         sys.exit(1)
     csv_path = args[0]
     if not os.path.exists(csv_path) and len(args) > 1 and os.path.exists(" ".join(args)):
@@ -1004,7 +1012,7 @@ def main():
     if not os.path.exists(csv_path):
         print(f"ERROR: file not found: {csv_path}")
         print("Make sure you are in the folder that contains your CSV, and put the file name in "
-              'quotes if it has spaces: "My Name resume.csv"')
+              'quotes: "Ikram, Areeba.csv"')
         sys.exit(1)
 
     print(f"Reading {csv_path}")
@@ -1080,6 +1088,9 @@ def main():
         sys.exit(3)
 
     print("\nDONE: your resume fits on one page with no warnings.")
+    csv_name = os.path.splitext(pdf_name)[0] + ".csv"
+    if os.path.basename(csv_path) != csv_name:
+        print(f'Before you submit, rename your CSV to "{csv_name}" so it sorts next to the PDF.')
     print("Submit the PDF above together with your CSV.")
     print(f"The HTML file ({os.path.basename(html_path)}) is a self-contained web version of the "
           "same resume, if you want one for a personal website.")
