@@ -61,9 +61,9 @@
 <body>
 <main>
   <h1>Baruch CS Resume Book</h1>
-  <p>Fill in a spreadsheet, open it here, and save a one-page PDF in the resume-book format. Nothing to install.</p>
+  <p>Fill in a spreadsheet, add it here, and save a one-page PDF in the resume-book format. Nothing to install.</p>
   <div class="note"><strong>Your file never leaves your computer.</strong> Everything runs inside this browser tab;
-     nothing is uploaded or saved anywhere.</div>
+     nothing is uploaded or saved anywhere. You can even turn off Wi-Fi once this page has loaded, and it still works.</div>
   <div class="status bad" id="browser-warn" style="display:none">
     <strong class="head">Use Google Chrome or Microsoft Edge to save your PDF.</strong>
     Safari and Firefox change the layout when they save a PDF, so your resume can spill onto a second page.
@@ -189,11 +189,11 @@
       if your jobs are all non-technical (cut the section's rows and insert them higher). Otherwise leave the order alone.</p>
   </div>
 
-  <h2>3. Open your CSV here</h2>
+  <h2>3. Add your CSV here</h2>
   <label id="drop">
     <input type="file" id="file" accept=".csv,text/csv">
     <span class="btn">Choose your CSV file</span>
-    <div class="hint">or drag it onto this box. Fix anything it flags in your CSV, save, and open it here again.</div>
+    <div class="hint">or drag it onto this box. Fix anything it flags in your CSV, save, and add it here again.</div>
     <div id="loading">Loading the generator (about 10 MB, first visit only)…</div>
   </label>
 
@@ -202,7 +202,7 @@
   <div id="save-box">
     <h2>4. Save the PDF and submit</h2>
     <div class="step">
-      <button class="btn" id="save" disabled>Save as PDF (open your CSV in step 3 first)</button>
+      <button class="btn" id="save" disabled>Save as PDF (add your CSV in step 3 first)</button>
       <ol>
         <li>Your resume opens in a new tab with the print window. Set Destination to <b>Save as PDF</b>
             and leave everything else as it is.</li>
@@ -390,11 +390,11 @@ function afterRender() {
     var c = current, msgs = [];
     if (over > 2 / 96) {
       msgs.push('<b>The resume runs about ' + (Math.round(over * 100) / 100) + ' inches past one page.</b> ' +
-                'Resumes must be exactly one page. Shorten or remove bullets in your CSV, save it, and open it here again. ' +
+                'Resumes must be exactly one page. Shorten or remove bullets in your CSV, save it, and add it here again. ' +
                 'In the preview below, everything under the red dashed line will be cut off.');
     }
     if (c.warnings.length) {
-      msgs.push('Fix the ' + c.warnings.length + ' warning(s) above in your CSV, save it, and open it here again.');
+      msgs.push('Fix the ' + c.warnings.length + ' warning(s) above in your CSV, save it, and add it here again.');
     }
     if (msgs.length) {
       show('<strong class="head">NOT DONE: do not submit yet.</strong>' + c.extra +
