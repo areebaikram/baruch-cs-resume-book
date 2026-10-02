@@ -27,7 +27,7 @@ Found a bug? Issues and pull requests are welcome.
 | `fonts/` | EB Garamond, bundled so every resume renders the same. |
 | `katex/` | KaTeX, used only when a resume contains LaTeX math. |
 
-## Format in one paragraph
+## Format
 
 The CSV has three columns: Section, Field, Value. Students only type in Value. Sections and fields are a fixed vocabulary (listed in `INSTRUCTIONS.html`). A new job, school, award, or project starts at its Company, Institution, Award, or Project row. Bullets are repeated `Bullet` rows. Sections print in the order they appear in the file, with Education first and Skills last. Any link, in a URL field or inside a bullet, can be written as `[display text](url)` to show shorter text. LaTeX math between `\(` and `\)` or `$` signs is typeset with the bundled KaTeX. The script writes a PDF and a self-contained HTML version of the same resume.
 
