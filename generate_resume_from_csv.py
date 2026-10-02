@@ -33,7 +33,7 @@ import sys
 import webbrowser
 from collections import defaultdict
 
-VERSION = "0.6.0 (Fall 2026)"  # matches the GitHub release tag
+VERSION = "0.6.1 (Fall 2026)"  # matches the GitHub release tag
 
 # --------------------------------------------------------------------------- #
 # CSV reading
@@ -968,8 +968,8 @@ def pdf_page_count(pdf_path):
 
 def pdf_filename(contact):
     """'Smith_John.pdf' so a folder of resumes sorts by last name. Spaces inside a
-    name become hyphens ('Van-Der-Berg_Mary-Ann.pdf'), so the file name never
-    needs quotes in a terminal."""
+    name become hyphens ('Van-Der-Berg_Mary-Ann.pdf') and apostrophes and periods
+    are dropped ('OBrien_J-R.pdf'), so the file name never needs quotes in a terminal."""
     name = contact.get("Name", "Resume").strip()
     last = contact.get("LastName", "").strip()
     if last:
@@ -977,7 +977,7 @@ def pdf_filename(contact):
     else:
         parts = name.split()
         first, last = " ".join(parts[:-1]), (parts[-1] if parts else "Resume")
-    clean = lambda t: re.sub(r"\s+", "-", re.sub(r"[^\w\s.-]|_", "", t).strip())
+    clean = lambda t: re.sub(r"\s+", "-", re.sub(r"[^\w\s-]|_", "", t).strip())
     return (f"{clean(last)}_{clean(first)}" if first else clean(last)) + ".pdf"
 
 
@@ -1092,7 +1092,7 @@ def main():
     print("\nDONE: your resume fits on one page with no warnings.")
     csv_name = os.path.splitext(pdf_name)[0] + ".csv"
     if os.path.basename(csv_path) != csv_name:
-        print(f'Before you submit, rename your CSV to "{csv_name}" so it sorts next to the PDF.')
+        print(f'Before you submit, rename your CSV to {csv_name} so it sorts next to the PDF.')
     print("Submit the PDF above together with your CSV.")
     print(f"The HTML file ({os.path.basename(html_path)}) is a self-contained web version of the "
           "same resume, if you want one for a personal website.")
