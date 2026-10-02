@@ -4,7 +4,7 @@ Baruch CS Resume Book generator.
 
 Reads a CSV (Section, Field, Value), writes an HTML file that matches
 the official CS resume-book template, and (if Chrome or Edge is installed)
-prints it to "LastName, FirstName.pdf" with no dialog, so every student's PDF
+prints it to "Lastname_Firstname.pdf" with no dialog, so every student's PDF
 has identical fonts, margins, and page size. The HTML file is kept next to the
 PDF (it is self-contained and can go on a personal website). Exit code 2 means
 the resume ran past one page.
@@ -17,7 +17,7 @@ the bundled KaTeX, e.g. "proved an \\(O(n \\log n)\\) bound". Money like $2,000
 is left alone. Nothing to install; the katex folder next to the script is used.
 
 Usage:
-    python3 generate_resume_from_csv.py "Lastname, Firstname.csv"
+    python3 generate_resume_from_csv.py Lastname_Firstname.csv
 """
 
 import base64
@@ -33,7 +33,7 @@ import sys
 import webbrowser
 from collections import defaultdict
 
-VERSION = "0.5.0 (Fall 2026)"  # matches the GitHub release tag
+VERSION = "0.6.0 (Fall 2026)"  # matches the GitHub release tag
 
 # --------------------------------------------------------------------------- #
 # CSV reading
@@ -860,7 +860,7 @@ class HTMLGenerator:
       '<li>Destination: <b>Save as PDF</b>.</li>' +
       '<li>Paper size: <b>Letter</b>. Margins: <b>Default</b>. Scale: <b>100%</b>.</li>' +
       '<li>Turn <b>off</b> "Headers and footers". Turn <b>on</b> "Background graphics".</li>' +
-      '<li>Keep the suggested file name (<i>LastName, FirstName.pdf</i>).</li>' +
+      '<li>Keep the suggested file name (<i>Lastname_Firstname.pdf</i>).</li>' +
       '</ul>';
     if (overflow > 2) {
       banner.className = 'banner bad';
@@ -967,7 +967,9 @@ def pdf_page_count(pdf_path):
 
 
 def pdf_filename(contact):
-    """'Smith, John.pdf' so a folder of resumes sorts by last name."""
+    """'Smith_John.pdf' so a folder of resumes sorts by last name. Spaces inside a
+    name become hyphens ('Van-Der-Berg_Mary-Ann.pdf'), so the file name never
+    needs quotes in a terminal."""
     name = contact.get("Name", "Resume").strip()
     last = contact.get("LastName", "").strip()
     if last:
@@ -975,8 +977,8 @@ def pdf_filename(contact):
     else:
         parts = name.split()
         first, last = " ".join(parts[:-1]), (parts[-1] if parts else "Resume")
-    clean = lambda t: re.sub(r"[^\w\s.'-]", "", t).strip()
-    return (f"{clean(last)}, {clean(first)}" if first else clean(last)) + ".pdf"
+    clean = lambda t: re.sub(r"\s+", "-", re.sub(r"[^\w\s.-]|_", "", t).strip())
+    return (f"{clean(last)}_{clean(first)}" if first else clean(last)) + ".pdf"
 
 
 def open_file(path):
@@ -997,12 +999,12 @@ def open_file(path):
 
 def main():
     if len(sys.argv) < 2:
-        print('Usage: python3 generate_resume_from_csv.py "Lastname, Firstname.csv"')
+        print('Usage: python3 generate_resume_from_csv.py Lastname_Firstname.csv')
         sys.exit(1)
 
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     if not args:
-        print('Usage: python3 generate_resume_from_csv.py "Lastname, Firstname.csv"')
+        print('Usage: python3 generate_resume_from_csv.py Lastname_Firstname.csv')
         sys.exit(1)
     csv_path = args[0]
     if not os.path.exists(csv_path) and len(args) > 1 and os.path.exists(" ".join(args)):
@@ -1011,8 +1013,8 @@ def main():
 
     if not os.path.exists(csv_path):
         print(f"ERROR: file not found: {csv_path}")
-        print("Make sure you are in the folder that contains your CSV, and put the file name in "
-              'quotes: "Ikram, Areeba.csv"')
+        print("Make sure you are in the folder that contains your CSV and that the file name "
+              "is spelled exactly, e.g. Ikram_Areeba.csv")
         sys.exit(1)
 
     print(f"Reading {csv_path}")

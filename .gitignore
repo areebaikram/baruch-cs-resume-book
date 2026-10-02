@@ -4,10 +4,10 @@ __pycache__/
 
 # Student output: keep only the shipped example
 *.pdf
-!Smith, John.pdf
+!Smith_John.pdf
 *.html
 !INSTRUCTIONS.html
 *.csv
-!Lastname, Firstname.csv
-!Smith, John.csv
+!Lastname_Firstname.csv
+!Smith_John.csv
 !index.html

@@ -61,8 +61,8 @@ does the same thing in your browser (Chrome or Edge) and makes the identical PDF
 <h2>Step 1: Make your own copy of the template</h2>
 <div class="step">
   <ol>
-    <li>Open <code>Lastname, Firstname.csv</code> in Excel, Numbers, or Google Sheets. It has every section and field the script accepts already in place; you delete the rows and blocks you do not need. Every Value spells out exactly what goes there and when to delete the row, in [square brackets]. The script refuses to finish while any brackets are left, so you cannot forget one.</li>
-    <li>Save it in the same folder as the script, renamed with your own name in the same format as the template, <strong>Last name, First name</strong>. For example, <code>Lastname, Firstname.csv</code> becomes <code>Ikram, Areeba.csv</code>. The script names your PDF the same way (<code>Ikram, Areeba.pdf</code>), so the two sort next to each other when you submit them:
+    <li>Open <code>Lastname_Firstname.csv</code> in Excel, Numbers, or Google Sheets. It has every section and field the script accepts already in place; you delete the rows and blocks you do not need. Every Value spells out exactly what goes there and when to delete the row, in [square brackets]. The script refuses to finish while any brackets are left, so you cannot forget one.</li>
+    <li>Save it in the same folder as the script, renamed with your own name in the same format as the template, <strong>Lastname_Firstname</strong>. For example, <code>Lastname_Firstname.csv</code> becomes <code>Ikram_Areeba.csv</code>. The script names your PDF the same way (<code>Ikram_Areeba.pdf</code>), so the two sort next to each other when you submit them:
       <ul>
         <li><strong>Excel:</strong> File &rarr; Save As &rarr; format <strong>CSV UTF-8 (Comma delimited)</strong>.</li>
         <li><strong>Numbers:</strong> File &rarr; Export To &rarr; CSV &rarr; open <strong>Advanced Options</strong> &rarr; Text Encoding <strong>Unicode (UTF-8)</strong>.</li>
@@ -89,7 +89,7 @@ does the same thing in your browser (Chrome or Edge) and makes the identical PDF
   <p><strong>Section and Field are labels. You only type in the third column, Value.</strong>
   Each row is one piece of your resume: Section says which part it belongs to, Field says which piece, and Value is what it says.
   Replace the placeholder text in Value with your own and leave the other two columns as they are. Never change the first row.</p>
-  <p>Open <code>Smith, John.csv</code> next to the template to see a finished version; <code>Smith, John.pdf</code> is the resume it produces.</p>
+  <p>Open <code>Smith_John.csv</code> next to the template to see a finished version; <code>Smith_John.pdf</code> is the resume it produces.</p>
 
   <h3>There are only three things you ever do to a row</h3>
   <ol>
@@ -176,7 +176,7 @@ does the same thing in your browser (Chrome or Edge) and makes the identical PDF
     <li>Math (optional): LaTeX between <code>\(</code> and <code>\)</code>, or between <code>$</code> signs, is typeset properly. See "Math" below.</li>
     <li>GPA only if 3.4 or higher. Otherwise delete the row.</li>
     <li>Name in Latin letters.</li>
-    <li>Last name more than one word? Add a row <code>CONTACT,Last Name,Van Der Berg</code> so the file is named correctly.</li>
+    <li>Last name more than one word? Fill in the <code>CONTACT,Last Name</code> row (e.g. <code>Van Der Berg</code>) so the file is named correctly (<code>Van-Der-Berg_Mary.pdf</code>).</li>
   </ul>
 </div>
 
@@ -184,21 +184,20 @@ does the same thing in your browser (Chrome or Edge) and makes the identical PDF
 <div class="step">
   <p><strong>Mac:</strong> open Terminal and run these two commands (drag the folder into the window to fill in the path):</p>
   <pre>cd "/path/to/baruch-cs-resume-book"
-python3 generate_resume_from_csv.py "Ikram, Areeba.csv"</pre>
+python3 generate_resume_from_csv.py Ikram_Areeba.csv</pre>
   <p><strong>Windows:</strong> extract the zip first (right-click &rarr; Extract All). Then open Command Prompt and run:</p>
   <pre>cd "C:\path\to\baruch-cs-resume-book"
-python generate_resume_from_csv.py "Ikram, Areeba.csv"</pre>
-  <p>Keep the quotes around the file name: it has a comma and a space.</p>
+python generate_resume_from_csv.py Ikram_Areeba.csv</pre>
   <p>The last line it prints is either:</p>
   <ul>
-    <li><span class="good">DONE</span>: the PDF is one page with no warnings. It is named after you, e.g. <code>Ikram, Areeba.pdf</code>, next to your CSV. A <code>.html</code> file with the same resume is also left next to it; see below.</li>
+    <li><span class="good">DONE</span>: the PDF is one page with no warnings. It is named after you, e.g. <code>Ikram_Areeba.pdf</code>, next to your CSV. A <code>.html</code> file with the same resume is also left next to it; see below.</li>
     <li><span class="bad">NOT DONE</span>: either the PDF ran to two pages (shorten or remove bullets) or there are <strong>WARNINGS</strong> listed above it, each naming a line in your CSV. Fix them and run the script again. Do not submit a NOT DONE resume.</li>
   </ul>
   <p>An <span class="bad">ERROR</span> means nothing was generated; the message says what to fix.</p>
 </div>
 
 <h2>The HTML file</h2>
-<p>Besides the PDF, the script leaves <code>Ikram, Areeba.html</code> next to your CSV: the same resume as a single self-contained web page (fonts included, nothing else to upload).
+<p>Besides the PDF, the script leaves <code>Ikram_Areeba.html</code> next to your CSV: the same resume as a single self-contained web page (fonts included, nothing else to upload).
 Opened from your computer it shows a box at the top with the page-length check and a red dashed line where page one ends; those disappear when the file is served from a website, so you can put it on a personal site as is.
 Submit the PDF, not the HTML file.</p>
 
@@ -209,14 +208,14 @@ Submit the PDF, not the HTML file.</p>
     <li>&#9744; No spelling or grammar errors. Someone else has proofread it.</li>
     <li>&#9744; You can talk about everything on it in an interview.</li>
   </ul>
-  <p>Submit <strong>both</strong> the PDF and your CSV by uploading them to Dropbox with the link in the email (no Dropbox account needed), named the same, e.g. <code>Ikram, Areeba.pdf</code> and <code>Ikram, Areeba.csv</code>. To change anything, edit the CSV and run the script again; never edit the PDF.</p>
+  <p>Submit <strong>both</strong> the PDF and your CSV by uploading them to Dropbox with the link in the email (no Dropbox account needed), named the same, e.g. <code>Ikram_Areeba.pdf</code> and <code>Ikram_Areeba.csv</code>. To change anything, edit the CSV and run the script again; never edit the PDF.</p>
 </div>
 
 <h2>Troubleshooting</h2>
 <h3>"command not found: python3" or "'python' is not recognized"</h3>
 <p>Windows: try <code>py</code> instead of <code>python</code>. Otherwise install Python (see What you need).</p>
 <h3>"file not found"</h3>
-<p>Your terminal is not in the folder with the CSV (see Step 3), or you left off the quotes around the file name: <code>"Ikram, Areeba.csv"</code>.</p>
+<p>Your terminal is not in the folder with the CSV (see Step 3), or the file name is misspelled. Type it exactly as it appears in the folder, e.g. <code>Ikram_Areeba.csv</code>.</p>
 <h3>"This is not a CSV file" or "The first row must be exactly: Section,Field,Value"</h3>
 <p>You saved as .xlsx or .numbers, or changed the first row. Save again as CSV (Step 1) with the first row intact.</p>
 <h3>"is not a valid field in ..." or "unknown section ... was ignored"</h3>

@@ -10,7 +10,7 @@ Fill in a spreadsheet, get a one-page PDF in the Baruch College CS Resume Book f
 
 1. **[Download the toolkit (zip)](https://github.com/areebaikram/baruch-cs-resume-book/releases/latest/download/baruch-cs-resume-book.zip)** and unzip it.
 2. Open `INSTRUCTIONS.html` inside the folder. It has the full instructions.
-3. Fill in `Lastname, Firstname.csv`, run the script, submit the PDF and the CSV.
+3. Fill in `Lastname_Firstname.csv`, run the script, submit the PDF and the CSV.
 
 You need Python 3 and Google Chrome or Microsoft Edge. Nothing else to install.
 
@@ -21,8 +21,8 @@ Found a bug? Issues and pull requests are welcome.
 | File | What it is |
 |---|---|
 | `INSTRUCTIONS.html` | Student instructions. Start here. |
-| `Lastname, Firstname.csv` | The template, with every section and field the script accepts. Every value spells out what goes there and when to delete the row. |
-| `Smith, John.csv` and `Smith, John.pdf` | A filled-in example and the PDF it produces. |
+| `Lastname_Firstname.csv` | The template, with every section and field the script accepts. Every value spells out what goes there and when to delete the row. |
+| `Smith_John.csv` and `Smith_John.pdf` | A filled-in example and the PDF it produces. |
 | `generate_resume_from_csv.py` | The script. Run it on your CSV. |
 | `fonts/` | EB Garamond, bundled so every resume renders the same. |
 | `katex/` | KaTeX, used only when a resume contains LaTeX math. |
