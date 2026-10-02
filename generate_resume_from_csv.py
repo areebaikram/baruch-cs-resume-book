@@ -33,7 +33,7 @@ import sys
 import webbrowser
 from collections import defaultdict
 
-VERSION = "0.6.2 (Fall 2026)"  # matches the GitHub release tag
+VERSION = "0.6.3 (Fall 2026)"  # matches the GitHub release tag
 
 # --------------------------------------------------------------------------- #
 # CSV reading
@@ -99,7 +99,7 @@ FIELD_NAMES_SHOWN = {
     "PUBLICATIONS": "Title, Venue, Authors, Dates",
     "LEADERSHIP":   "Organization, Location, Title, Dates, Bullet (one row per bullet)",
     "PROJECTS":     "Project, Technologies, Website, Dates, Bullet (one row per bullet)",
-    "SKILLS":       "Skills, Certifications, Interests",
+    "SKILLS":       "Skills, Certifications, Languages, Interests",
 }
 # The field that begins a new block (a new job, school, award, ...) in each section.
 LEADING_FIELD = {
@@ -176,7 +176,7 @@ class ResumeData:
         if canon in target:
             hint = ""
             if section in LEADING_FIELD:
-                hint = (f" A new {section.lower()} item must begin with its "
+                hint = (f" A new {section.lower()} block must begin with its "
                         f"{LEADING_SHOWN[section]} row.")
             self.problems.append(
                 f'Line {line_no}: {section} already has a "{canon}" value (line '
@@ -209,7 +209,7 @@ def read_csv_rows(path):
         except UnicodeDecodeError:
             continue
     if raw is None:
-        raise ValueError("Could not decode the CSV file.")
+        raise ValueError("Could not read the text in the CSV file. Save it again as CSV UTF-8 (INSTRUCTIONS.html, Step 1).")
 
     delimiter = ","
     first_line = raw.splitlines()[0] if raw.splitlines() else ""
@@ -314,9 +314,9 @@ def validate(data):
         if not data.contact.get(f):
             errors.append(f"CONTACT is missing required field: {f}")
     if not data.education:
-        errors.append("No EDUCATION entries found.")
+        errors.append("No EDUCATION block found.")
     if not (data.experience or data.research or data.leadership or data.projects):
-        errors.append("Need at least one EXPERIENCE, RESEARCH, LEADERSHIP, or PROJECTS entry.")
+        errors.append("Need at least one EXPERIENCE, RESEARCH, LEADERSHIP, or PROJECTS block.")
 
     for where, value in all_values(data):
         # [display text](url) links and math are not placeholders; check the text without them.
@@ -337,8 +337,8 @@ def validate(data):
                 warnings.append(
                     data.line(name.upper(), entry, "Dates") +
                     f'{name.upper()} {entry} Dates "{fields.get("Dates", "")}" is not in the standard format '
-                    '"Mon. YYYY – Mon. YYYY" (e.g. "Jun. 2025 – Aug. 2025", '
-                    '"Sep. 2024 – Present", "Expected May 2026").'
+                    '"Mon. YYYY - Mon. YYYY" (e.g. "Jun. 2025 - Aug. 2025", '
+                    '"Sep. 2024 - Present", "Expected May 2026").'
                 )
 
     for entry, fields in data.education.items():
@@ -865,7 +865,6 @@ class HTMLGenerator:
       '<li>Press <b>Ctrl+P</b> (Windows) or <b>Cmd+P</b> (Mac).</li>' +
       '<li>Destination: <b>Save as PDF</b>.</li>' +
       '<li>Paper size: <b>Letter</b>. Margins: <b>Default</b>. Scale: <b>100%</b>.</li>' +
-      '<li>Turn <b>off</b> "Headers and footers". Turn <b>on</b> "Background graphics".</li>' +
       '<li>Keep the suggested file name (<i>Lastname_Firstname.pdf</i>).</li>' +
       '</ul>';
     if (overflow > 2) {
@@ -1019,8 +1018,8 @@ def main():
 
     if not os.path.exists(csv_path):
         print(f"ERROR: file not found: {csv_path}")
-        print("Make sure you are in the folder that contains your CSV and that the file name "
-              "is spelled exactly, e.g. Ikram_Areeba.csv")
+        print("Run this from the folder that contains your CSV, and type the file name "
+              "exactly as it appears there, e.g. Ikram_Areeba.csv")
         sys.exit(1)
 
     print(f"Reading {csv_path}")

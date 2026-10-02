@@ -4,12 +4,12 @@ Fill in a form (or a spreadsheet), get a one-page PDF in the Baruch College CS R
 
 ## Students
 
-**Use the web version: [areebaikram.github.io/baruch-cs-resume-book](https://areebaikram.github.io/baruch-cs-resume-book/).** Fill in the form on the page, or upload a CSV made from the template. Either way you submit the PDF and the CSV, with nothing to install. Your information stays on your computer.
+**Use the web version: [areebaikram.github.io/baruch-cs-resume-book](https://areebaikram.github.io/baruch-cs-resume-book/).** Fill in the form on the page, or upload a CSV made from the template. Either way, you submit the PDF and the CSV. Your information stays on your computer.
 
 ### Prefer to run the script yourself?
 
 1. **[Download the toolkit (zip)](https://github.com/areebaikram/baruch-cs-resume-book/releases/latest/download/baruch-cs-resume-book.zip)** and unzip it.
-2. Open `INSTRUCTIONS.html` inside the folder. It has the full instructions.
+2. Open `INSTRUCTIONS.html` inside the folder.
 3. Fill in `Lastname_Firstname.csv`, run the script, submit the PDF and the CSV.
 
 You need Python 3 and Google Chrome or Microsoft Edge. Nothing else to install.

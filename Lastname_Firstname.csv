@@ -20,28 +20,28 @@ EDUCATION,Degree,"[e.g. Associate of Science in Computer Science, or Transferred
 EDUCATION,Dates,[Mon. 20XX - Mon. 20XX]
 AWARDS,Award,"[Award name, e.g. Presidential Scholarship - delete all AWARDS rows if none]"
 AWARDS,Dates,[Mon. 20XX]
-AWARDS,Details,"[One line of context, e.g. Awarded to top 2% of incoming class - delete this row if not needed]"
+AWARDS,Details,"[One line of context, e.g. Awarded to top 2% of incoming class - delete this row if none]"
 AWARDS,Award,[Second award: name - delete this whole block if you have only one award]
 AWARDS,Dates,[Mon. 20XX]
 EXPERIENCE,Company,[Company name]
 EXPERIENCE,Location,"[City, State]"
 EXPERIENCE,Title,[Job title]
 EXPERIENCE,Dates,"[Mon. 20XX - Mon. 20XX, or Mon. 20XX - Present]"
-EXPERIENCE,Bullet,[Did X by doing Y which resulted in Z]
-EXPERIENCE,Bullet,[Did X by doing Y which resulted in Z]
-EXPERIENCE,Bullet,[Did X by doing Y which resulted in Z - delete this row if you only have two bullets]
+EXPERIENCE,Bullet,[Did X by doing Y, which resulted in Z]
+EXPERIENCE,Bullet,[Did X by doing Y, which resulted in Z]
+EXPERIENCE,Bullet,[Did X by doing Y, which resulted in Z - delete this row if you only have two bullets]
 EXPERIENCE,Company,[Second job: company name - delete this whole block if you have only one job]
 EXPERIENCE,Location,"[City, State]"
 EXPERIENCE,Title,[Job title]
 EXPERIENCE,Dates,[Mon. 20XX - Mon. 20XX]
-EXPERIENCE,Bullet,[Did X by doing Y which resulted in Z]
-EXPERIENCE,Bullet,[Did X by doing Y which resulted in Z]
+EXPERIENCE,Bullet,[Did X by doing Y, which resulted in Z]
+EXPERIENCE,Bullet,[Did X by doing Y, which resulted in Z]
 RESEARCH,Company,"[Lab, department, or institute, e.g. Baruch College, Department of Mathematics - delete all RESEARCH rows if none]"
 RESEARCH,Location,"[City, State]"
 RESEARCH,Title,"[Your role, e.g. Undergraduate Research Assistant]"
 RESEARCH,Dates,[Mon. 20XX - Mon. 20XX]
-RESEARCH,Bullet,[Did X by doing Y which resulted in Z]
-RESEARCH,Bullet,[Did X by doing Y which resulted in Z]
+RESEARCH,Bullet,[Did X by doing Y, which resulted in Z]
+RESEARCH,Bullet,[Did X by doing Y, which resulted in Z]
 PUBLICATIONS,Title,[Paper or poster title - delete all PUBLICATIONS rows if none]
 PUBLICATIONS,Venue,"[Conference, journal, or symposium name]"
 PUBLICATIONS,Authors,"[Author list as it appears on the paper, e.g. J. Smith, A. Lee - delete this row if not needed]"
@@ -50,18 +50,18 @@ LEADERSHIP,Organization,[Club or organization name - delete all LEADERSHIP rows 
 LEADERSHIP,Location,"[City, State]"
 LEADERSHIP,Title,"[Your role, e.g. Vice President]"
 LEADERSHIP,Dates,[Mon. 20XX - Present]
-LEADERSHIP,Bullet,[Did X by doing Y which resulted in Z]
-LEADERSHIP,Bullet,[Did X by doing Y which resulted in Z]
+LEADERSHIP,Bullet,[Did X by doing Y, which resulted in Z]
+LEADERSHIP,Bullet,[Did X by doing Y, which resulted in Z]
 PROJECTS,Project,[Project name - delete all PROJECTS rows if none]
 PROJECTS,Technologies,"[Language, Framework, Tool]"
 PROJECTS,Dates,[Mon. 20XX]
 PROJECTS,Website,[github.com/your-username/project or [GitHub repo](github.com/your-username/project) - delete this row if none]
-PROJECTS,Bullet,[Did X by doing Y which resulted in Z]
-PROJECTS,Bullet,[Did X by doing Y which resulted in Z]
+PROJECTS,Bullet,[Did X by doing Y, which resulted in Z]
+PROJECTS,Bullet,[Did X by doing Y, which resulted in Z]
 PROJECTS,Project,[Second project: name - delete this whole block if you have only one project]
 PROJECTS,Technologies,"[Language, Framework, Tool]"
 PROJECTS,Dates,[Mon. 20XX]
-PROJECTS,Bullet,[Did X by doing Y which resulted in Z]
+PROJECTS,Bullet,[Did X by doing Y, which resulted in Z]
 SKILLS,Skills,"[Languages, frameworks, tools, e.g. Python, Java, React, Git, AWS]"
 SKILLS,Certifications,[Certification name - delete this row if none]
 SKILLS,Languages,"[Spoken languages, e.g. Spanish (fluent), Mandarin (conversational) - delete this row if none]"

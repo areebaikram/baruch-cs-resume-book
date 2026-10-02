@@ -173,14 +173,14 @@
   <h1>Baruch CS Resume Book</h1>
   <p>Fill in the form (or a spreadsheet, if you prefer), check the preview, and save a one-page PDF in the resume-book format.
      Nothing to install.</p>
-  <div class="note"><strong>Your information never leaves your computer.</strong> Everything runs inside this browser tab;
-     nothing is uploaded. You can even turn off Wi-Fi once this page has loaded, and it still works.
+  <div class="note"><strong>Your information never leaves your computer.</strong> Nothing is uploaded, and the page works
+     even with Wi-Fi off.
      <span class="only-form">The form keeps a draft in this browser so you can close the tab and come back. On a shared or lab
      computer, click <b>Clear the form</b> when you are done.</span></div>
   <div class="status bad" id="browser-warn" style="display:none">
     <strong class="head">Use Google Chrome or Microsoft Edge to save your PDF.</strong>
     Safari and Firefox change the layout when they save a PDF, so your resume can spill onto a second page.
-    You can fill in and check your resume here, but open this page in Chrome or Edge to save the PDF.
+    You can still fill in and check your resume here.
     <div>
       <button class="btn secondary" id="copy-link" type="button">Copy this page's link</button>
       <a class="btn secondary" href="https://www.google.com/chrome/" target="_blank" rel="noopener">Get Chrome (free)</a>
@@ -188,7 +188,7 @@
   </div>
 
   <div class="step content">
-    <h3>What to write (please read)</h3>
+    <h3>What to write</h3>
     <ul>
       <li>Every bullet: <b>Did X by doing Y, which resulted in Z.</b> Use numbers where you honestly can.<br>
         <span class="weak">Weak:</span> Cashier at a grocery store<br>
@@ -221,7 +221,7 @@
   <h2>1. Enter your information</h2>
   <div class="modes" role="group" aria-label="How to enter your information">
     <button type="button" id="mode-form" aria-pressed="true"><b>Fill in a form</b>
-      <span class="small">Type your information right on this page. Recommended.</span></button>
+      <span class="small">Type your information on this page. Recommended.</span></button>
     <button type="button" id="mode-csv" aria-pressed="false"><b>Use a spreadsheet</b>
       <span class="small">Fill in our CSV template in Excel, Google Sheets, or Numbers.</span></button>
   </div>
@@ -243,7 +243,7 @@
         <li>Links can be typed with or without <code>https://</code>. To show shorter text, write
           <code>[GitHub repo](github.com/you/project)</code>: square brackets around the text, then the address in round
           brackets, with no space between. This also works inside a bullet.</li>
-        <li>Math (optional, for math research): put LaTeX between <code>$</code> signs, e.g.
+        <li>Math (optional, for math research): put LaTeX between <code>$</code> signs, or between <code>\(</code> and <code>\)</code>, e.g.
           <code>Proved an $O(n \log n)$ bound</code>. Dollar amounts like $2,000 are left alone.</li>
         <li>You can't rename or add sections or change fonts or layout: every resume in the book has to match. If your
           situation needs something the format can't do, email us before submitting instead of improvising.</li>
@@ -263,28 +263,29 @@
 
   <h3>b. Fill it in</h3>
   <div class="step">
-    Open it in <b>Google Sheets</b>, <b>Excel</b>, or <b>Numbers</b>.
+    Open it in <b>Google Sheets</b> (File &rarr; Import &rarr; Upload, and untick "Convert text to numbers, dates, and formulas"),
+    <b>Excel</b>, or <b>Numbers</b>.
     <ul>
       <li><b>Only type in the third column (Value).</b> Each <code>[bracketed text]</code> says what goes there. Replace all of it,
         <b>brackets included</b>: <code>[First Last]</code> becomes <code>Areeba Ikram</code>.</li>
       <li><b>Don't need a row or a whole section?</b> Delete it; the template has every section, so most people delete several. <b>Need another school, job, project, or bullet?</b> Copy those rows and insert them right below, without
         pasting over the rows already there (how: see "Adding or removing a school, job, bullet, or section" below).</li>
       <li><b>Save it as a CSV</b> named <code>Lastname_Firstname.csv</code> (e.g. <code>Ikram_Areeba.csv</code>).
-        Use hyphens for spaces inside a name and leave out apostrophes and periods, e.g. <code>Van-Der-Berg_Mary-Ann.csv</code>, <code>OBrien_Sean.csv</code>. Then:
+        Use hyphens for spaces inside a name and leave out apostrophes and periods, e.g. <code>Van-Der-Berg_Mary-Ann.csv</code>, <code>OBrien_Sean.csv</code>.
         <ul>
-          <li>Google Sheets: open it with File &rarr; Import &rarr; Upload, and untick "Convert text to numbers, dates, and formulas". When done, File &rarr; Download &rarr; Comma Separated Values (.csv).</li>
+          <li>Google Sheets: File &rarr; Download &rarr; Comma Separated Values (.csv).</li>
           <li>Excel: File &rarr; Save As &rarr; <b>CSV UTF-8</b>.</li>
           <li>Numbers: File &rarr; Export To &rarr; CSV.</li>
         </ul>
       </li>
     </ul>
-    <p style="margin:14px 0 4px"><b>Spreadsheet help</b> (click a topic if you get stuck):</p>
+    <p style="margin:14px 0 4px"><b>Spreadsheet help</b> (click a topic):</p>
     <details>
       <summary>Adding or removing a school, job, bullet, or section</summary>
-      <p>There are only three things you ever do to a row:</p>
+      <p>You only do three things to a row:</p>
       <ol>
         <li><b>Fill it in.</b> Replace the bracketed text in Value with your own. This is most of the work.</li>
-        <li><b>Delete it.</b> Whatever it was for is simply left off the resume. No awards: delete all the AWARDS rows.
+        <li><b>Delete it.</b> Whatever it was for is left off the resume. No awards: delete all the AWARDS rows.
           Only two bullets for a job: delete the third Bullet row. No minor: delete the Minor row.</li>
         <li><b>Add one.</b> Need a second school, job, club, project, or award? Copy all the rows of one and insert the copy
           directly below; there is nothing to renumber. Need another bullet? Copy a Bullet row and insert it under the others.</li>
@@ -322,8 +323,8 @@
         around the text, then the address in round brackets, with no space between. This also works inside a bullet.</p>
     </details>
     <details>
-      <summary>Writing math on your resume</summary>
-      <p>Optional, for math research. Put LaTeX between <code>$</code> signs or between <code>\(</code> and <code>\)</code>,
+      <summary>Formatting math</summary>
+      <p>Optional, for math research. Put LaTeX between <code>$</code> signs, or between <code>\(</code> and <code>\)</code>,
         e.g. <code>Proved an $O(n \log n)$ bound</code>. Dollar amounts like $2,000 are left alone. Keep it to a symbol or a
         short expression.</p>
     </details>
@@ -334,7 +335,7 @@
         submitting instead of improvising.</p>
     </details>
     <details>
-      <summary>Fixing common problems</summary>
+      <summary>Common problems</summary>
       <ul>
         <li><b>Strange characters in accented names</b> (&#381;, &Atilde;&copy;): the file was saved in the wrong format.
           In Excel choose <b>CSV UTF-8</b>; in Google Sheets use File &rarr; Download &rarr; Comma Separated Values.</li>
@@ -350,7 +351,7 @@
   <label id="drop">
     <input type="file" id="file" accept=".csv,text/csv">
     <span class="btn">Choose your CSV file</span>
-    <div class="hint">or drag it onto this box. Fix anything it flags in your CSV, save, and add it here again.</div>
+    <div class="hint">or drag it onto this box. If anything is flagged, fix it in your CSV, save, and add the file here again.</div>
   </label>
   <div id="loading">Loading the generator (about 10 MB, first visit only)…</div>
   </div>
@@ -501,7 +502,7 @@ ready.then(function (api) {
   var bad = JSON.parse(api.checkForm(JSON.stringify(formSpec())));
   if (bad.length) {
     document.getElementById('import-status').innerHTML = '<div class="status bad"><strong class="head">' +
-      'The form and the generator disagree, so the form may lose some of what you type. Please report this ' +
+      'The form and the generator disagree, so the form may lose some of what you type. Email us, ' +
       'and use the spreadsheet for now.</strong>' + list(bad) + '</div>';
   }
 }, function (e) {
@@ -661,13 +662,14 @@ function afterRender() {
       msgs.push('<b>The resume runs about ' + (Math.round(over * 100) / 100) + ' inches past one page.</b> ' +
                 'Resumes must be exactly one page. ' +
                 (form ? 'Shorten or remove bullets until it fits; the preview updates as you type. '
-                      : 'Shorten or remove bullets in your CSV, save it, and add it here again. ') +
+                      : 'Shorten or remove bullets in your CSV. ') +
                 'In the preview below, everything under the red dashed line will be cut off.');
     }
     if (c.warnings.length) {
       msgs.push(form ? 'Fix the ' + plural(c.warnings.length, 'warning') + ' above. Click one to jump to it.'
-                     : 'Fix the ' + plural(c.warnings.length, 'warning') + ' above in your CSV, save it, and add it here again.');
+                     : 'Fix the ' + plural(c.warnings.length, 'warning') + ' above in your CSV.');
     }
+    if (!form && msgs.length) msgs.push('Then save the CSV and add it here again.');
     var tooLong = over > 2 / 96 ? 'Too long by about ' + (Math.round(over * 10) / 10) + ' in. ' : '';
     if (c.errors.length) {
       show('<strong class="head">Not ready yet. The preview below shows what you have so far.</strong>' + c.extra +
@@ -742,8 +744,8 @@ function showSaved() {
   var el = document.getElementById('after-save'), form = pageMode === 'form', items = [];
   if (!saved.pdf && !saved.csv) { el.innerHTML = ''; return; }
   items.push(saved.pdf
-    ? '<span class="tick">&#10003; PDF:</span> in the print window, set Destination to <b>Save as PDF</b> and click ' +
-      '<b>Save</b>. It is saved as <b>' + esc(saved.pdf) + '</b>, usually in your <b>Downloads</b> folder. ' +
+    ? '<span class="tick">&#10003; PDF:</span> the print window is open in a new tab. Set Destination to <b>Save as PDF</b> ' +
+      'and click <b>Save</b>. The file is <b>' + esc(saved.pdf) + '</b>, usually in your <b>Downloads</b> folder. ' +
       'Open it to check it is one page.'
     : '<span class="todo">&#9744; PDF:</span> not saved yet. Click <b>Save as PDF</b>.');
   if (form) {
