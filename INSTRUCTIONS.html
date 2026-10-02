@@ -31,6 +31,9 @@
 <p>You fill in a spreadsheet. A script turns it into a one-page PDF in the resume-book format.
 Plan on 30 to 60 minutes for the writing.</p>
 
+<div class="tip">Would rather not install anything? The <a href="https://areebaikram.github.io/baruch-cs-resume-book/">web version</a>
+does the same thing in your browser (Chrome or Edge) and makes the identical PDF.</div>
+
 <h2>What you need</h2>
 <ul>
   <li><strong>Python 3.</strong> Check with <code>python3 --version</code> (Mac) or <code>python --version</code> (Windows).
@@ -58,9 +61,8 @@ Plan on 30 to 60 minutes for the writing.</p>
 <h2>Step 1: Make your own copy of the template</h2>
 <div class="step">
   <ol>
-    <li>Open <code>Lastname, Firstname (GUIDED).csv</code> in Excel, Numbers, or Google Sheets. Every Value spells out exactly what goes there and when to delete the row, in [square brackets]. The script refuses to finish while any brackets are left, so you cannot forget one.
-      <br>If you have publications, a second school, a personal website, or spoken languages to list, open <code>Lastname, Firstname (FULL).csv</code> instead: it has every section and field the script accepts already in place, and you delete the blocks you do not need. Both produce the same resume.</li>
-    <li>Save it in the same folder as the script, renamed with your own name in the same format as the template, <strong>Last name, First name</strong>, and without the (GUIDED) or (FULL) part. For example, <code>Lastname, Firstname (GUIDED).csv</code> becomes <code>Ikram, Areeba.csv</code>. The script names your PDF the same way (<code>Ikram, Areeba.pdf</code>), so the two sort next to each other when you submit them:
+    <li>Open <code>Lastname, Firstname.csv</code> in Excel, Numbers, or Google Sheets. It has every section and field the script accepts already in place; you delete the rows and blocks you do not need. Every Value spells out exactly what goes there and when to delete the row, in [square brackets]. The script refuses to finish while any brackets are left, so you cannot forget one.</li>
+    <li>Save it in the same folder as the script, renamed with your own name in the same format as the template, <strong>Last name, First name</strong>. For example, <code>Lastname, Firstname.csv</code> becomes <code>Ikram, Areeba.csv</code>. The script names your PDF the same way (<code>Ikram, Areeba.pdf</code>), so the two sort next to each other when you submit them:
       <ul>
         <li><strong>Excel:</strong> File &rarr; Save As &rarr; format <strong>CSV UTF-8 (Comma delimited)</strong>.</li>
         <li><strong>Numbers:</strong> File &rarr; Export To &rarr; CSV &rarr; open <strong>Advanced Options</strong> &rarr; Text Encoding <strong>Unicode (UTF-8)</strong>.</li>
@@ -114,8 +116,6 @@ Plan on 30 to 60 minutes for the writing.</p>
     <tr><td>SKILLS</td><td>Skills, Interests, and Certifications</td><td>Skills</td><td>Certifications, Interests</td><td>No</td></tr>
   </table>
   <p>Within a section every block uses the same fields. Required fields must be in every block; optional ones can be left out of any block. Only the number of Bullet rows varies.</p>
-  <p>PUBLICATIONS, Honors, a second school, Website, and Languages are only in <code>Lastname, Firstname (FULL).csv</code>. To add a publication to the GUIDED template instead, add the rows
-  <code>PUBLICATIONS,Title,...</code>, <code>PUBLICATIONS,Venue,...</code>, <code>PUBLICATIONS,Dates,...</code>.</p>
 
   <h3>Links</h3>
   <p>LinkedIn, GitHub, Website, and a project's Website are printed as clickable links. Type the address with or without <code>https://</code>; the script shows it without the <code>https://www.</code> part.
@@ -153,7 +153,7 @@ Plan on 30 to 60 minutes for the writing.</p>
   </ul>
 
   <h3>Order on the page</h3>
-  <p>Education always prints first and Skills always last. The sections in between print in the order they appear in your file: to move Research above Experience, cut its rows and paste them above the Experience rows. The default order in the templates is Awards, Experience, Research, Leadership and Projects; if you add Publications, the usual place is right after Research. When to change it:</p>
+  <p>Education always prints first and Skills always last. The sections in between print in the order they appear in your file: to move Research above Experience, cut its rows and paste them above the Experience rows. The default order in the template is Awards, Experience, Research, Publications, Leadership and Projects. When to change it:</p>
   <ul>
     <li>Put Research or Publications before Experience if you are aiming at graduate school or research roles, or if the research is stronger than your jobs.</li>
     <li>Put Leadership and Projects before Experience if your jobs are all non-technical and your projects are your best technical evidence.</li>

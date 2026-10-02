@@ -8,6 +8,6 @@ __pycache__/
 *.html
 !INSTRUCTIONS.html
 *.csv
-!Lastname, Firstname (GUIDED).csv
-!Lastname, Firstname (FULL).csv
+!Lastname, Firstname.csv
 !Smith, John.csv
+!index.html

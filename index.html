@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baruch CS Resume Book</title>
+<style>
+  :root {
+    --navy: #003366; --text: #222; --muted: #555; --line: #ddd; --panel: #f5f5f5;
+    --ok: #2e7d32; --ok-bg: #edf7ee; --bad: #c62828; --bad-bg: #fdecea;
+    --note-bg: #e8f4f8; --note: #2196F3;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.55;
+         margin: 0; color: var(--text); background: #fff; overflow-wrap: anywhere; }
+  main { max-width: 860px; margin: 0 auto; padding: 32px 16px 16px; }
+  h1 { color: var(--navy); border-bottom: 3px solid var(--navy); padding-bottom: 8px; margin: 0 0 12px; }
+  h2 { color: var(--navy); margin: 30px 0 8px; }
+  code { background: #eee; padding: 2px 5px; border-radius: 3px; font-family: Menlo, Consolas, monospace; font-size: 0.92em; }
+  a { color: var(--navy); }
+  ul, ol { padding-left: 22px; margin: 6px 0; }
+  li { margin: 3px 0; }
+  .note { background: var(--note-bg); padding: 12px 16px; margin: 12px 0; border-left: 4px solid var(--note); }
+  .step { background: var(--panel); padding: 16px 20px; margin: 12px 0; border-left: 4px solid var(--navy); }
+  .small { font-size: 0.92em; color: var(--muted); }
+  .step.content { border-left-color: var(--ok); background: var(--ok-bg); }
+  .step h3 { margin: 0 0 6px; color: var(--navy); }
+  .good { color: var(--ok); font-weight: 600; } .weak { color: var(--bad); font-weight: 600; }
+  details { margin: 10px 0; }
+  summary { cursor: pointer; font-weight: 600; color: var(--navy); }
+  details table { border-collapse: collapse; margin: 8px 0; font-size: 0.95em; }
+  details td, details th { border: 1px solid var(--line); padding: 4px 8px; text-align: left; }
+
+  #drop { display: block; border: 2px dashed #9aa9bb; border-radius: 8px; padding: 28px 16px; text-align: center;
+          background: #fafbfc; cursor: pointer; }
+  #drop.over { border-color: var(--navy); background: #eef3f9; }
+  #drop input { display: none; }
+  .btn { display: inline-block; font: inherit; font-weight: 600; font-size: 1.05em; padding: 10px 22px;
+         border: 0; border-radius: 6px; background: var(--navy); color: #fff; cursor: pointer; text-decoration: none; }
+  .btn.secondary { background: #fff; color: var(--navy); border: 2px solid var(--navy); padding: 8px 18px; font-size: 1em; }
+  .btn:disabled { background: #9aa3ad; cursor: not-allowed; }
+  #drop .hint { color: var(--muted); margin-top: 8px; font-size: 0.95em; }
+  #loading { color: var(--muted); font-size: 0.95em; margin-top: 10px; }
+
+  .status { padding: 14px 18px; border-radius: 6px; border: 1px solid var(--line); margin: 16px 0; }
+  .status.ok { border-color: var(--ok); background: var(--ok-bg); }
+  .status.bad { border-color: var(--bad); background: var(--bad-bg); }
+  .status strong.head { display: block; font-size: 1.1em; }
+  .status ul { margin: 6px 0 0; padding-left: 22px; }
+  .status li { margin: 2px 0; }
+  #browser-warn .btn { margin: 10px 10px 0 0; }
+
+
+  #preview-wrap { display: none; background: #e9e9e9; border-top: 1px solid var(--line); overflow: hidden; }
+  #preview-scale { transform-origin: top left; margin: 0 auto; }
+  #preview { display: block; border: 0; width: 864px; background: #e9e9e9; }
+
+  footer { max-width: 860px; margin: 0 auto; padding: 24px 16px 40px; color: var(--muted); font-size: 0.9em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Baruch CS Resume Book</h1>
+  <p>Fill in a spreadsheet, open it here, and save a one-page PDF in the resume-book format. Nothing to install.</p>
+  <div class="note"><strong>Your file never leaves your computer.</strong> Everything runs inside this browser tab;
+     nothing is uploaded or saved anywhere.</div>
+  <div class="status bad" id="browser-warn" style="display:none">
+    <strong class="head">Use Google Chrome or Microsoft Edge to save your PDF.</strong>
+    Safari and Firefox change the layout when they save a PDF, so your resume can spill onto a second page.
+    You can check your CSV here, but open this page in Chrome or Edge to save the PDF.
+    <div>
+      <button class="btn secondary" id="copy-link" type="button">Copy this page's link</button>
+      <a class="btn secondary" href="https://www.google.com/chrome/" target="_blank" rel="noopener">Get Chrome (free)</a>
+    </div>
+  </div>
+
+  <h2>1. Download the template</h2>
+  <div class="step">
+    <a class="btn" href="Lastname,%20Firstname.csv" download>Download the template</a>
+    <p class="small" style="margin:10px 0 0">See a finished one: <a href="Smith,%20John.csv" download>Smith, John.csv</a>
+      makes <a href="Smith,%20John.pdf" target="_blank">this PDF</a>.</p>
+  </div>
+
+  <h2>2. Fill it in</h2>
+  <div class="step">
+    Open it in <b>Google Sheets</b>, <b>Excel</b>, or <b>Numbers</b>.
+    <ul>
+      <li><b>Only type in the third column (Value).</b> Each <code>[bracketed text]</code> says what goes there. Replace all of it,
+        <b>brackets included</b>: <code>[First Last]</code> becomes <code>Areeba Ikram</code>.</li>
+      <li><b>Don't need a row or a whole section?</b> Delete it; the template has every section, so most people delete several. <b>Need another school, job, project, or bullet?</b> Copy those rows and insert them right below, without
+        pasting over the rows already there (how: see "Adding or removing a school, job, bullet, or section" below).</li>
+      <li><b>Save it as a CSV</b> named <code>Lastname, Firstname.csv</code>:
+        <ul>
+          <li>Google Sheets: open it with File &rarr; Import &rarr; Upload, and untick "Convert text to numbers, dates, and formulas". When done, File &rarr; Download &rarr; Comma Separated Values (.csv).</li>
+          <li>Excel: File &rarr; Save As &rarr; <b>CSV UTF-8</b>.</li>
+          <li>Numbers: File &rarr; Export To &rarr; CSV.</li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin:14px 0 4px"><b>Spreadsheet help</b> (click a topic if you get stuck):</p>
+    <details>
+      <summary>Adding or removing a school, job, bullet, or section</summary>
+      <p>There are only three things you ever do to a row:</p>
+      <ol>
+        <li><b>Fill it in.</b> Replace the bracketed text in Value with your own. This is most of the work.</li>
+        <li><b>Delete it.</b> Whatever it was for is simply left off the resume. No awards: delete all the AWARDS rows.
+          Only two bullets for a job: delete the third Bullet row. No minor: delete the Minor row.</li>
+        <li><b>Add one.</b> Need a second school, job, club, project, or award? Copy all the rows of one and insert the copy
+          directly below; there is nothing to renumber. Need another bullet? Copy a Bullet row and insert it under the others.</li>
+      </ol>
+      <p><b>Inserting copied rows without overwriting the ones below.</b> Select the rows by clicking their row numbers
+        on the left, copy them, then:</p>
+      <ul>
+        <li><b>Excel:</b> right-click the row number where the copy should <b>begin</b> &rarr; <b>Insert Copied Cells</b>.
+          The copy goes there and everything from that row on moves down. For example, to add a job at the end of
+          Experience, right-click the first RESEARCH row.</li>
+        <li><b>Google Sheets:</b> with the same number of rows selected, right-click &rarr; <b>Insert rows below</b>,
+          then click the first new empty row and paste.</li>
+        <li><b>Numbers:</b> with the same number of rows selected, right-click &rarr; <b>Add Rows Below</b>,
+          then click the first new empty row and paste.</li>
+      </ul>
+      <p>To delete, right-click the row number &rarr; Delete. A row left completely empty is also ignored.</p>
+      <p>Each block starts at a fixed row: a school at Institution, a job at Company, a club at Organization, an award at Award,
+        a project at Project. Keep that row first in each block (copying a whole block does this for you).
+        If text shows up under the wrong job, that first row is missing or out of place.</p>
+    </details>
+    <details>
+      <summary>Dates, punctuation, and your name</summary>
+      <ul>
+        <li>Dates: <code>Jun. 2025 - Aug. 2025</code>, <code>Sep. 2024 - Present</code>, or <code>Expected May 2027</code>.</li>
+        <li>No periods at the end of bullets. No bold, italics, or bullet symbols; the generator does the formatting.</li>
+        <li>Write your name in Latin letters. Last name more than one word? Fill in the Last Name row
+          (e.g. <code>Van Der Berg</code>) so your PDF is named correctly; otherwise delete that row.</li>
+      </ul>
+    </details>
+    <details>
+      <summary>Making a link show shorter text</summary>
+      <p>LinkedIn, GitHub, Website, and a project's Website become clickable links; type them with or without
+        <code>https://</code>. To show shorter text, write <code>[GitHub repo](github.com/you/project)</code>: square brackets
+        around the text, then the address in round brackets, with no space between. This also works inside a bullet.</p>
+    </details>
+    <details>
+      <summary>Writing math on your resume</summary>
+      <p>Optional, for math research. Put LaTeX between <code>$</code> signs or between <code>\(</code> and <code>\)</code>,
+        e.g. <code>Proved an $O(n \log n)$ bound</code>. Dollar amounts like $2,000 are left alone. Keep it to a symbol or a
+        short expression.</p>
+    </details>
+    <details>
+      <summary>What you can't change (fonts, layout, section names)</summary>
+      <p>You can't rename or add sections, add fields that aren't in the template, or change fonts, margins, or layout:
+        every resume in the book has to match. If your situation needs something the format can't do, email us before
+        submitting instead of improvising.</p>
+    </details>
+    <details>
+      <summary>Fixing common problems</summary>
+      <ul>
+        <li><b>Strange characters in accented names</b> (&#381;, &Atilde;&copy;): the file was saved in the wrong format.
+          In Excel choose <b>CSV UTF-8</b>; in Google Sheets use File &rarr; Download &rarr; Comma Separated Values.</li>
+        <li><b>"This is not a CSV file":</b> you opened the .xlsx or .numbers file. Save or export it as a CSV first.</li>
+        <li><b>Text under the wrong job:</b> see "Adding or removing a school, job, bullet, or section" above.</li>
+        <li><b>Brackets showing on the resume:</b> check the link form under "Making a link show shorter text".</li>
+        <li><b>Anything else:</b> the message on this page names the line in your file to fix.</li>
+      </ul>
+    </details>
+  </div>
+  <div class="step content">
+    <h3>What to write (please read)</h3>
+    <ul>
+      <li>Every bullet: <b>Did X by doing Y, which resulted in Z.</b> Use numbers where you honestly can.<br>
+        <span class="weak">Weak:</span> Cashier at a grocery store<br>
+        <span class="good">Better:</span> Reorganized the stockroom by grouping high-turnover items near the floor, which cut restocking time by 20%</li>
+      <li><b>Stay truthful.</b> You may be asked about anything on the page.</li>
+      <li><b>Include non-tech jobs</b>, and list the most recent first in each section.</li>
+      <li><b>GPA:</b> only if it is 3.4 or higher. Otherwise delete the GPA row.</li>
+      <li><b>Coursework:</b> only courses you are comfortable being asked about, or delete the row.</li>
+      <li><b>Interests must be specific.</b> Not "reading, chess" but "Russian literature (Dostoevsky, Gogol); chess (club tournament director)".</li>
+      <li><b>Email:</b> use a professional address, such as your Baruch one.</li>
+    </ul>
+    <p style="margin:12px 0 4px"><b>Which section does it go in?</b></p>
+    <ul>
+      <li><b>Experience:</b> jobs, internships, fellowships, tutoring, teaching or course assistant work.</li>
+      <li><b>Research:</b> only research done with a professor, lab, or institute (for example an REU). A class project is not research.</li>
+      <li><b>Publications:</b> a paper, poster, or talk you authored at a conference, journal, or symposium.</li>
+      <li><b>Leadership:</b> clubs, executive boards, volunteering where you had a role.</li>
+      <li><b>Projects:</b> personal, class, and hackathon projects.</li>
+    </ul>
+    <p style="margin:8px 0 0">Education always prints first and Skills last; the rest print in the order they appear in your file.
+      Move Research or Publications up if you are aiming at graduate school or research roles, or Leadership and Projects up
+      if your jobs are all non-technical (cut the section's rows and insert them higher). Otherwise leave the order alone.</p>
+  </div>
+
+  <h2>3. Open your CSV here</h2>
+  <label id="drop">
+    <input type="file" id="file" accept=".csv,text/csv">
+    <span class="btn">Choose your CSV file</span>
+    <div class="hint">or drag it onto this box. Fix anything it flags in your CSV, save, and open it here again.</div>
+    <div id="loading">Loading the generator (about 10 MB, first visit only)…</div>
+  </label>
+
+  <div id="result"></div>
+
+  <div id="save-box">
+    <h2>4. Save the PDF and submit</h2>
+    <div class="step">
+      <button class="btn" id="save" disabled>Save as PDF (open your CSV in step 3 first)</button>
+      <ol>
+        <li>Your resume opens in a new tab with the print window. Set Destination to <b>Save as PDF</b>
+            and leave everything else as it is.</li>
+        <li>Click <b>Save</b> and keep the suggested file name (<i>Lastname, Firstname.pdf</i>).</li>
+        <li>Open the PDF and check that it is <b>one page</b>.</li>
+        <li><b>Submit both files</b>, <i>Lastname, Firstname.pdf</i> and <i>Lastname, Firstname.csv</i>, by uploading
+            them with the <b>Dropbox link in the email</b> (no Dropbox account needed).</li>
+      </ol>
+    </div>
+  </div>
+</main>
+
+<div id="preview-wrap"><div id="preview-scale"><iframe id="preview" title="Resume preview"></iframe></div></div>
+
+<footer>
+  Prefer the command line? The same generator is a Python script:
+  <a href="https://github.com/areebaikram/baruch-cs-resume-book">github.com/areebaikram/baruch-cs-resume-book</a>.
+  Found a bug? Issues and pull requests are welcome.
+  Built with <a href="https://pyodide.org">Pyodide</a> (MPL-2.0).
+</footer>
+
+<script src="web/pyodide/pyodide.js"></script>
+<script>
+// The generator script, its fonts, and KaTeX are read straight from the repo,
+// so this page always runs the same code as the toolkit.
+var ROOT = './';
+// Only Chrome and Edge print the resume exactly like the script does.
+var CHROMIUM = /(Chrome|Chromium|Edg)\/\d/.test(navigator.userAgent) &&
+               !/Firefox|FxiOS|CriOS|EdgiOS|OPR\//.test(navigator.userAgent);
+if (!CHROMIUM) document.getElementById('browser-warn').style.display = 'block';
+document.getElementById('copy-link').addEventListener('click', function () {
+  var b = this, url = location.href.split('#')[0];
+  function done() { b.textContent = 'Link copied. Paste it into Chrome or Edge.'; }
+  if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, function () { prompt('Copy this link:', url); });
+  else prompt('Copy this link:', url);
+});
+var APP = '/app';
+
+var GLUE = [
+  'import sys, json',
+  'sys.path.insert(0, "' + APP + '")',
+  'import generate_resume_from_csv as g',
+  'def run(path):',
+  '    try:',
+  '        data = g.parse_csv(path)',
+  '    except Exception as e:',
+  '        return json.dumps({"fatal": "ERROR reading CSV: " + str(e)})',
+  '    errors, warnings = g.validate(data)',
+  '    out = {"errors": errors, "warnings": warnings}',
+  '    if not errors:',
+  '        try:',
+  '            out["html"] = g.HTMLGenerator(data).generate()',
+  '        except (g.MissingFontError, g.MissingKatexError) as e:',
+  '            out["fatal"] = "ERROR: " + str(e)',
+  '        out["pdf_name"] = g.pdf_filename(data.contact)',
+  '    return json.dumps(out)',
+].join('\n');
+
+function fetchOk(url, how) {
+  return fetch(url).then(function (r) {
+    if (!r.ok) throw new Error('Could not load ' + url + ' (' + r.status + ')');
+    return how === 'text' ? r.text() : r.arrayBuffer();
+  });
+}
+
+var pyFS = null;
+var ready = (async function () {
+  var py = await loadPyodide({ indexURL: 'web/pyodide/' });
+  var FS = pyFS = py.FS;
+  FS.mkdirTree(APP + '/fonts');
+  FS.mkdirTree(APP + '/katex/fonts');
+  function put(path, buf) { FS.writeFile(APP + '/' + path, new Uint8Array(buf)); }
+
+  var fonts = ['EBGaramond-Regular.woff2', 'EBGaramond-Bold.woff2',
+               'EBGaramond-Italic.woff2', 'EBGaramond-BoldItalic.woff2'];
+  var katexCss = await fetchOk(ROOT + 'katex/katex.min.css', 'text');
+  var katexFonts = Array.from(new Set((katexCss.match(/fonts\/[^)]+\.woff2/g) || [])));
+  var jobs = [
+    fetchOk(ROOT + 'generate_resume_from_csv.py', 'text').then(function (t) {
+      FS.writeFile(APP + '/generate_resume_from_csv.py', t);
+    }),
+    fetchOk(ROOT + 'katex/katex.min.js').then(function (b) { put('katex/katex.min.js', b); }),
+  ];
+  FS.writeFile(APP + '/katex/katex.min.css', katexCss);
+  fonts.forEach(function (f) {
+    jobs.push(fetchOk(ROOT + 'fonts/' + f).then(function (b) { put('fonts/' + f, b); }));
+  });
+  katexFonts.forEach(function (f) {
+    jobs.push(fetchOk(ROOT + 'katex/' + f).then(function (b) { put('katex/' + f, b); }));
+  });
+  await Promise.all(jobs);
+  py.runPython(GLUE);
+  return py.globals.get('run');
+})();
+
+ready.then(function () {
+  document.getElementById('loading').textContent = 'Ready.';
+}, function (e) {
+  document.getElementById('loading').innerHTML =
+    '<span style="color:var(--bad)">The generator could not load in this browser (' + esc(e.message) +
+    '). Try the latest Chrome or Edge, or use the Python script from the toolkit.</span>';
+});
+
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function list(items) {
+  return '<ul>' + items.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
+}
+
+var resultEl = document.getElementById('result');
+function setSave(on, label) {
+  var b = document.getElementById('save');
+  b.disabled = !on;
+  b.textContent = label;
+}
+var wrap = document.getElementById('preview-wrap');
+var frame = document.getElementById('preview');
+var current = null;   // {warnings, pdfName, csvName}
+
+function show(html, cls) {
+  resultEl.innerHTML = '<div class="status ' + (cls || '') + '">' + html + '</div>';
+}
+
+async function handle(file) {
+  if (!file) return;
+  current = null;
+  setSave(false, 'Save as PDF (checking your CSV…)');
+  wrap.style.display = 'none';
+  show('<strong class="head">Reading ' + esc(file.name) + '…</strong>' +
+       (document.getElementById('loading').textContent === 'Ready.' ? '' : 'Still loading the generator, one moment.'));
+  var run;
+  try { run = await ready; } catch (e) { show('<strong class="head">The generator did not load.</strong>' + esc(e.message), 'bad'); return; }
+
+  var name = file.name.replace(/[\/\\]/g, '_');
+  var path = '/tmp/' + name;
+  var bytes = new Uint8Array(await file.arrayBuffer());
+  pyFS.writeFile(path, bytes);
+  var out = JSON.parse(run(path));
+  try { pyFS.unlink(path); } catch (e) {}
+
+  if (out.fatal) {
+    show('<strong class="head">' + esc(out.fatal) + '</strong>', 'bad');
+    setSave(false, 'Save as PDF (fix the problem above first)');
+    return;
+  }
+  var parts = [];
+  if (out.warnings.length) parts.push('<b>WARNINGS (' + out.warnings.length + '):</b>' + list(out.warnings));
+  if (out.errors.length) {
+    show('<strong class="head">ERRORS (resume not generated):</strong>' + list(out.errors) + parts.join(''), 'bad');
+    setSave(false, 'Save as PDF (fix the problems above first)');
+    return;
+  }
+  current = { warnings: out.warnings, pdfName: out.pdf_name, csvName: name, extra: parts.join(''), html: out.html };
+  show('<strong class="head">Checking page length…</strong>' + current.extra);
+  frame.onload = afterRender;
+  wrap.style.display = 'block';
+  frame.srcdoc = out.html;
+}
+
+// Same measurement as the script's own page check.
+function overflowInches(doc) {
+  var page = doc.querySelector('.page');
+  var pageTop = page.getBoundingClientRect().top;
+  var bottom = 0;
+  for (var i = 0; i < page.children.length; i++) {
+    var k = page.children[i];
+    if (k.classList.contains('page-end')) continue;
+    var b = k.getBoundingClientRect().bottom - pageTop;
+    if (b > bottom) bottom = b;
+  }
+  var pad = parseFloat(doc.defaultView.getComputedStyle(page).paddingBottom);
+  return (bottom + pad - 11 * 96) / 96;
+}
+
+function afterRender() {
+  var doc = frame.contentDocument;
+  // The generated page hides its guide line when not opened as a local file; show it here.
+  var pe = doc.querySelector('.page-end');
+  if (pe) pe.style.display = '';
+  var done = (doc.fonts && doc.fonts.ready) ? doc.fonts.ready : Promise.resolve();
+  done.then(function () {
+    fit();
+    var over = overflowInches(doc);
+    var c = current, msgs = [];
+    if (over > 2 / 96) {
+      msgs.push('<b>The resume runs about ' + (Math.round(over * 100) / 100) + ' inches past one page.</b> ' +
+                'Resumes must be exactly one page. Shorten or remove bullets in your CSV, save it, and open it here again. ' +
+                'In the preview below, everything under the red dashed line will be cut off.');
+    }
+    if (c.warnings.length) {
+      msgs.push('Fix the ' + c.warnings.length + ' warning(s) above in your CSV, save it, and open it here again.');
+    }
+    if (msgs.length) {
+      show('<strong class="head">NOT DONE: do not submit yet.</strong>' + c.extra +
+           msgs.map(function (m) { return '<p style="margin:8px 0 0">' + m + '</p>'; }).join(''), 'bad');
+      setSave(false, 'Save as PDF (fix the problems above first)');
+    } else {
+      var rename = '';
+      var want = c.pdfName.replace(/\.pdf$/i, '') + '.csv';
+      if (c.csvName !== want) {
+        rename = '<p style="margin:8px 0 0">Before you submit, rename your CSV to <code>' + esc(want) +
+                 '</code> so it sorts next to the PDF.</p>';
+      }
+      show('<strong class="head">DONE: your resume fits on one page with no warnings.</strong>' + rename, 'ok');
+      setSave(CHROMIUM, CHROMIUM ? 'Save as PDF' : 'Save as PDF (open this page in Chrome or Edge)');
+    }
+  });
+}
+
+// Size the preview to its content, and shrink it on narrow screens.
+function fit() {
+  if (wrap.style.display === 'none' || !frame.contentDocument || !frame.contentDocument.body) return;
+  var h = frame.contentDocument.documentElement.scrollHeight;
+  frame.style.height = h + 'px';
+  var avail = wrap.clientWidth;
+  var s = Math.min(1, avail / 864);
+  var box = document.getElementById('preview-scale');
+  box.style.width = (864 * s) + 'px';
+  frame.style.transform = 'scale(' + s + ')';
+  frame.style.transformOrigin = 'top left';
+  box.style.height = (h * s) + 'px';
+}
+window.addEventListener('resize', fit);
+
+// Print the resume as its own page in a new tab, the same way the script prints it.
+// Its <title> becomes the suggested PDF file name.
+var PRINT_ON_LOAD = '<script>addEventListener("load", function () {' +
+  ' (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () { setTimeout(print, 300); });' +
+  ' });<\/script>\n</body>';
+document.getElementById('save').addEventListener('click', function () {
+  if (!current || !CHROMIUM) return;
+  var html = current.html.replace(/<\/body>(?![\s\S]*<\/body>)/, PRINT_ON_LOAD);
+  var url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+  if (!window.open(url, '_blank')) location.href = url;
+});
+
+var input = document.getElementById('file');
+input.addEventListener('change', function () {
+  var f = input.files[0];
+  input.value = '';   // so opening the same file again re-runs it
+  handle(f);
+});
+var drop = document.getElementById('drop');
+['dragenter', 'dragover'].forEach(function (t) {
+  drop.addEventListener(t, function (e) { e.preventDefault(); drop.classList.add('over'); });
+});
+['dragleave', 'drop'].forEach(function (t) {
+  drop.addEventListener(t, function () { drop.classList.remove('over'); });
+});
+drop.addEventListener('drop', function (e) {
+  e.preventDefault();
+  handle(e.dataTransfer.files[0]);
+});
+</script>
+</body>
+</html>

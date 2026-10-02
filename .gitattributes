@@ -1,0 +1,5 @@
+# Keep these out of the student download zip
+web export-ignore
+index.html export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore

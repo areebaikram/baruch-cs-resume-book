@@ -33,7 +33,7 @@ import sys
 import webbrowser
 from collections import defaultdict
 
-VERSION = "0.4.1 (Fall 2026)"  # matches the GitHub release tag
+VERSION = "0.5.0 (Fall 2026)"  # matches the GitHub release tag
 
 # --------------------------------------------------------------------------- #
 # CSV reading
@@ -197,7 +197,7 @@ def read_csv_rows(path):
     if ext in (".xlsx", ".xls", ".numbers", ".ods") or b"\x00" in head or head.startswith(b"PK"):
         raise ValueError(
             "This is not a CSV file (it looks like an Excel or Numbers file). "
-            "Save it again choosing the CSV UTF-8 format, then run the script on the .csv file.")
+            "Save it again as a CSV (in Excel: CSV UTF-8), then use the .csv file.")
     raw = None
     for enc in ("utf-8-sig", "cp1252", "latin-1"):
         try:

@@ -4,19 +4,24 @@ Fill in a spreadsheet, get a one-page PDF in the Baruch College CS Resume Book f
 
 ## Students
 
-1. **[Download the toolkit (zip)](https://github.com/areebaikram/baruch-cs-resume-book/releases/latest/download/baruch-cs-resume-book.zip)** and unzip it. (Not the green Code button; that is the source, not the toolkit.)
+**Use the web version: [areebaikram.github.io/baruch-cs-resume-book](https://areebaikram.github.io/baruch-cs-resume-book/).** It has everything you need, with nothing to install. Your file stays on your computer.
+
+### Prefer to run the script yourself?
+
+1. **[Download the toolkit (zip)](https://github.com/areebaikram/baruch-cs-resume-book/releases/latest/download/baruch-cs-resume-book.zip)** and unzip it.
 2. Open `INSTRUCTIONS.html` inside the folder. It has the full instructions.
-3. Fill in `Lastname, Firstname (GUIDED).csv` (or `Lastname, Firstname (FULL).csv` if you have publications or need a rarer field), run the script, submit the PDF and the CSV.
+3. Fill in `Lastname, Firstname.csv`, run the script, submit the PDF and the CSV.
 
 You need Python 3 and Google Chrome or Microsoft Edge. Nothing else to install.
+
+Found a bug? Issues and pull requests are welcome.
 
 ## What is in the folder
 
 | File | What it is |
 |---|---|
 | `INSTRUCTIONS.html` | Student instructions. Start here. |
-| `Lastname, Firstname (GUIDED).csv` | The template. Every value spells out what goes there and when to delete the row. Includes a Research block. |
-| `Lastname, Firstname (FULL).csv` | Same, but with every section and every field the script accepts (Publications, Honors, a second school, Website, Languages, ...). Delete what you do not need. |
+| `Lastname, Firstname.csv` | The template, with every section and field the script accepts. Every value spells out what goes there and when to delete the row. |
 | `Smith, John.csv` and `Smith, John.pdf` | A filled-in example and the PDF it produces. |
 | `generate_resume_from_csv.py` | The script. Run it on your CSV. |
 | `fonts/` | EB Garamond, bundled so every resume renders the same. |
