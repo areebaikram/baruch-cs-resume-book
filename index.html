@@ -50,38 +50,169 @@
   .status li { margin: 2px 0; }
   #browser-warn .btn { margin: 10px 10px 0 0; }
 
+  /* ---- Choosing form or spreadsheet ---- */
+  .modes { display: flex; gap: 10px; flex-wrap: wrap; margin: 8px 0 4px; }
+  .modes button { flex: 1 1 240px; font: inherit; text-align: left; padding: 12px 16px; border-radius: 8px;
+                  border: 2px solid var(--line); background: #fff; cursor: pointer; color: var(--text); }
+  .modes button b { display: block; color: var(--navy); font-size: 1.05em; }
+  .modes button[aria-pressed="true"] { border-color: var(--navy); background: #eef3f9; }
+  body.form-mode .only-csv, body.csv-mode .only-form { display: none !important; }
 
+  /* ---- The form ---- */
+  .form-bar { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; margin: 12px 0; }
+  .form-bar .small { flex: 1 1 260px; }
+  #import-status:empty { display: none; }
+  .card { border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin: 14px 0; background: #fff; }
+  .card-head { display: flex; align-items: center; gap: 8px; }
+  .card-head h3 { margin: 0; color: var(--navy); flex: 1; }
+  .blurb { margin: 2px 0 8px; color: var(--muted); font-size: 0.92em; }
+  .tools { display: flex; gap: 4px; flex: none; }
+  .icon { font: inherit; font-size: 0.9em; min-width: 32px; padding: 3px 8px; border: 1px solid #b8c2cc;
+          border-radius: 5px; background: #fff; color: var(--navy); cursor: pointer; }
+  .icon:hover:not(:disabled) { background: #eef3f9; }
+  .icon:disabled { color: #c3c9cf; border-color: #e3e6e9; cursor: default; }
+  .entry { border-left: 3px solid #c9d5e2; background: var(--panel); padding: 10px 12px; margin: 10px 0; border-radius: 0 6px 6px 0; }
+  .entry-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .entry-title { flex: 1; font-weight: 600; }
+  .entry-warn { color: var(--bad); font-size: 0.92em; margin-top: 6px; }
+  .entry-warn:empty { display: none; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; }
+  .fld { display: flex; flex-direction: column; min-width: 0; }
+  .fld.wide { grid-column: 1 / -1; }
+  .fld label, .bullets .lbl { font-size: 0.88em; font-weight: 600; color: #333; margin-bottom: 2px; }
+  .fld .hint { font-size: 0.82em; color: var(--muted); margin-top: 2px; }
+  .req { color: var(--bad); }
+  #form input, #form textarea { font: inherit; font-size: 0.97em; width: 100%; padding: 6px 8px;
+          border: 1px solid #b8c2cc; border-radius: 5px; background: #fff; color: var(--text); }
+  #form textarea { resize: vertical; min-height: 2.6em; line-height: 1.4; }
+  #form input:focus, #form textarea:focus { outline: 2px solid #7aa7d6; outline-offset: 0; border-color: var(--navy); }
+  #form .flag { border-color: var(--bad); background: #fff6f5; }
+  #form ::placeholder { color: #9aa1a8; }
+  .bullets { margin-top: 10px; }
+  .bullet { display: flex; gap: 6px; align-items: flex-start; margin: 4px 0; }
+  .bullet textarea { flex: 1; }
+  .add { font: inherit; font-weight: 600; color: var(--navy); background: none; border: 1px dashed #9aa9bb;
+         border-radius: 6px; padding: 6px 12px; cursor: pointer; margin-top: 4px; }
+  .add:hover { background: #eef3f9; }
+  .add.small { font-size: 0.9em; padding: 3px 10px; }
+  .linkish { font: inherit; color: var(--navy); background: none; border: 0; padding: 0; cursor: pointer;
+             text-decoration: underline; font-weight: 600; }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+  /* ---- Output: status, save, preview ---- */
+  #output .inner { max-width: 860px; margin: 0 auto; padding: 0 16px 8px; }
+  #after-save:empty { display: none; }
+  #after-save { margin: 12px 0 4px; padding: 10px 14px; border-radius: 6px; background: #fff; border: 1px solid var(--line); }
+  #after-save ul { list-style: none; padding-left: 0; }
+  #after-save li { margin: 4px 0; }
+  .tick { color: var(--ok); font-weight: 700; }
+  .todo { color: var(--muted); font-weight: 700; }
+  .save-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
   #preview-wrap { display: none; background: #e9e9e9; border-top: 1px solid var(--line); overflow: hidden; }
   #preview-scale { transform-origin: top left; margin: 0 auto; }
   #preview { display: block; border: 0; width: 864px; background: #e9e9e9; }
 
+  /* Wide screens: the form on the left, the live preview on the right. */
+  @media (min-width: 1280px) {
+    body.form-mode .layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+    body.form-mode main { max-width: 780px; margin: 0 0 0 auto; width: 100%; }
+    body.form-mode #output { position: sticky; top: 0; height: 100vh; overflow-y: auto;
+                             border-left: 1px solid var(--line); background: #fafafa; }
+  }
+
   footer { max-width: 860px; margin: 0 auto; padding: 24px 16px 40px; color: var(--muted); font-size: 0.9em; }
 </style>
 </head>
-<body>
+<body class="form-mode">
+<div class="layout">
 <main>
   <h1>Baruch CS Resume Book</h1>
-  <p>Fill in a spreadsheet, add it here, and save a one-page PDF in the resume-book format. Nothing to install.</p>
-  <div class="note"><strong>Your file never leaves your computer.</strong> Everything runs inside this browser tab;
-     nothing is uploaded or saved anywhere. You can even turn off Wi-Fi once this page has loaded, and it still works.</div>
+  <p>Fill in the form (or a spreadsheet, if you prefer), check the preview, and save a one-page PDF in the resume-book format.
+     Nothing to install.</p>
+  <div class="note"><strong>Your information never leaves your computer.</strong> Everything runs inside this browser tab;
+     nothing is uploaded. You can even turn off Wi-Fi once this page has loaded, and it still works.
+     <span class="only-form">The form keeps a draft in this browser so you can close the tab and come back. On a shared or lab
+     computer, click <b>Clear the form</b> when you are done.</span></div>
   <div class="status bad" id="browser-warn" style="display:none">
     <strong class="head">Use Google Chrome or Microsoft Edge to save your PDF.</strong>
     Safari and Firefox change the layout when they save a PDF, so your resume can spill onto a second page.
-    You can check your CSV here, but open this page in Chrome or Edge to save the PDF.
+    You can fill in and check your resume here, but open this page in Chrome or Edge to save the PDF.
     <div>
       <button class="btn secondary" id="copy-link" type="button">Copy this page's link</button>
       <a class="btn secondary" href="https://www.google.com/chrome/" target="_blank" rel="noopener">Get Chrome (free)</a>
     </div>
   </div>
 
-  <h2>1. Download the template</h2>
+  <div class="step content">
+    <h3>What to write (please read)</h3>
+    <ul>
+      <li>Every bullet: <b>Did X by doing Y, which resulted in Z.</b> Use numbers where you honestly can.<br>
+        <span class="weak">Weak:</span> Cashier at a grocery store<br>
+        <span class="good">Better:</span> Reorganized the stockroom by grouping high-turnover items near the floor, which cut restocking time by 20%</li>
+      <li><b>Stay truthful.</b> You may be asked about anything on the page.</li>
+      <li><b>Include non-tech jobs</b>, and list the most recent first in each section.</li>
+      <li><b>GPA:</b> only if it is 3.4 or higher. Otherwise leave it out.</li>
+      <li><b>Coursework:</b> only courses you are comfortable being asked about, or leave it out.</li>
+      <li><b>Interests must be specific.</b> Not "reading, chess" but "Russian literature (Dostoevsky, Gogol); chess (club tournament director)".</li>
+      <li><b>Email:</b> use a professional address, such as your Baruch one.</li>
+    </ul>
+    <p style="margin:12px 0 4px"><b>Which section does it go in?</b></p>
+    <ul>
+      <li><b>Experience:</b> jobs, internships, fellowships, tutoring, teaching or course assistant work.</li>
+      <li><b>Research:</b> only research done with a professor, lab, or institute (for example an REU). A class project is not research.</li>
+      <li><b>Publications:</b> a paper, poster, or talk you authored at a conference, journal, or symposium.</li>
+      <li><b>Leadership:</b> clubs, executive boards, volunteering where you had a role.</li>
+      <li><b>Projects:</b> personal, class, and hackathon projects.</li>
+    </ul>
+    <p style="margin:8px 0 0">Education always prints first and Skills last; the rest print in the order you put them in.
+      Move Research or Publications up if you are aiming at graduate school or research roles, or Leadership and Projects up
+      if your jobs are all non-technical. Otherwise leave the order alone.</p>
+  </div>
+
+  <h2>1. Enter your information</h2>
+  <div class="modes" role="group" aria-label="How to enter your information">
+    <button type="button" id="mode-form" aria-pressed="true"><b>Fill in a form</b>
+      <span class="small">Type your information right on this page. Recommended.</span></button>
+    <button type="button" id="mode-csv" aria-pressed="false"><b>Use a spreadsheet</b>
+      <span class="small">Fill in our CSV template in Excel, Google Sheets, or Numbers.</span></button>
+  </div>
+
+  <!-- ===================== Form ===================== -->
+  <div class="only-form">
+    <div class="form-bar">
+      <span class="small">Made a CSV before, here or in a spreadsheet? Open it to keep editing.</span>
+      <label class="btn secondary" style="cursor:pointer">Open a CSV<input type="file" id="form-file" accept=".csv,text/csv" hidden></label>
+      <button type="button" class="btn secondary" id="clear-form">Clear the form</button>
+    </div>
+    <div id="import-status"></div>
+    <details>
+      <summary>Formatting tips (dates, links, math)</summary>
+      <ul>
+        <li>Dates: <code>Jun. 2025 - Aug. 2025</code>, <code>Sep. 2024 - Present</code>, or <code>Expected May 2027</code>.</li>
+        <li>No periods at the end of bullets. No bold, italics, or bullet symbols; the generator does the formatting.</li>
+        <li>Write your name in Latin letters.</li>
+        <li>Links can be typed with or without <code>https://</code>. To show shorter text, write
+          <code>[GitHub repo](github.com/you/project)</code>: square brackets around the text, then the address in round
+          brackets, with no space between. This also works inside a bullet.</li>
+        <li>Math (optional, for math research): put LaTeX between <code>$</code> signs, e.g.
+          <code>Proved an $O(n \log n)$ bound</code>. Dollar amounts like $2,000 are left alone.</li>
+        <li>You can't rename or add sections or change fonts or layout: every resume in the book has to match. If your
+          situation needs something the format can't do, email us before submitting instead of improvising.</li>
+      </ul>
+    </details>
+    <form id="form" autocomplete="on" onsubmit="return false"></form>
+  </div>
+
+  <!-- ===================== Spreadsheet ===================== -->
+  <div class="only-csv">
+  <h3>a. Download the template</h3>
   <div class="step">
     <a class="btn" href="Lastname_Firstname.csv" download>Download the template</a>
     <p class="small" style="margin:10px 0 0">See a finished one: <a href="Smith_John.csv" download>Smith_John.csv</a>
       makes <a href="Smith_John.pdf" target="_blank">this PDF</a>.</p>
   </div>
 
-  <h2>2. Fill it in</h2>
+  <h3>b. Fill it in</h3>
   <div class="step">
     Open it in <b>Google Sheets</b>, <b>Excel</b>, or <b>Numbers</b>.
     <ul>
@@ -124,6 +255,7 @@
       <p>Each block starts at a fixed row: a school at Institution, a job at Company, a club at Organization, an award at Award,
         a project at Project. Keep that row first in each block (copying a whole block does this for you).
         If text shows up under the wrong job, that first row is missing or out of place.</p>
+      <p>Sections print in the order their rows appear, so to move a section up, cut its rows and insert them higher.</p>
     </details>
     <details>
       <summary>Dates, punctuation, and your name</summary>
@@ -164,59 +296,43 @@
       </ul>
     </details>
   </div>
-  <div class="step content">
-    <h3>What to write (please read)</h3>
-    <ul>
-      <li>Every bullet: <b>Did X by doing Y, which resulted in Z.</b> Use numbers where you honestly can.<br>
-        <span class="weak">Weak:</span> Cashier at a grocery store<br>
-        <span class="good">Better:</span> Reorganized the stockroom by grouping high-turnover items near the floor, which cut restocking time by 20%</li>
-      <li><b>Stay truthful.</b> You may be asked about anything on the page.</li>
-      <li><b>Include non-tech jobs</b>, and list the most recent first in each section.</li>
-      <li><b>GPA:</b> only if it is 3.4 or higher. Otherwise delete the GPA row.</li>
-      <li><b>Coursework:</b> only courses you are comfortable being asked about, or delete the row.</li>
-      <li><b>Interests must be specific.</b> Not "reading, chess" but "Russian literature (Dostoevsky, Gogol); chess (club tournament director)".</li>
-      <li><b>Email:</b> use a professional address, such as your Baruch one.</li>
-    </ul>
-    <p style="margin:12px 0 4px"><b>Which section does it go in?</b></p>
-    <ul>
-      <li><b>Experience:</b> jobs, internships, fellowships, tutoring, teaching or course assistant work.</li>
-      <li><b>Research:</b> only research done with a professor, lab, or institute (for example an REU). A class project is not research.</li>
-      <li><b>Publications:</b> a paper, poster, or talk you authored at a conference, journal, or symposium.</li>
-      <li><b>Leadership:</b> clubs, executive boards, volunteering where you had a role.</li>
-      <li><b>Projects:</b> personal, class, and hackathon projects.</li>
-    </ul>
-    <p style="margin:8px 0 0">Education always prints first and Skills last; the rest print in the order they appear in your file.
-      Move Research or Publications up if you are aiming at graduate school or research roles, or Leadership and Projects up
-      if your jobs are all non-technical (cut the section's rows and insert them higher). Otherwise leave the order alone.</p>
-  </div>
 
-  <h2>3. Add your CSV here</h2>
+  <h3>c. Add your CSV here</h3>
   <label id="drop">
     <input type="file" id="file" accept=".csv,text/csv">
     <span class="btn">Choose your CSV file</span>
     <div class="hint">or drag it onto this box. Fix anything it flags in your CSV, save, and add it here again.</div>
-    <div id="loading">Loading the generator (about 10 MB, first visit only)…</div>
   </label>
-
-  <div id="result"></div>
-
-  <div id="save-box">
-    <h2>4. Save the PDF and submit</h2>
-    <div class="step">
-      <button class="btn" id="save" disabled>Save as PDF (add your CSV in step 3 first)</button>
-      <ol>
-        <li>Your resume opens in a new tab with the print window. Set Destination to <b>Save as PDF</b>
-            and leave everything else as it is.</li>
-        <li>Click <b>Save</b> and keep the suggested file name (<i>Lastname_Firstname.pdf</i>).</li>
-        <li>Open the PDF and check that it is <b>one page</b>.</li>
-        <li><b>Submit both files</b>, <i>Lastname_Firstname.pdf</i> and <i>Lastname_Firstname.csv</i>, by uploading
-            them with the <b>Dropbox link in the email</b> (no Dropbox account needed).</li>
-      </ol>
-    </div>
+  <div id="loading">Loading the generator (about 10 MB, first visit only)…</div>
   </div>
 </main>
 
-<div id="preview-wrap"><div id="preview-scale"><iframe id="preview" title="Resume preview"></iframe></div></div>
+<aside id="output">
+  <div class="inner">
+    <h2>2. Check, save the PDF, and submit</h2>
+    <div id="result"></div>
+    <div class="step">
+      <div class="save-row">
+        <button class="btn" id="save" disabled>Save as PDF</button>
+        <button class="btn secondary only-form" id="download-csv" type="button">Download your CSV</button>
+      </div>
+      <div id="after-save" aria-live="polite"></div>
+      <ol>
+        <li class="only-form"><b>Download your CSV</b> and keep it. To make changes later, open it here with
+            <b>Open a CSV</b>.</li>
+        <li><b>Save as PDF</b> opens your resume in a new tab with the print window. Set Destination to <b>Save as PDF</b>
+            and leave everything else as it is. Keep the suggested file name (<i>Lastname_Firstname.pdf</i>).</li>
+        <li>Open the PDF and check that it is <b>one page</b>.</li>
+        <li><b>Submit both files</b>, <i>Lastname_Firstname.pdf</i> and <i>Lastname_Firstname.csv</i>, by uploading
+            them with the <b>Dropbox link in the email</b> (no Dropbox account needed).</li>
+        <li class="only-form"><b>On a shared or lab computer?</b> After you submit, <button type="button" class="linkish"
+            data-clear-form>clear the form</button> so the next person can't see your information.</li>
+      </ol>
+    </div>
+  </div>
+  <div id="preview-wrap"><div id="preview-scale"><iframe id="preview" title="Resume preview"></iframe></div></div>
+</aside>
+</div>
 
 <footer>
   Prefer the command line? The same generator is a Python script:
@@ -246,20 +362,40 @@ var GLUE = [
   'import sys, json',
   'sys.path.insert(0, "' + APP + '")',
   'import generate_resume_from_csv as g',
-  'def run(path):',
+  // preview=True builds the HTML even when required fields are still missing.
+  'def run(path, preview=False):',
   '    try:',
   '        data = g.parse_csv(path)',
   '    except Exception as e:',
   '        return json.dumps({"fatal": "ERROR reading CSV: " + str(e)})',
   '    errors, warnings = g.validate(data)',
-  '    out = {"errors": errors, "warnings": warnings}',
-  '    if not errors:',
+  '    out = {"errors": errors, "warnings": warnings, "pdf_name": g.pdf_filename(data.contact)}',
+  '    if not errors or preview:',
   '        try:',
   '            out["html"] = g.HTMLGenerator(data).generate()',
   '        except (g.MissingFontError, g.MissingKatexError) as e:',
   '            out["fatal"] = "ERROR: " + str(e)',
-  '        out["pdf_name"] = g.pdf_filename(data.contact)',
   '    return json.dumps(out)',
+  // A CSV as plain data, for opening it in the form.
+  'def load(path):',
+  '    try:',
+  '        data = g.parse_csv(path)',
+  '    except Exception as e:',
+  '        return json.dumps({"fatal": str(e)})',
+  '    secs = {n.upper(): [dict(f) for _, f in g.sorted_entries(getattr(data, n))] for n in g.LIST_SECTIONS}',
+  '    return json.dumps({"contact": data.contact, "skills": data.skills, "order": data.order,',
+  '                       "sections": secs, "problems": data.problems})',
+  // The form\'s field names must be ones the generator accepts.
+  'def check_form(spec):',
+  '    bad = []',
+  '    for sec, fields in json.loads(spec).items():',
+  '        for i, f in enumerate(fields):',
+  '            c = g.canonical_field(f)',
+  '            if c is None or c not in g.SECTION_FIELDS[sec]:',
+  '                bad.append(sec + " / " + f)',
+  '            elif i == 0 and sec in g.LEADING_FIELD and c != g.LEADING_FIELD[sec]:',
+  '                bad.append(sec + " / " + f + " (must start each block)")',
+  '    return json.dumps(bad)',
 ].join('\n');
 
 function fetchOk(url, how) {
@@ -269,9 +405,9 @@ function fetchOk(url, how) {
   });
 }
 
-var pyFS = null;
+var pyFS = null, py = null;
 var ready = (async function () {
-  var py = await loadPyodide({ indexURL: 'web/pyodide/' });
+  py = await loadPyodide({ indexURL: 'web/pyodide/' });
   var FS = pyFS = py.FS;
   FS.mkdirTree(APP + '/fonts');
   FS.mkdirTree(APP + '/katex/fonts');
@@ -296,23 +432,34 @@ var ready = (async function () {
   });
   await Promise.all(jobs);
   py.runPython(GLUE);
-  return py.globals.get('run');
+  return { run: py.globals.get('run'), load: py.globals.get('load'), checkForm: py.globals.get('check_form') };
 })();
 
-ready.then(function () {
-  document.getElementById('loading').textContent = 'Ready.';
+var loaded = false;
+ready.then(function (api) {
+  loaded = true;
+  document.getElementById('loading').textContent = '';
+  var bad = JSON.parse(api.checkForm(JSON.stringify(formSpec())));
+  if (bad.length) {
+    document.getElementById('import-status').innerHTML = '<div class="status bad"><strong class="head">' +
+      'The form and the generator disagree, so the form may lose some of what you type. Please report this ' +
+      'and use the spreadsheet for now.</strong>' + list(bad) + '</div>';
+  }
 }, function (e) {
-  document.getElementById('loading').innerHTML =
-    '<span style="color:var(--bad)">The generator could not load in this browser (' + esc(e.message) +
-    '). Try the latest Chrome or Edge, or use the Python script from the toolkit.</span>';
+  var msg = 'The generator could not load in this browser (' + esc(e.message) +
+    '). Try the latest Chrome or Edge, or use the Python script from the toolkit.';
+  document.getElementById('loading').innerHTML = '<span style="color:var(--bad)">' + msg + '</span>';
+  if (pageMode === 'form') show(msg, 'bad');
 });
 
 function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
-function list(items) {
-  return '<ul>' + items.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
+function list(items, fmt) {
+  return '<ul>' + items.map(function (x) { return '<li>' + (fmt ? fmt(x) : esc(x)) + '</li>'; }).join('') + '</ul>';
 }
+function store(k, v) { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) {} }
+function recall(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 
 var resultEl = document.getElementById('result');
 function setSave(on, label) {
@@ -322,10 +469,55 @@ function setSave(on, label) {
 }
 var wrap = document.getElementById('preview-wrap');
 var frame = document.getElementById('preview');
-var current = null;   // {warnings, pdfName, csvName}
+var current = null;   // the result being shown: {mode, warnings, errors, pdfName, csvName, extra, html}
+var lastPdfName = null;
 
 function show(html, cls) {
   resultEl.innerHTML = '<div class="status ' + (cls || '') + '">' + html + '</div>';
+}
+
+// Run the generator on CSV bytes. mode 'csv': a file the student added; 'form': built from the form.
+async function check(bytes, name, mode) {
+  var api;
+  try { api = await ready; } catch (e) { show('<strong class="head">The generator did not load.</strong>' + esc(e.message), 'bad'); return; }
+  if (mode !== pageMode) return;
+  var path = '/tmp/' + name;
+  pyFS.writeFile(path, bytes);
+  var out;
+  try { out = JSON.parse(api.run(path, mode === 'form')); }
+  catch (e) { out = { fatal: 'The generator failed: ' + e.message }; }
+  try { pyFS.unlink(path); } catch (e) {}
+  if (mode !== pageMode) return;
+  if (out.pdf_name) lastPdfName = out.pdf_name;
+  if (mode === 'form') markFields(out);
+
+  if (out.fatal) {
+    current = null;
+    wrap.style.display = 'none';
+    show('<strong class="head">' + esc(out.fatal) + '</strong>', 'bad');
+    setSave(false, 'Save as PDF (fix the problem above first)');
+    return;
+  }
+  var fmt = mode === 'form' ? formMsg : null;
+  var warnings = out.warnings.concat(mode === 'form' ? formProblems : []);
+  var parts = [];
+  if (warnings.length) parts.push('<b>WARNINGS (' + warnings.length + '):</b>' + list(warnings, fmt));
+  if (out.errors.length && mode === 'csv') {
+    current = null;
+    wrap.style.display = 'none';
+    show('<strong class="head">ERRORS (resume not generated):</strong>' + list(out.errors) + parts.join('') + switchOffer(), 'bad');
+    setSave(false, 'Save as PDF (fix the problems above first)');
+    return;
+  }
+  if (out.errors.length) {
+    parts.unshift('<b>Still needed:</b>' + list(out.errors, fmt));
+  }
+  current = { mode: mode, warnings: warnings, errors: out.errors, pdfName: out.pdf_name, csvName: name,
+              extra: parts.join(''), html: out.html };
+  if (mode === 'csv') show('<strong class="head">Checking page length…</strong>' + current.extra);
+  frame.onload = afterRender;
+  wrap.style.display = 'block';
+  frame.srcdoc = out.html;
 }
 
 async function handle(file) {
@@ -334,34 +526,10 @@ async function handle(file) {
   setSave(false, 'Save as PDF (checking your CSV…)');
   wrap.style.display = 'none';
   show('<strong class="head">Reading ' + esc(file.name) + '…</strong>' +
-       (document.getElementById('loading').textContent === 'Ready.' ? '' : 'Still loading the generator, one moment.'));
-  var run;
-  try { run = await ready; } catch (e) { show('<strong class="head">The generator did not load.</strong>' + esc(e.message), 'bad'); return; }
-
-  var name = file.name.replace(/[\/\\]/g, '_');
-  var path = '/tmp/' + name;
+       (document.getElementById('loading').textContent === '' ? '' : 'Still loading the generator, one moment.'));
   var bytes = new Uint8Array(await file.arrayBuffer());
-  pyFS.writeFile(path, bytes);
-  var out = JSON.parse(run(path));
-  try { pyFS.unlink(path); } catch (e) {}
-
-  if (out.fatal) {
-    show('<strong class="head">' + esc(out.fatal) + '</strong>', 'bad');
-    setSave(false, 'Save as PDF (fix the problem above first)');
-    return;
-  }
-  var parts = [];
-  if (out.warnings.length) parts.push('<b>WARNINGS (' + out.warnings.length + '):</b>' + list(out.warnings));
-  if (out.errors.length) {
-    show('<strong class="head">ERRORS (resume not generated):</strong>' + list(out.errors) + parts.join(''), 'bad');
-    setSave(false, 'Save as PDF (fix the problems above first)');
-    return;
-  }
-  current = { warnings: out.warnings, pdfName: out.pdf_name, csvName: name, extra: parts.join(''), html: out.html };
-  show('<strong class="head">Checking page length…</strong>' + current.extra);
-  frame.onload = afterRender;
-  wrap.style.display = 'block';
-  frame.srcdoc = out.html;
+  lastCsv = { bytes: bytes, name: file.name };
+  await check(bytes, file.name.replace(/[\/\\]/g, '_'), 'csv');
 }
 
 // Same measurement as the script's own page check.
@@ -380,31 +548,44 @@ function overflowInches(doc) {
 }
 
 function afterRender() {
+  var c = current;
+  if (!c) return;
   var doc = frame.contentDocument;
   // The generated page hides its guide line when not opened as a local file; show it here.
   var pe = doc.querySelector('.page-end');
   if (pe) pe.style.display = '';
   var done = (doc.fonts && doc.fonts.ready) ? doc.fonts.ready : Promise.resolve();
   done.then(function () {
+    if (c !== current) return;
     fit();
     var over = overflowInches(doc);
-    var c = current, msgs = [];
+    var form = c.mode === 'form', msgs = [];
     if (over > 2 / 96) {
       msgs.push('<b>The resume runs about ' + (Math.round(over * 100) / 100) + ' inches past one page.</b> ' +
-                'Resumes must be exactly one page. Shorten or remove bullets in your CSV, save it, and add it here again. ' +
+                'Resumes must be exactly one page. ' +
+                (form ? 'Shorten or remove bullets until it fits; the preview updates as you type. '
+                      : 'Shorten or remove bullets in your CSV, save it, and add it here again. ') +
                 'In the preview below, everything under the red dashed line will be cut off.');
     }
     if (c.warnings.length) {
-      msgs.push('Fix the ' + c.warnings.length + ' warning(s) above in your CSV, save it, and add it here again.');
+      msgs.push(form ? 'Fix the ' + c.warnings.length + ' warning(s) above in the form. Click one to jump to it.'
+                     : 'Fix the ' + c.warnings.length + ' warning(s) above in your CSV, save it, and add it here again.');
     }
-    if (msgs.length) {
+    if (c.errors.length) {
+      show('<strong class="head">Not ready yet. The preview below shows what you have so far.</strong>' + c.extra +
+           msgs.map(function (m) { return '<p style="margin:8px 0 0">' + m + '</p>'; }).join(''));
+      setSave(false, 'Save as PDF (finish the form first)');
+    } else if (msgs.length) {
       show('<strong class="head">NOT DONE: do not submit yet.</strong>' + c.extra +
-           msgs.map(function (m) { return '<p style="margin:8px 0 0">' + m + '</p>'; }).join(''), 'bad');
+           msgs.map(function (m) { return '<p style="margin:8px 0 0">' + m + '</p>'; }).join('') +
+           (form ? '' : switchOffer()), 'bad');
       setSave(false, 'Save as PDF (fix the problems above first)');
     } else {
       var rename = '';
       var want = c.pdfName.replace(/\.pdf$/i, '') + '.csv';
-      if (c.csvName !== want) {
+      if (form) {
+        rename = '<p style="margin:8px 0 0">Download your CSV and save the PDF below, then submit both.</p>';
+      } else if (c.csvName !== want) {
         rename = '<p style="margin:8px 0 0">Before you submit, rename your CSV to <code>' + esc(want) +
                  '</code> so it sorts next to the PDF.</p>';
       }
@@ -438,8 +619,31 @@ document.getElementById('save').addEventListener('click', function () {
   if (!current || !CHROMIUM) return;
   var html = current.html.replace(/<\/body>(?![\s\S]*<\/body>)/, PRINT_ON_LOAD);
   var url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+  saved.pdf = current.pdfName;
+  showSaved();
   if (!window.open(url, '_blank')) location.href = url;
 });
+
+// What the student has saved so far, so the end of the page says what is done and what is next.
+var saved = { pdf: null, csv: null };
+function showSaved() {
+  var el = document.getElementById('after-save'), form = pageMode === 'form', items = [];
+  if (!saved.pdf && !saved.csv) { el.innerHTML = ''; return; }
+  items.push(saved.pdf
+    ? '<span class="tick">&#10003; PDF:</span> when you click <b>Save</b> in the print window, it is saved as <b>' +
+      esc(saved.pdf) + '</b>, usually in your <b>Downloads</b> folder. Open it to check it is one page.'
+    : '<span class="todo">&#9744; PDF:</span> not saved yet. Click <b>Save as PDF</b>.');
+  if (form) {
+    items.push(saved.csv
+      ? '<span class="tick">&#10003; CSV:</span> downloaded as <b>' + esc(saved.csv) + '</b>, usually in your <b>Downloads</b> folder.'
+      : '<span class="todo">&#9744; CSV:</span> not downloaded yet. Click <b>Download your CSV</b>.');
+  }
+  if (saved.pdf && (saved.csv || !form)) {
+    items.push('<b>Next:</b> submit both files with the <b>Dropbox link in the email</b>.' +
+      (form ? ' On a shared or lab computer, then <button type="button" class="linkish" data-clear-form>clear the form</button>.' : ''));
+  }
+  el.innerHTML = '<ul>' + items.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>';
+}
 
 var input = document.getElementById('file');
 input.addEventListener('change', function () {
@@ -458,6 +662,507 @@ drop.addEventListener('drop', function (e) {
   e.preventDefault();
   handle(e.dataTransfer.files[0]);
 });
+
+// =========================================================================== //
+// The form. It writes the same Section,Field,Value CSV as the template, using
+// the template's own field names, and runs it through the same generator.
+// =========================================================================== //
+
+var CONTACT_FIELDS = [
+  { f: 'Name', label: 'Full name', ph: 'Areeba Ikram', req: true, ac: 'name' },
+  { f: 'Last Name', label: 'Last name, only if it is more than one word', ph: 'Van Der Berg',
+    hint: 'Names your PDF correctly (Van-Der-Berg_Mary.pdf). Otherwise leave it blank.' },
+  { f: 'Phone', label: 'Phone', ph: '212-555-1234', req: true, ac: 'tel' },
+  { f: 'Email', label: 'Email', ph: 'first.last@baruchmail.cuny.edu', req: true, ac: 'email' },
+  { f: 'LinkedIn', label: 'LinkedIn (optional)', ph: 'linkedin.com/in/your-profile' },
+  { f: 'GitHub', label: 'GitHub (optional)', ph: 'github.com/your-username' },
+  { f: 'Website', label: 'Website (optional)', ph: 'your-site.com', wide: true,
+    hint: 'To show shorter text: [Portfolio](your-site.com/long/path)' },
+];
+var SKILLS_FIELDS = [
+  { f: 'Skills', label: 'Technical skills', ph: 'Python, Java, SQL, React, Git, AWS', wide: true },
+  { f: 'Certifications', label: 'Certifications (optional)', ph: 'AWS Certified Cloud Practitioner', wide: true },
+  { f: 'Languages', label: 'Spoken languages (optional)', ph: 'Spanish (fluent), Mandarin (conversational)', wide: true },
+  { f: 'Interests', label: 'Interests', wide: true,
+    ph: 'Russian literature (Dostoevsky, Gogol); chess (club tournament director)', hint: 'Be specific.' },
+];
+var DATES = 'Jun. 2025 - Aug. 2025';
+// The first field of each section starts a new block, exactly as in the CSV.
+var SECTIONS = {
+  EDUCATION: { title: 'Education', item: 'school', a: 'a', bullets: false,
+    blurb: 'Most recent first. Add another school if you transferred.',
+    fields: [
+      { f: 'Institution', label: 'School', ph: 'CUNY Baruch College' },
+      { f: 'Location', label: 'Location', ph: 'New York, NY' },
+      { f: 'Degree', label: 'Degree', ph: 'Bachelor of Science in Computer Science' },
+      { f: 'Dates', label: 'Dates', ph: 'Expected May 2027' },
+      { f: 'Minor', label: 'Minor (optional)', ph: 'Mathematics' },
+      { f: 'GPA', label: 'GPA (only if 3.4 or higher)', ph: '3.70/4.0' },
+      { f: 'Coursework', label: 'Relevant coursework (optional)', wide: true,
+        ph: 'Data Structures, Operating Systems, Database Systems', hint: 'Only courses you are comfortable being asked about.' },
+      { f: 'Honors', label: 'Honors (optional)', wide: true, ph: "Dean's List (4 semesters), Macaulay Honors" },
+    ] },
+  AWARDS: { title: 'Awards', item: 'award', a: 'an', bullets: false,
+    blurb: 'Scholarships, prizes, and competitions. Leave this empty if none.',
+    fields: [
+      { f: 'Award', label: 'Award', ph: 'Presidential Scholarship' },
+      { f: 'Dates', label: 'Date', ph: 'Sep. 2024' },
+      { f: 'Details', label: 'One line of context (optional)', wide: true, ph: 'Awarded to the top 2% of the incoming class' },
+    ] },
+  EXPERIENCE: { title: 'Experience', item: 'job', a: 'a', bullets: true,
+    blurb: 'Jobs, internships, fellowships, tutoring, teaching or course assistant work. Include non-tech jobs. Most recent first.',
+    fields: [
+      { f: 'Company', label: 'Company', ph: 'Goldman Sachs' },
+      { f: 'Location', label: 'Location', ph: 'New York, NY' },
+      { f: 'Title', label: 'Job title', ph: 'Software Engineering Summer Analyst' },
+      { f: 'Dates', label: 'Dates', ph: DATES },
+    ] },
+  RESEARCH: { title: 'Research', item: 'research position', a: 'a', bullets: true,
+    blurb: 'Only research done with a professor, lab, or institute (for example an REU). A class project goes under Projects.',
+    fields: [
+      { f: 'Company', label: 'Lab, department, or institute', ph: 'Baruch College, Department of Mathematics' },
+      { f: 'Location', label: 'Location', ph: 'New York, NY' },
+      { f: 'Title', label: 'Your role', ph: 'Undergraduate Research Assistant' },
+      { f: 'Dates', label: 'Dates', ph: 'Jan. 2026 - May 2026' },
+    ] },
+  PUBLICATIONS: { title: 'Publications', item: 'publication', a: 'a', bullets: false,
+    blurb: 'A paper, poster, or talk you authored at a conference, journal, or symposium.',
+    fields: [
+      { f: 'Title', label: 'Title of the paper, poster, or talk', wide: true, ph: 'Link Prediction in Citation Graphs' },
+      { f: 'Venue', label: 'Conference, journal, or symposium', ph: 'CUNY Undergraduate Research Symposium' },
+      { f: 'Dates', label: 'Date', ph: 'Apr. 2026' },
+      { f: 'Authors', label: 'Authors (optional)', wide: true, ph: 'J. Smith, A. Lee', hint: 'As they appear on the paper.' },
+    ] },
+  LEADERSHIP: { title: 'Leadership', item: 'organization', a: 'an', bullets: true,
+    blurb: 'Clubs, executive boards, volunteering where you had a role. Prints under one heading with Projects.',
+    fields: [
+      { f: 'Organization', label: 'Organization', ph: 'Baruch Computer Science Club' },
+      { f: 'Location', label: 'Location', ph: 'New York, NY' },
+      { f: 'Title', label: 'Your role', ph: 'Vice President' },
+      { f: 'Dates', label: 'Dates', ph: 'Sep. 2025 - Present' },
+    ] },
+  PROJECTS: { title: 'Projects', item: 'project', a: 'a', bullets: true,
+    blurb: 'Personal, class, and hackathon projects. Prints under one heading with Leadership.',
+    fields: [
+      { f: 'Project', label: 'Project name', ph: 'NYC Subway Shortest Path' },
+      { f: 'Website', label: 'Link (optional)', ph: 'github.com/you/project',
+        hint: 'Shorter text: [GitHub repo](github.com/you/project)' },
+      { f: 'Technologies', label: 'Technologies', ph: 'Python, Flask, JavaScript' },
+      { f: 'Dates', label: 'Dates', ph: 'Mar. 2026' },
+    ] },
+};
+var MOVABLE = ['AWARDS', 'EXPERIENCE', 'RESEARCH', 'PUBLICATIONS', 'LEADERSHIP', 'PROJECTS'];
+// The generator's name for a field, where it differs from the template's.
+var CANON = { CONTACT: { 'Last Name': 'LastName' }, LEADERSHIP: { Organization: 'Company' },
+              PROJECTS: { Project: 'Company', Technologies: 'Title' } };
+
+function formSpec() {
+  var spec = { CONTACT: CONTACT_FIELDS.map(function (x) { return x.f; }),
+               SKILLS: SKILLS_FIELDS.map(function (x) { return x.f; }) };
+  Object.keys(SECTIONS).forEach(function (s) {
+    spec[s] = SECTIONS[s].fields.map(function (x) { return x.f; });
+    if (SECTIONS[s].bullets) spec[s].push('Bullet');
+  });
+  return spec;
+}
+
+function blankEntry(sec) { return { fields: {}, bullets: SECTIONS[sec].bullets ? ['', ''] : [] }; }
+function defaultState() {
+  var s = { contact: {}, skills: {}, order: MOVABLE.slice(), entries: {} };
+  Object.keys(SECTIONS).forEach(function (k) { s.entries[k] = []; });
+  s.entries.EDUCATION.push({ fields: { Institution: 'CUNY Baruch College', Location: 'New York, NY' }, bullets: [] });
+  s.entries.EXPERIENCE.push(blankEntry('EXPERIENCE'));
+  return s;
+}
+// Repair a saved draft so it always has every section, once each.
+function normalize(s) {
+  var d = defaultState();
+  s.contact = s.contact || {}; s.skills = s.skills || {}; s.entries = s.entries || {};
+  Object.keys(SECTIONS).forEach(function (k) {
+    s.entries[k] = (s.entries[k] || []).map(function (e) {
+      return { fields: e.fields || {}, bullets: Array.isArray(e.bullets) ? e.bullets : [] };
+    });
+  });
+  var order = (s.order || []).filter(function (k, i, a) { return MOVABLE.indexOf(k) >= 0 && a.indexOf(k) === i; });
+  s.order = order.concat(d.order.filter(function (k) { return order.indexOf(k) < 0; }));
+  return s;
+}
+
+var DRAFT = 'resume-form-draft-v1';
+var state = (function () {
+  try { var s = JSON.parse(recall(DRAFT)); if (s && typeof s === 'object') return normalize(s); } catch (e) {}
+  return defaultState();
+})();
+function isPristine() { return JSON.stringify(state) === JSON.stringify(defaultState()); }
+
+function hasText(v) { return !!(v && String(v).trim()); }
+function entryHasContent(e) {
+  return Object.keys(e.fields).some(function (k) { return hasText(e.fields[k]); }) || e.bullets.some(hasText);
+}
+function entryTitle(sec, e, i) {
+  var S = SECTIONS[sec], lead = (e.fields[S.fields[0].f] || '').trim();
+  return S.item.charAt(0).toUpperCase() + S.item.slice(1) + ' ' + (i + 1) + (lead ? ': ' + lead : '');
+}
+function entryWarn(sec, e) {
+  var S = SECTIONS[sec];
+  return entryHasContent(e) && !hasText(e.fields[S.fields[0].f])
+    ? 'Fill in ' + S.fields[0].label + ', or this ' + S.item + ' is left off your resume.' : '';
+}
+
+var formEl = document.getElementById('form');
+
+function fieldHtml(key, x, val) {
+  var id = 'f-' + key.replace(/[^\w]+/g, '-');
+  return '<div class="fld' + (x.wide ? ' wide' : '') + '"><label for="' + id + '">' + esc(x.label) +
+    (x.req ? ' <span class="req" aria-hidden="true">*</span>' : '') + '</label>' +
+    '<input id="' + id + '" data-k="' + esc(key) + '" type="text" value="' + esc(val || '') + '" placeholder="' +
+    esc(x.ph ? 'e.g. ' + x.ph : '') + '"' + (x.ac ? ' autocomplete="' + x.ac + '"' : ' autocomplete="off"') + (x.req ? ' required' : '') + '>' +
+    (x.hint ? '<div class="hint">' + esc(x.hint) + '</div>' : '') + '</div>';
+}
+function icon(act, text, label, disabled) {
+  return '<button type="button" class="icon" data-act="' + esc(act) + '" aria-label="' + esc(label) + '" title="' +
+    esc(label) + '"' + (disabled ? ' disabled' : '') + '>' + text + '</button>';
+}
+
+function entryHtml(sec, e, i, n) {
+  var S = SECTIONS[sec], p = sec + '|' + i, noun = S.item;
+  var h = '<div class="entry" data-entry="' + p + '"><div class="entry-head"><span class="entry-title">' +
+    esc(entryTitle(sec, e, i)) + '</span><span class="tools">' +
+    icon('up|' + p, '&uarr;', 'Move this ' + noun + ' up', i === 0) +
+    icon('down|' + p, '&darr;', 'Move this ' + noun + ' down', i === n - 1) +
+    icon('del|' + p, 'Remove', 'Remove this ' + noun) + '</span></div><div class="grid">';
+  S.fields.forEach(function (x) { h += fieldHtml('e|' + p + '|' + x.f, x, e.fields[x.f]); });
+  h += '</div>';
+  if (S.bullets) {
+    h += '<div class="bullets"><div class="lbl">Bullet points</div>';
+    e.bullets.forEach(function (b, j) {
+      h += '<div class="bullet"><textarea data-k="b|' + p + '|' + j + '" rows="2" aria-label="Bullet ' + (j + 1) +
+        '" placeholder="Did X by doing Y, which resulted in Z">' + esc(b) + '</textarea>' +
+        icon('delb|' + p + '|' + j, '&times;', 'Remove bullet ' + (j + 1)) + '</div>';
+    });
+    h += '<button type="button" class="add small" data-act="addb|' + p + '">+ Add a bullet</button></div>';
+  }
+  return h + '<div class="entry-warn">' + esc(entryWarn(sec, e)) + '</div></div>';
+}
+
+function sectionHtml(sec, pos) {
+  var S = SECTIONS[sec], items = state.entries[sec];
+  var h = '<section class="card"><div class="card-head"><h3>' + S.title + '</h3>';
+  if (pos >= 0) {
+    h += '<span class="tools">' +
+      icon('secup|' + sec, '&uarr; Move up', 'Move the ' + S.title + ' section up', pos === 0) +
+      icon('secdown|' + sec, '&darr; Move down', 'Move the ' + S.title + ' section down', pos === MOVABLE.length - 1) +
+      '</span>';
+  }
+  h += '</div><p class="blurb">' + esc(S.blurb) + '</p>';
+  items.forEach(function (e, i) { h += entryHtml(sec, e, i, items.length); });
+  return h + '<button type="button" class="add" data-act="add|' + sec + '">+ Add ' +
+    (items.length ? 'another ' : S.a + ' ') + S.item + '</button></section>';
+}
+
+function render() {
+  var h = '<section class="card"><div class="card-head"><h3>Contact</h3></div>' +
+    '<p class="blurb">Fields marked <span class="req">*</span> are required.</p><div class="grid">';
+  CONTACT_FIELDS.forEach(function (x) { h += fieldHtml('c|' + x.f, x, state.contact[x.f]); });
+  h += '</div></section>' + sectionHtml('EDUCATION', -1);
+  state.order.forEach(function (sec, i) { h += sectionHtml(sec, i); });
+  h += '<section class="card"><div class="card-head"><h3>Skills, Interests, and Certifications</h3></div><div class="grid">';
+  SKILLS_FIELDS.forEach(function (x) { h += fieldHtml('s|' + x.f, x, state.skills[x.f]); });
+  formEl.innerHTML = h + '</div></section>';
+}
+
+function focusKey(key) {
+  var el = formEl.querySelector('[data-k="' + key.replace(/["\\]/g, '\\$&') + '"]');
+  if (el) { el.scrollIntoView({ block: 'center' }); el.focus({ preventScroll: true }); }
+  return el;
+}
+
+formEl.addEventListener('input', function (ev) {
+  var k = ev.target.getAttribute('data-k');
+  if (!k) return;
+  var p = k.split('|'), v = ev.target.value;
+  if (p[0] === 'c') state.contact[p[1]] = v;
+  else if (p[0] === 's') state.skills[p[1]] = v;
+  else {
+    var e = state.entries[p[1]][+p[2]];
+    if (p[0] === 'e') e.fields[p[3]] = v; else e.bullets[+p[3]] = v;
+    var box = ev.target.closest('.entry');
+    box.querySelector('.entry-title').textContent = entryTitle(p[1], e, +p[2]);
+    box.querySelector('.entry-warn').textContent = entryWarn(p[1], e);
+  }
+  ev.target.classList.remove('flag');
+  changed();
+});
+
+formEl.addEventListener('click', function (ev) {
+  var b = ev.target.closest('[data-act]');
+  if (!b) return;
+  var p = b.getAttribute('data-act').split('|'), act = p[0], sec = p[1], i = +p[2], j = +p[3];
+  var items = state.entries[sec], focus = null;
+  if (act === 'add') {
+    items.push(blankEntry(sec));
+    focus = 'e|' + sec + '|' + (items.length - 1) + '|' + SECTIONS[sec].fields[0].f;
+  } else if (act === 'del') {
+    if (entryHasContent(items[i]) && !confirm('Remove "' + entryTitle(sec, items[i], i) + '" and everything in it?')) return;
+    items.splice(i, 1);
+  } else if (act === 'up' || act === 'down') {
+    var t = act === 'up' ? i - 1 : i + 1;
+    items.splice(t, 0, items.splice(i, 1)[0]);
+  } else if (act === 'addb') {
+    items[i].bullets.push('');
+    focus = 'b|' + sec + '|' + i + '|' + (items[i].bullets.length - 1);
+  } else if (act === 'delb') {
+    items[i].bullets.splice(j, 1);
+  } else if (act === 'secup' || act === 'secdown') {
+    var o = state.order, at = o.indexOf(sec), to = act === 'secup' ? at - 1 : at + 1;
+    o.splice(to, 0, o.splice(at, 1)[0]);
+  }
+  var y = b.getBoundingClientRect().top;
+  render();
+  changed();
+  if (focus) focusKey(focus);
+  else if (act === 'secup' || act === 'secdown') {
+    // Keep the moved section under the pointer.
+    var nb = formEl.querySelector('[data-act="' + act + '|' + sec + '"]') ||
+             formEl.querySelector('[data-act="' + (act === 'secup' ? 'secdown' : 'secup') + '|' + sec + '"]');
+    if (nb) window.scrollBy(0, nb.getBoundingClientRect().top - y);
+  }
+});
+
+// Enter in a bullet starts the next bullet, like a word processor.
+formEl.addEventListener('keydown', function (ev) {
+  var k = ev.target.getAttribute && ev.target.getAttribute('data-k');
+  if (ev.key !== 'Enter' || ev.shiftKey || ev.isComposing || !k || k.charAt(0) !== 'b') return;
+  ev.preventDefault();
+  var p = k.split('|'), e = state.entries[p[1]][+p[2]], j = +p[3];
+  e.bullets.splice(j + 1, 0, '');
+  render();
+  changed();
+  focusKey('b|' + p[1] + '|' + p[2] + '|' + (j + 1));
+});
+
+// ---- Form -> CSV ----
+
+var lineKey = [];      // CSV line number -> the form field it came from
+var formProblems = []; // things the form left out, shown with the generator's warnings
+
+function csvCell(v) { return /[",\r\n]/.test(v) || /^\s|\s$/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+
+function buildCsv() {
+  var rows = [['Section', 'Field', 'Value']];
+  lineKey = [null, null];
+  formProblems = [];
+  function add(sec, f, v, key) {
+    v = String(v || '').replace(/\s*[\r\n]+\s*/g, ' ').trim();
+    if (!v) return;
+    rows.push([sec, f, v]);
+    lineKey[rows.length] = key;
+  }
+  CONTACT_FIELDS.forEach(function (x) { add('CONTACT', x.f, state.contact[x.f], 'c|' + x.f); });
+  ['EDUCATION'].concat(state.order).forEach(function (sec) {
+    var S = SECTIONS[sec];
+    state.entries[sec].forEach(function (e, i) {
+      if (!entryHasContent(e)) return;
+      var w = entryWarn(sec, e);
+      if (w) { formProblems.push({ key: 'e|' + sec + '|' + i + '|' + S.fields[0].f, text: w }); return; }
+      S.fields.forEach(function (x) { add(sec, x.f, e.fields[x.f], 'e|' + sec + '|' + i + '|' + x.f); });
+      e.bullets.forEach(function (b, j) { add(sec, 'Bullet', b, 'b|' + sec + '|' + i + '|' + j); });
+    });
+  });
+  SKILLS_FIELDS.forEach(function (x) { add('SKILLS', x.f, state.skills[x.f], 's|' + x.f); });
+  return '\uFEFF' + rows.map(function (r) { return r.map(csvCell).join(','); }).join('\r\n') + '\r\n';
+}
+
+// Where a form field is, in words: "Experience > Goldman Sachs > Dates".
+function placeName(key) {
+  var p = key.split('|');
+  if (p[0] === 'c') return 'Contact > ' + p[1];
+  if (p[0] === 's') return 'Skills > ' + p[1];
+  var S = SECTIONS[p[1]], e = state.entries[p[1]][+p[2]];
+  if (!e) return S.title;
+  var where = S.title + ' > ' + entryTitle(p[1], e, +p[2]);
+  if (p[0] === 'b') return where + ' > bullet ' + (+p[3] + 1);
+  var x = S.fields.filter(function (f) { return f.f === p[3]; })[0];
+  return where + ' > ' + (x ? x.label : p[3]);
+}
+// A generator message ("Line 7: ...") as a link to the form field it is about.
+function formMsg(m) {
+  if (typeof m === 'object') {
+    return '<button type="button" class="linkish" data-goto="' + esc(m.key) + '">' + esc(placeName(m.key)) + '</button>: ' + esc(m.text);
+  }
+  var mm = /^Line (\d+): /.exec(m), key = mm && lineKey[+mm[1]];
+  if (!key) return esc(m);
+  return '<button type="button" class="linkish" data-goto="' + esc(key) + '">' + esc(placeName(key)) + '</button>: ' +
+    esc(m.slice(mm[0].length));
+}
+function markFields(out) {
+  formEl.querySelectorAll('.flag').forEach(function (el) { el.classList.remove('flag'); });
+  (out.warnings || []).concat(out.errors || []).forEach(function (m) {
+    var mm = /^Line (\d+): /.exec(m), key = mm && lineKey[+mm[1]];
+    var el = key && formEl.querySelector('[data-k="' + key.replace(/["\\]/g, '\\$&') + '"]');
+    if (el) el.classList.add('flag');
+  });
+}
+resultEl.addEventListener('click', function (ev) {
+  var b = ev.target.closest('[data-goto]');
+  if (b) focusKey(b.getAttribute('data-goto'));
+  var o = ev.target.closest('[data-open-in-form]');
+  if (o && lastCsv) importCsv(lastCsv.bytes, lastCsv.name);
+});
+
+var timer = null, saveTimer = null;
+function changed() {
+  if (saved.pdf || saved.csv) { saved = { pdf: null, csv: null }; showSaved(); }
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function () { store(DRAFT, JSON.stringify(state)); }, 300);
+  schedulePreview(400);
+}
+function schedulePreview(ms) {
+  clearTimeout(timer);
+  timer = setTimeout(function () {
+    if (pageMode !== 'form') return;
+    check(new TextEncoder().encode(buildCsv()), 'form.csv', 'form');
+  }, ms);
+}
+
+function csvName() { return (lastPdfName || 'Lastname_Firstname.pdf').replace(/\.pdf$/i, '') + '.csv'; }
+document.getElementById('download-csv').addEventListener('click', function () {
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([buildCsv()], { type: 'text/csv;charset=utf-8' }));
+  a.download = csvName();
+  saved.csv = a.download;
+  showSaved();
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+});
+
+function clearForm(atEnd) {
+  if (!isPristine() && !confirm('Clear everything in the form? Download your CSV first if you want to keep it.')) return;
+  state = defaultState();
+  document.getElementById('import-status').innerHTML = '';
+  render();
+  changed();
+  clearTimeout(saveTimer);
+  store(DRAFT, null);
+  if (atEnd) {
+    // Hide their resume too, until someone types again.
+    clearTimeout(timer);
+    current = null;
+    wrap.style.display = 'none';
+    frame.srcdoc = '';
+    setSave(false, 'Save as PDF (fill in the form first)');
+    show('<strong class="head">The form is cleared.</strong>Nothing of yours is left in this browser. ' +
+         'Your PDF and CSV are still wherever you saved them.', 'ok');
+  } else window.scrollTo(0, formEl.getBoundingClientRect().top + window.scrollY - 80);
+}
+document.getElementById('clear-form').addEventListener('click', function () { clearForm(false); });
+document.getElementById('output').addEventListener('click', function (ev) {
+  if (ev.target.closest('[data-clear-form]')) clearForm(true);
+});
+
+// ---- CSV -> form ----
+
+var lastCsv = null;   // the last CSV added in spreadsheet mode, to offer opening it in the form
+function switchOffer() {
+  return '<p style="margin:10px 0 0">Easier to fix in a form? <button type="button" class="linkish" data-open-in-form>' +
+    'Open this CSV in the form</button>.</p>';
+}
+
+function fromParsed(p) {
+  var s = defaultState(), left = [];
+  s.entries.EDUCATION = []; s.entries.EXPERIENCE = [];
+  function back(sec, canon) {
+    var m = CANON[sec] || {};
+    for (var k in m) if (m[k] === canon) return k;
+    return canon;
+  }
+  function take(sec, src, fields, dest) {
+    Object.keys(src).forEach(function (k) {
+      var f = back(sec, k);
+      if (fields.some(function (x) { return x.f === f; })) dest[f] = src[k];
+      else if (!/^Bullet\d+$/.test(k)) left.push(sec + ' / ' + k + ': ' + src[k]);
+    });
+  }
+  take('CONTACT', p.contact, CONTACT_FIELDS, s.contact);
+  take('SKILLS', p.skills, SKILLS_FIELDS, s.skills);
+  Object.keys(SECTIONS).forEach(function (sec) {
+    s.entries[sec] = (p.sections[sec] || []).map(function (src) {
+      var e = { fields: {}, bullets: [] };
+      take(sec, src, SECTIONS[sec].fields, e.fields);
+      Object.keys(src).filter(function (k) { return /^Bullet\d+$/.test(k); })
+        .sort(function (a, b) { return a.slice(6) - b.slice(6); })
+        .forEach(function (k) {
+          if (SECTIONS[sec].bullets) e.bullets.push(src[k]); else left.push(sec + ' / Bullet: ' + src[k]);
+        });
+      return e;
+    });
+  });
+  var seen = p.order.filter(function (k) { return MOVABLE.indexOf(k) >= 0; });
+  s.order = seen.concat(MOVABLE.filter(function (k) { return seen.indexOf(k) < 0; }));
+  return { state: s, left: left };
+}
+
+async function importCsv(bytes, name) {
+  var st = document.getElementById('import-status');
+  if (pageMode !== 'form') setMode('form');
+  st.innerHTML = '<div class="status">Opening ' + esc(name) + '…</div>';
+  var api;
+  try { api = await ready; } catch (e) { st.innerHTML = '<div class="status bad">The generator did not load.</div>'; return; }
+  var path = '/tmp/import.csv';
+  pyFS.writeFile(path, bytes);
+  var p;
+  try { p = JSON.parse(api.load(path)); } catch (e) { p = { fatal: e.message }; }
+  try { pyFS.unlink(path); } catch (e) {}
+  if (p.fatal) {
+    st.innerHTML = '<div class="status bad"><strong class="head">Could not open ' + esc(name) + '.</strong>' + esc(p.fatal) + '</div>';
+    return;
+  }
+  if (!isPristine() && !confirm('Replace what is in the form with ' + name + '?')) { st.innerHTML = ''; return; }
+  var r = fromParsed(p);
+  state = r.state;
+  render();
+  changed();
+  var notes = p.problems.concat(r.left.map(function (x) { return 'Not in the form, so left out: ' + x; }));
+  st.innerHTML = '<div class="status ' + (notes.length ? 'bad' : 'ok') + '"><strong class="head">Opened ' + esc(name) +
+    '.</strong>' + (notes.length ? 'Some rows could not be brought into the form:' + list(notes) : 'Keep editing below.') + '</div>';
+}
+document.getElementById('form-file').addEventListener('change', async function () {
+  var f = this.files[0];
+  this.value = '';
+  if (f) importCsv(new Uint8Array(await f.arrayBuffer()), f.name);
+});
+
+// ---- Choosing form or spreadsheet ----
+
+var pageMode = null;
+function setMode(m) {
+  if (m === pageMode) return;
+  pageMode = m;
+  document.body.classList.toggle('form-mode', m === 'form');
+  document.body.classList.toggle('csv-mode', m === 'csv');
+  document.getElementById('mode-form').setAttribute('aria-pressed', m === 'form');
+  document.getElementById('mode-csv').setAttribute('aria-pressed', m === 'csv');
+  store('resume-mode', m);
+  current = null;
+  resultEl.innerHTML = '';
+  wrap.style.display = 'none';
+  saved = { pdf: null, csv: null };
+  showSaved();
+  if (m === 'form') {
+    setSave(false, 'Save as PDF (fill in the form first)');
+    if (!loaded) show('<strong class="head">Loading the generator (about 10 MB, first visit only)…</strong>' +
+                      'Start filling in the form; your preview appears here.');
+    schedulePreview(0);
+  } else {
+    setSave(false, 'Save as PDF (add your CSV first)');
+  }
+}
+document.getElementById('mode-form').addEventListener('click', function () { setMode('form'); });
+document.getElementById('mode-csv').addEventListener('click', function () { setMode('csv'); });
+
+render();
+setMode(recall('resume-mode') === 'csv' ? 'csv' : 'form');
 </script>
 </body>
 </html>

@@ -1,10 +1,10 @@
 # Baruch CS Resume Book
 
-Fill in a spreadsheet, get a one-page PDF in the Baruch College CS Resume Book format.
+Fill in a form (or a spreadsheet), get a one-page PDF in the Baruch College CS Resume Book format.
 
 ## Students
 
-**Use the web version: [areebaikram.github.io/baruch-cs-resume-book](https://areebaikram.github.io/baruch-cs-resume-book/).** It has everything you need, with nothing to install. Your file stays on your computer.
+**Use the web version: [areebaikram.github.io/baruch-cs-resume-book](https://areebaikram.github.io/baruch-cs-resume-book/).** Fill in the form on the page, or upload a CSV made from the template. Either way you submit the PDF and the CSV, with nothing to install. Your information stays on your computer.
 
 ### Prefer to run the script yourself?
 
