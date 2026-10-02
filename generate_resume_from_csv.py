@@ -33,7 +33,7 @@ import sys
 import webbrowser
 from collections import defaultdict
 
-VERSION = "0.4.0 (Fall 2026)"  # matches the GitHub release tag
+VERSION = "0.4.1 (Fall 2026)"  # matches the GitHub release tag
 
 # --------------------------------------------------------------------------- #
 # CSV reading
