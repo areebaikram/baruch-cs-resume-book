@@ -38,7 +38,8 @@
   .btn { display: inline-block; font: inherit; font-weight: 600; font-size: 1.05em; padding: 10px 22px;
          border: 0; border-radius: 6px; background: var(--navy); color: #fff; cursor: pointer; text-decoration: none; }
   .btn.secondary { background: #fff; color: var(--navy); border: 2px solid var(--navy); padding: 8px 18px; font-size: 1em; }
-  .btn:disabled { background: #9aa3ad; cursor: not-allowed; }
+  .btn:disabled { background: #e3e7eb; color: #4b5563; cursor: not-allowed; }
+  .btn.secondary:disabled { background: #fff; color: #6b7280; border-color: #c5ccd3; }
   #drop .hint { color: var(--muted); margin-top: 8px; font-size: 0.95em; }
   #loading { color: var(--muted); font-size: 0.95em; margin-top: 10px; }
 
@@ -66,11 +67,17 @@
   .card-head { display: flex; align-items: center; gap: 8px; }
   .card-head h3 { margin: 0; color: var(--navy); flex: 1; }
   .blurb { margin: 2px 0 8px; color: var(--muted); font-size: 0.92em; }
+  .card-head h4 { margin: 0; color: var(--navy); flex: 1; font-size: 1.05em; }
+  .card.group > .card { margin: 10px 0 0; background: #fcfdfe; }
+  .card.moved, .entry.moved { animation: moved 1.4s ease-out; }
+  @keyframes moved { from { box-shadow: 0 0 0 3px #7aa7d6; } to { box-shadow: 0 0 0 3px transparent; } }
   .tools { display: flex; gap: 4px; flex: none; }
-  .icon { font: inherit; font-size: 0.9em; min-width: 32px; padding: 3px 8px; border: 1px solid #b8c2cc;
+  .icon { font: inherit; font-size: 0.9em; min-width: 36px; min-height: 34px; padding: 3px 8px; border: 1px solid #8a96a3;
           border-radius: 5px; background: #fff; color: var(--navy); cursor: pointer; }
   .icon:hover:not(:disabled) { background: #eef3f9; }
-  .icon:disabled { color: #c3c9cf; border-color: #e3e6e9; cursor: default; }
+  .icon:disabled { color: #8a939c; border-color: #d0d5da; background: #f7f8f9; cursor: default; }
+  .icon.remove { margin-left: 10px; }
+  @media (max-width: 600px) { .icon { min-width: 44px; min-height: 42px; } }
   .entry { border-left: 3px solid #c9d5e2; background: var(--panel); padding: 10px 12px; margin: 10px 0; border-radius: 0 6px 6px 0; }
   .entry-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
   .entry-title { flex: 1; font-weight: 600; }
@@ -83,11 +90,11 @@
   .fld .hint { font-size: 0.82em; color: var(--muted); margin-top: 2px; }
   .req { color: var(--bad); }
   #form input, #form textarea { font: inherit; font-size: 0.97em; width: 100%; padding: 6px 8px;
-          border: 1px solid #b8c2cc; border-radius: 5px; background: #fff; color: var(--text); }
-  #form textarea { resize: vertical; min-height: 2.6em; line-height: 1.4; }
+          border: 1px solid #8a96a3; border-radius: 5px; background: #fff; color: var(--text); }
+  #form textarea { resize: none; overflow: hidden; min-height: 2.6em; line-height: 1.4; }
   #form input:focus, #form textarea:focus { outline: 2px solid #7aa7d6; outline-offset: 0; border-color: var(--navy); }
   #form .flag { border-color: var(--bad); background: #fff6f5; }
-  #form ::placeholder { color: #9aa1a8; }
+  #form ::placeholder { color: #6b7280; }
   .bullets { margin-top: 10px; }
   .bullet { display: flex; gap: 6px; align-items: flex-start; margin: 4px 0; }
   .bullet textarea { flex: 1; }
@@ -97,7 +104,14 @@
   .add.small { font-size: 0.9em; padding: 3px 10px; }
   .linkish { font: inherit; color: var(--navy); background: none; border: 0; padding: 0; cursor: pointer;
              text-decoration: underline; font-weight: 600; }
-  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+    .card { padding: 12px; }
+    .card.group > .card { border: 0; padding: 0; margin-top: 16px; background: none; }
+    .entry { padding: 10px; }
+    .entry-head { flex-wrap: wrap; }
+    .entry-title { flex-basis: 100%; }
+  }
 
   /* ---- Output: status, save, preview ---- */
   #output .inner { max-width: 860px; margin: 0 auto; padding: 0 16px 8px; }
@@ -107,7 +121,31 @@
   #after-save li { margin: 4px 0; }
   .tick { color: var(--ok); font-weight: 700; }
   .todo { color: var(--muted); font-weight: 700; }
-  .save-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .save-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 4px; }
+  #output .top { padding-bottom: 10px; }
+  #how { background: var(--panel); padding: 10px 16px; border-left: 4px solid var(--navy); }
+  #how ol { margin-top: 8px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* Phones and tablets: a status bar at the bottom while the preview is out of sight. */
+  #mini { display: none; position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: #fff;
+          border-top: 3px solid var(--navy); box-shadow: 0 -2px 10px rgba(0,0,0,0.12);
+          padding: 8px 16px; align-items: center; gap: 12px; }
+  #mini.show { display: flex; }
+  #mini-txt { flex: 1; font-weight: 600; }
+  #mini.ok #mini-txt { color: var(--ok); } #mini.bad #mini-txt { color: var(--bad); }
+  #mini .btn { padding: 6px 14px; white-space: nowrap; }
+  body.mini-on footer { padding-bottom: 96px; }
+  #toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 18px; z-index: 11; background: #1f2933;
+           color: #fff; padding: 10px 16px; border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
+  #toast .linkish { color: #fff; margin-left: 10px; }
+  @media (max-width: 1279px) {
+    #toast { left: 0; right: 0; bottom: 0; transform: none; border-radius: 0; display: flex; align-items: center; }
+    #toast[hidden] { display: none; }
+    #toast-txt { flex: 1; }
+    body.mini-on #toast { bottom: var(--mini-h, 60px); }
+  }
+  @media (min-width: 1280px) { body.form-mode #toast { left: 25%; } }
   #preview-wrap { display: none; background: #e9e9e9; border-top: 1px solid var(--line); overflow: hidden; }
   #preview-scale { transform-origin: top left; margin: 0 auto; }
   #preview { display: block; border: 0; width: 864px; background: #e9e9e9; }
@@ -118,6 +156,12 @@
     body.form-mode main { max-width: 780px; margin: 0 0 0 auto; width: 100%; }
     body.form-mode #output { position: sticky; top: 0; height: 100vh; overflow-y: auto;
                              border-left: 1px solid var(--line); background: #fafafa; }
+    /* Keep the status and buttons in view while scrolling the preview. */
+    body.form-mode #output .top { position: sticky; top: 0; z-index: 2; background: #fafafa;
+                                  border-bottom: 1px solid var(--line); max-width: none; }
+    body.form-mode #output .inner { padding-left: 24px; padding-right: 24px; }
+    body.form-mode #output h2 { margin-top: 18px; }
+    body.form-mode #result .status { max-height: 34vh; overflow-y: auto; margin: 10px 0; }
   }
 
   footer { max-width: 860px; margin: 0 auto; padding: 24px 16px 40px; color: var(--muted); font-size: 0.9em; }
@@ -150,6 +194,10 @@
         <span class="weak">Weak:</span> Cashier at a grocery store<br>
         <span class="good">Better:</span> Reorganized the stockroom by grouping high-turnover items near the floor, which cut restocking time by 20%</li>
       <li><b>Stay truthful.</b> You may be asked about anything on the page.</li>
+    </ul>
+    <details>
+      <summary>More tips: GPA, coursework, interests, and which section things go in</summary>
+    <ul>
       <li><b>Include non-tech jobs</b>, and list the most recent first in each section.</li>
       <li><b>GPA:</b> only if it is 3.4 or higher. Otherwise leave it out.</li>
       <li><b>Coursework:</b> only courses you are comfortable being asked about, or leave it out.</li>
@@ -167,6 +215,7 @@
     <p style="margin:8px 0 0">Education always prints first and Skills last; the rest print in the order you put them in.
       Move Research or Publications up if you are aiming at graduate school or research roles, or Leadership and Projects up
       if your jobs are all non-technical. Otherwise leave the order alone.</p>
+    </details>
   </div>
 
   <h2>1. Enter your information</h2>
@@ -308,15 +357,19 @@
 </main>
 
 <aside id="output">
-  <div class="inner">
-    <h2>2. Check, save the PDF, and submit</h2>
-    <div id="result"></div>
-    <div class="step">
+  <div class="inner top">
+      <h2>2. Check, save the PDF, and submit</h2>
+      <div id="result"></div>
       <div class="save-row">
         <button class="btn" id="save" disabled>Save as PDF</button>
         <button class="btn secondary only-form" id="download-csv" type="button">Download your CSV</button>
+        <span id="save-why" class="small"></span>
       </div>
       <div id="after-save" aria-live="polite"></div>
+  </div>
+  <div class="inner">
+    <details id="how">
+      <summary>How to save and submit</summary>
       <ol>
         <li class="only-form"><b>Download your CSV</b> and keep it. To make changes later, open it here with
             <b>Open a CSV</b>.</li>
@@ -325,14 +378,20 @@
         <li>Open the PDF and check that it is <b>one page</b>.</li>
         <li><b>Submit both files</b>, <i>Lastname_Firstname.pdf</i> and <i>Lastname_Firstname.csv</i>, by uploading
             them with the <b>Dropbox link in the email</b> (no Dropbox account needed).</li>
-        <li class="only-form"><b>On a shared or lab computer?</b> After you submit, <button type="button" class="linkish"
-            data-clear-form>clear the form</button> so the next person can't see your information.</li>
       </ol>
-    </div>
+    </details>
+    <p class="small only-form"><b>On a shared or lab computer?</b> After you submit, <button type="button" class="linkish"
+        data-clear-form>clear the form</button> so the next person can't see your information.</p>
+    <p id="full-row" class="small" hidden><button type="button" class="linkish" id="full-preview">Open the preview full size
+        in a new tab</button></p>
   </div>
   <div id="preview-wrap"><div id="preview-scale"><iframe id="preview" title="Resume preview"></iframe></div></div>
 </aside>
 </div>
+
+<div id="mini"><span id="mini-txt"></span><button class="btn secondary" id="mini-go" type="button">See preview</button></div>
+<div id="toast" hidden><span id="toast-txt"></span><button type="button" class="linkish" id="toast-undo">Undo</button></div>
+<div id="announce" class="sr-only" aria-live="polite"></div>
 
 <footer>
   Prefer the command line? The same generator is a Python script:
@@ -462,19 +521,56 @@ function store(k, v) { try { if (v === null) localStorage.removeItem(k); else lo
 function recall(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 
 var resultEl = document.getElementById('result');
+// label: "Save as PDF (reason)". The reason goes beside the button, so the button stays short.
 function setSave(on, label) {
-  var b = document.getElementById('save');
+  var b = document.getElementById('save'), m = /^(.*?) \((.*)\)$/.exec(label);
   b.disabled = !on;
-  b.textContent = label;
+  b.textContent = m ? m[1] : label;
+  document.getElementById('save-why').textContent = m ? m[2].charAt(0).toUpperCase() + m[2].slice(1) + '.' : '';
 }
 var wrap = document.getElementById('preview-wrap');
 var frame = document.getElementById('preview');
 var current = null;   // the result being shown: {mode, warnings, errors, pdfName, csvName, extra, html}
 var lastPdfName = null;
 
-function show(html, cls) {
+// short: a few words for the phone status bar and for screen readers.
+function show(html, cls, short) {
   resultEl.innerHTML = '<div class="status ' + (cls || '') + '">' + html + '</div>';
+  if (short !== undefined) {
+    setMini(short, cls);
+    announce(short);
+  }
 }
+function plural(n, word) { return n + ' ' + word + (n === 1 ? '' : 's'); }
+
+var lastAnnounced = '';
+function announce(text) {
+  if (!text || text === lastAnnounced) return;
+  lastAnnounced = text;
+  document.getElementById('announce').textContent = text;
+}
+var mini = document.getElementById('mini'), miniTxt = document.getElementById('mini-txt'), outputSeen = false;
+function setMini(text, cls) {
+  miniTxt.textContent = text || '';
+  mini.className = (cls || '') + (mini.classList.contains('show') ? ' show' : '');
+  updateMini();
+}
+var started = false, typing = false;   // started: the student has typed or opened a CSV
+function updateMini() {
+  var on = pageMode === 'form' && window.innerWidth < 1280 && !!miniTxt.textContent && !outputSeen && started &&
+           !(typing && window.innerWidth < 768);
+  mini.classList.toggle('show', on);
+  document.body.classList.toggle('mini-on', on);
+  if (on) document.body.style.setProperty('--mini-h', mini.offsetHeight + 'px');
+}
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver(function (es) { outputSeen = es[0].isIntersecting; updateMini(); })
+    .observe(document.getElementById('output'));
+}
+window.addEventListener('resize', updateMini);
+document.getElementById('mini-go').addEventListener('click', function () {
+  document.getElementById('output').scrollIntoView({ behavior: 'smooth' });
+});
 
 // Run the generator on CSV bytes. mode 'csv': a file the student added; 'form': built from the form.
 async function check(bytes, name, mode) {
@@ -494,18 +590,19 @@ async function check(bytes, name, mode) {
   if (out.fatal) {
     current = null;
     wrap.style.display = 'none';
-    show('<strong class="head">' + esc(out.fatal) + '</strong>', 'bad');
+    show('<strong class="head">' + esc(out.fatal) + '</strong>', 'bad', 'There is a problem. See step 2.');
     setSave(false, 'Save as PDF (fix the problem above first)');
     return;
   }
   var fmt = mode === 'form' ? formMsg : null;
   var warnings = out.warnings.concat(mode === 'form' ? formProblems : []);
   var parts = [];
-  if (warnings.length) parts.push('<b>WARNINGS (' + warnings.length + '):</b>' + list(warnings, fmt));
+  if (warnings.length) parts.push('<b>Warnings (' + warnings.length + '):</b>' + list(warnings, fmt));
   if (out.errors.length && mode === 'csv') {
     current = null;
     wrap.style.display = 'none';
-    show('<strong class="head">ERRORS (resume not generated):</strong>' + list(out.errors) + parts.join('') + switchOffer(), 'bad');
+    show('<strong class="head">Errors (resume not made):</strong>' + list(out.errors) + parts.join('') + switchOffer(), 'bad',
+         'Your CSV has ' + plural(out.errors.length, 'error') + '.');
     setSave(false, 'Save as PDF (fix the problems above first)');
     return;
   }
@@ -559,7 +656,7 @@ function afterRender() {
     if (c !== current) return;
     fit();
     var over = overflowInches(doc);
-    var form = c.mode === 'form', msgs = [];
+    var form = c.mode === 'form', msgs = [], short;
     if (over > 2 / 96) {
       msgs.push('<b>The resume runs about ' + (Math.round(over * 100) / 100) + ' inches past one page.</b> ' +
                 'Resumes must be exactly one page. ' +
@@ -568,28 +665,35 @@ function afterRender() {
                 'In the preview below, everything under the red dashed line will be cut off.');
     }
     if (c.warnings.length) {
-      msgs.push(form ? 'Fix the ' + c.warnings.length + ' warning(s) above in the form. Click one to jump to it.'
-                     : 'Fix the ' + c.warnings.length + ' warning(s) above in your CSV, save it, and add it here again.');
+      msgs.push(form ? 'Fix the ' + plural(c.warnings.length, 'warning') + ' above. Click one to jump to it.'
+                     : 'Fix the ' + plural(c.warnings.length, 'warning') + ' above in your CSV, save it, and add it here again.');
     }
+    var tooLong = over > 2 / 96 ? 'Too long by about ' + (Math.round(over * 10) / 10) + ' in. ' : '';
     if (c.errors.length) {
       show('<strong class="head">Not ready yet. The preview below shows what you have so far.</strong>' + c.extra +
-           msgs.map(function (m) { return '<p style="margin:8px 0 0">' + m + '</p>'; }).join(''));
+           msgs.map(function (m) { return '<p style="margin:8px 0 0">' + m + '</p>'; }).join(''), '',
+           'Not ready yet: ' + plural(c.errors.length, 'thing') + ' still needed.');
       setSave(false, 'Save as PDF (finish the form first)');
     } else if (msgs.length) {
-      show('<strong class="head">NOT DONE: do not submit yet.</strong>' + c.extra +
+      short = tooLong + (c.warnings.length ? plural(c.warnings.length, 'warning') + ' to fix.' : '');
+      show('<strong class="head">Not done yet: don\'t submit.</strong>' + c.extra +
            msgs.map(function (m) { return '<p style="margin:8px 0 0">' + m + '</p>'; }).join('') +
-           (form ? '' : switchOffer()), 'bad');
+           (form ? '' : switchOffer()), 'bad', short.trim());
       setSave(false, 'Save as PDF (fix the problems above first)');
     } else {
       var rename = '';
       var want = c.pdfName.replace(/\.pdf$/i, '') + '.csv';
       if (form) {
         rename = '<p style="margin:8px 0 0">Download your CSV and save the PDF below, then submit both.</p>';
-      } else if (c.csvName !== want) {
-        rename = '<p style="margin:8px 0 0">Before you submit, rename your CSV to <code>' + esc(want) +
-                 '</code> so it sorts next to the PDF.</p>';
+      } else {
+        rename = '<p style="margin:8px 0 0">Save the PDF below, then submit it with your CSV using the Dropbox link in the email.</p>';
+        if (c.csvName !== want) {
+          rename += '<p style="margin:8px 0 0">Before you submit, rename your CSV to <code>' + esc(want) +
+                    '</code> so it sorts next to the PDF.</p>';
+        }
       }
-      show('<strong class="head">DONE: your resume fits on one page with no warnings.</strong>' + rename, 'ok');
+      show('<strong class="head">Done: your resume fits on one page with no warnings.</strong>' + rename, 'ok',
+           'Fits on one page. Ready to save.');
       setSave(CHROMIUM, CHROMIUM ? 'Save as PDF' : 'Save as PDF (open this page in Chrome or Edge)');
     }
   });
@@ -603,6 +707,7 @@ function fit() {
   var avail = wrap.clientWidth;
   var s = Math.min(1, avail / 864);
   var box = document.getElementById('preview-scale');
+  document.getElementById('full-row').hidden = s >= 0.95;
   box.style.width = (864 * s) + 'px';
   frame.style.transform = 'scale(' + s + ')';
   frame.style.transformOrigin = 'top left';
@@ -624,14 +729,22 @@ document.getElementById('save').addEventListener('click', function () {
   if (!window.open(url, '_blank')) location.href = url;
 });
 
+// Small screens shrink the preview; this shows it at full size.
+document.getElementById('full-preview').addEventListener('click', function () {
+  if (!current) return;
+  var url = URL.createObjectURL(new Blob([current.html], { type: 'text/html' }));
+  if (!window.open(url, '_blank')) location.href = url;
+});
+
 // What the student has saved so far, so the end of the page says what is done and what is next.
 var saved = { pdf: null, csv: null };
 function showSaved() {
   var el = document.getElementById('after-save'), form = pageMode === 'form', items = [];
   if (!saved.pdf && !saved.csv) { el.innerHTML = ''; return; }
   items.push(saved.pdf
-    ? '<span class="tick">&#10003; PDF:</span> when you click <b>Save</b> in the print window, it is saved as <b>' +
-      esc(saved.pdf) + '</b>, usually in your <b>Downloads</b> folder. Open it to check it is one page.'
+    ? '<span class="tick">&#10003; PDF:</span> in the print window, set Destination to <b>Save as PDF</b> and click ' +
+      '<b>Save</b>. It is saved as <b>' + esc(saved.pdf) + '</b>, usually in your <b>Downloads</b> folder. ' +
+      'Open it to check it is one page.'
     : '<span class="todo">&#9744; PDF:</span> not saved yet. Click <b>Save as PDF</b>.');
   if (form) {
     items.push(saved.csv
@@ -734,7 +847,7 @@ var SECTIONS = {
       { f: 'Authors', label: 'Authors (optional)', wide: true, ph: 'J. Smith, A. Lee', hint: 'As they appear on the paper.' },
     ] },
   LEADERSHIP: { title: 'Leadership', item: 'organization', a: 'an', bullets: true,
-    blurb: 'Clubs, executive boards, volunteering where you had a role. Prints under one heading with Projects.',
+    blurb: 'Clubs, executive boards, volunteering where you had a role.',
     fields: [
       { f: 'Organization', label: 'Organization', ph: 'Baruch Computer Science Club' },
       { f: 'Location', label: 'Location', ph: 'New York, NY' },
@@ -742,7 +855,7 @@ var SECTIONS = {
       { f: 'Dates', label: 'Dates', ph: 'Sep. 2025 - Present' },
     ] },
   PROJECTS: { title: 'Projects', item: 'project', a: 'a', bullets: true,
-    blurb: 'Personal, class, and hackathon projects. Prints under one heading with Leadership.',
+    blurb: 'Personal, class, and hackathon projects.',
     fields: [
       { f: 'Project', label: 'Project name', ph: 'NYC Subway Shortest Path' },
       { f: 'Website', label: 'Link (optional)', ph: 'github.com/you/project',
@@ -751,7 +864,10 @@ var SECTIONS = {
       { f: 'Dates', label: 'Dates', ph: 'Mar. 2026' },
     ] },
 };
-var MOVABLE = ['AWARDS', 'EXPERIENCE', 'RESEARCH', 'PUBLICATIONS', 'LEADERSHIP', 'PROJECTS'];
+// Leadership and Projects print under one heading, so the form moves them as one group ('LP').
+var UNITS = ['AWARDS', 'EXPERIENCE', 'RESEARCH', 'PUBLICATIONS', 'LP'];
+function secsOf(u) { return u === 'LP' ? ['LEADERSHIP', 'PROJECTS'] : [u]; }
+function unitOf(sec) { return sec === 'LEADERSHIP' || sec === 'PROJECTS' ? 'LP' : sec; }
 // The generator's name for a field, where it differs from the template's.
 var CANON = { CONTACT: { 'Last Name': 'LastName' }, LEADERSHIP: { Organization: 'Company' },
               PROJECTS: { Project: 'Company', Technologies: 'Title' } };
@@ -768,29 +884,47 @@ function formSpec() {
 
 function blankEntry(sec) { return { fields: {}, bullets: SECTIONS[sec].bullets ? ['', ''] : [] }; }
 function defaultState() {
-  var s = { contact: {}, skills: {}, order: MOVABLE.slice(), entries: {} };
+  var s = { contact: {}, skills: {}, order: UNITS.slice(), entries: {} };
   Object.keys(SECTIONS).forEach(function (k) { s.entries[k] = []; });
   s.entries.EDUCATION.push({ fields: { Institution: 'CUNY Baruch College', Location: 'New York, NY' }, bullets: [] });
   s.entries.EXPERIENCE.push(blankEntry('EXPERIENCE'));
   return s;
 }
-// Repair a saved draft so it always has every section, once each.
-function normalize(s) {
-  var d = defaultState();
-  s.contact = s.contact || {}; s.skills = s.skills || {}; s.entries = s.entries || {};
+// Section order as units, each once, in the given order and then the default order.
+function unitOrder(list) {
+  var seen = [];
+  (Array.isArray(list) ? list : []).forEach(function (k) {
+    var u = unitOf(k);
+    if (UNITS.indexOf(u) >= 0 && seen.indexOf(u) < 0) seen.push(u);
+  });
+  return seen.concat(UNITS.filter(function (u) { return seen.indexOf(u) < 0; }));
+}
+// Rebuild a saved draft from whatever is usable in it; anything malformed is dropped, not the whole draft.
+function normalize(raw) {
+  function obj(v) { return v && typeof v === 'object' && !Array.isArray(v) ? v : {}; }
+  function strs(v) {
+    var o = obj(v), r = {};
+    Object.keys(o).forEach(function (k) {
+      if (typeof o[k] === 'string' || typeof o[k] === 'number') r[k] = String(o[k]);
+    });
+    return r;
+  }
+  var s = obj(raw), d = defaultState(), ents = obj(s.entries);
+  var out = { contact: strs(s.contact), skills: strs(s.skills), order: unitOrder(s.order), entries: {} };
   Object.keys(SECTIONS).forEach(function (k) {
-    s.entries[k] = (s.entries[k] || []).map(function (e) {
-      return { fields: e.fields || {}, bullets: Array.isArray(e.bullets) ? e.bullets : [] };
+    var items = Array.isArray(ents[k]) ? ents[k] : (k in ents ? [] : d.entries[k]);
+    out.entries[k] = items.filter(function (e) { return e && typeof e === 'object'; }).map(function (e) {
+      var b = SECTIONS[k].bullets && Array.isArray(e.bullets) ? e.bullets : [];
+      return { fields: strs(e.fields),
+               bullets: b.map(function (x) { return typeof x === 'string' || typeof x === 'number' ? String(x) : ''; }) };
     });
   });
-  var order = (s.order || []).filter(function (k, i, a) { return MOVABLE.indexOf(k) >= 0 && a.indexOf(k) === i; });
-  s.order = order.concat(d.order.filter(function (k) { return order.indexOf(k) < 0; }));
-  return s;
+  return out;
 }
 
 var DRAFT = 'resume-form-draft-v1';
 var state = (function () {
-  try { var s = JSON.parse(recall(DRAFT)); if (s && typeof s === 'object') return normalize(s); } catch (e) {}
+  try { var s = JSON.parse(recall(DRAFT)); if (s !== null) return normalize(s); } catch (e) {}
   return defaultState();
 })();
 function isPristine() { return JSON.stringify(state) === JSON.stringify(defaultState()); }
@@ -819,10 +953,11 @@ function fieldHtml(key, x, val) {
     esc(x.ph ? 'e.g. ' + x.ph : '') + '"' + (x.ac ? ' autocomplete="' + x.ac + '"' : ' autocomplete="off"') + (x.req ? ' required' : '') + '>' +
     (x.hint ? '<div class="hint">' + esc(x.hint) + '</div>' : '') + '</div>';
 }
-function icon(act, text, label, disabled) {
-  return '<button type="button" class="icon" data-act="' + esc(act) + '" aria-label="' + esc(label) + '" title="' +
-    esc(label) + '"' + (disabled ? ' disabled' : '') + '>' + text + '</button>';
+function icon(act, text, label, disabled, cls) {
+  return '<button type="button" class="icon' + (cls ? ' ' + cls : '') + '" data-act="' + esc(act) + '" aria-label="' +
+    esc(label) + '" title="' + esc(label) + '"' + (disabled ? ' disabled' : '') + '>' + text + '</button>';
 }
+function bulletLabel(sec, e, i, j) { return entryTitle(sec, e, i) + ', bullet ' + (j + 1); }
 
 function entryHtml(sec, e, i, n) {
   var S = SECTIONS[sec], p = sec + '|' + i, noun = S.item;
@@ -830,34 +965,42 @@ function entryHtml(sec, e, i, n) {
     esc(entryTitle(sec, e, i)) + '</span><span class="tools">' +
     icon('up|' + p, '&uarr;', 'Move this ' + noun + ' up', i === 0) +
     icon('down|' + p, '&darr;', 'Move this ' + noun + ' down', i === n - 1) +
-    icon('del|' + p, 'Remove', 'Remove this ' + noun) + '</span></div><div class="grid">';
+    icon('del|' + p, 'Remove', 'Remove this ' + noun, false, 'remove') + '</span></div><div class="grid">';
   S.fields.forEach(function (x) { h += fieldHtml('e|' + p + '|' + x.f, x, e.fields[x.f]); });
   h += '</div>';
   if (S.bullets) {
     h += '<div class="bullets"><div class="lbl">Bullet points</div>';
     e.bullets.forEach(function (b, j) {
-      h += '<div class="bullet"><textarea data-k="b|' + p + '|' + j + '" rows="2" aria-label="Bullet ' + (j + 1) +
-        '" placeholder="Did X by doing Y, which resulted in Z">' + esc(b) + '</textarea>' +
-        icon('delb|' + p + '|' + j, '&times;', 'Remove bullet ' + (j + 1)) + '</div>';
+      h += '<div class="bullet"><textarea data-k="b|' + p + '|' + j + '" rows="2" aria-label="' +
+        esc(bulletLabel(sec, e, i, j)) + '" placeholder="Did X by doing Y, which resulted in Z">' + esc(b) + '</textarea>' +
+        icon('delb|' + p + '|' + j, '&times;', 'Remove ' + bulletLabel(sec, e, i, j)) + '</div>';
     });
     h += '<button type="button" class="add small" data-act="addb|' + p + '">+ Add a bullet</button></div>';
   }
   return h + '<div class="entry-warn">' + esc(entryWarn(sec, e)) + '</div></div>';
 }
 
-function sectionHtml(sec, pos) {
+function moveTools(unit, title, pos) {
+  return '<span class="tools">' +
+    icon('secup|' + unit, '&uarr; Move up', 'Move the ' + title + ' section up', pos === 0) +
+    icon('secdown|' + unit, '&darr; Move down', 'Move the ' + title + ' section down', pos === UNITS.length - 1) +
+    '</span>';
+}
+// pos: place among the movable sections, or -1 for one that cannot move on its own.
+function sectionHtml(sec, pos, inGroup) {
   var S = SECTIONS[sec], items = state.entries[sec];
-  var h = '<section class="card"><div class="card-head"><h3>' + S.title + '</h3>';
-  if (pos >= 0) {
-    h += '<span class="tools">' +
-      icon('secup|' + sec, '&uarr; Move up', 'Move the ' + S.title + ' section up', pos === 0) +
-      icon('secdown|' + sec, '&darr; Move down', 'Move the ' + S.title + ' section down', pos === MOVABLE.length - 1) +
-      '</span>';
-  }
-  h += '</div><p class="blurb">' + esc(S.blurb) + '</p>';
+  var h = '<section class="card"' + (pos >= 0 ? ' data-unit="' + sec + '"' : '') + '><div class="card-head">' +
+    (inGroup ? '<h4>' + S.title + '</h4>' : '<h3>' + S.title + '</h3>') + (pos >= 0 ? moveTools(sec, S.title, pos) : '') +
+    '</div><p class="blurb">' + esc(S.blurb) + '</p>';
   items.forEach(function (e, i) { h += entryHtml(sec, e, i, items.length); });
   return h + '<button type="button" class="add" data-act="add|' + sec + '">+ Add ' +
     (items.length ? 'another ' : S.a + ' ') + S.item + '</button></section>';
+}
+function groupHtml(pos) {
+  return '<section class="card group" data-unit="LP"><div class="card-head"><h3>Leadership and Projects</h3>' +
+    moveTools('LP', 'Leadership and Projects', pos) + '</div><p class="blurb">These print together under one heading, ' +
+    'Leadership first. If you fill in only one of them, the heading is just "Leadership" or "Projects".</p>' +
+    sectionHtml('LEADERSHIP', -1, true) + sectionHtml('PROJECTS', -1, true) + '</section>';
 }
 
 function render() {
@@ -865,14 +1008,30 @@ function render() {
     '<p class="blurb">Fields marked <span class="req">*</span> are required.</p><div class="grid">';
   CONTACT_FIELDS.forEach(function (x) { h += fieldHtml('c|' + x.f, x, state.contact[x.f]); });
   h += '</div></section>' + sectionHtml('EDUCATION', -1);
-  state.order.forEach(function (sec, i) { h += sectionHtml(sec, i); });
+  state.order.forEach(function (u, i) { h += u === 'LP' ? groupHtml(i) : sectionHtml(u, i); });
   h += '<section class="card"><div class="card-head"><h3>Skills, Interests, and Certifications</h3></div><div class="grid">';
   SKILLS_FIELDS.forEach(function (x) { h += fieldHtml('s|' + x.f, x, state.skills[x.f]); });
   formEl.innerHTML = h + '</div></section>';
+  autosizeAll();
+  updateDownload();
 }
 
+// Bullet boxes grow to fit their text.
+function autosize(el) {
+  el.style.height = 'auto';
+  if (el.scrollHeight) el.style.height = (el.scrollHeight + 2) + 'px';
+}
+function autosizeAll() { formEl.querySelectorAll('textarea').forEach(autosize); }
+var resizeTimer = null;
+window.addEventListener('resize', function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(autosizeAll, 150); });
+
+// A form control by key: an input's data-k, or a button's data-act.
+function control(key) {
+  var q = key.replace(/["\\]/g, '\\$&');
+  return formEl.querySelector('[data-k="' + q + '"]') || formEl.querySelector('[data-act="' + q + '"]');
+}
 function focusKey(key) {
-  var el = formEl.querySelector('[data-k="' + key.replace(/["\\]/g, '\\$&') + '"]');
+  var el = control(key);
   if (el) { el.scrollIntoView({ block: 'center' }); el.focus({ preventScroll: true }); }
   return el;
 }
@@ -884,52 +1043,93 @@ formEl.addEventListener('input', function (ev) {
   if (p[0] === 'c') state.contact[p[1]] = v;
   else if (p[0] === 's') state.skills[p[1]] = v;
   else {
-    var e = state.entries[p[1]][+p[2]];
+    var sec = p[1], i = +p[2], e = state.entries[sec][i];
     if (p[0] === 'e') e.fields[p[3]] = v; else e.bullets[+p[3]] = v;
     var box = ev.target.closest('.entry');
-    box.querySelector('.entry-title').textContent = entryTitle(p[1], e, +p[2]);
-    box.querySelector('.entry-warn').textContent = entryWarn(p[1], e);
+    box.querySelector('.entry-title').textContent = entryTitle(sec, e, i);
+    box.querySelector('.entry-warn').textContent = entryWarn(sec, e);
+    if (p[0] === 'e') {
+      box.querySelectorAll('textarea').forEach(function (t, j) { t.setAttribute('aria-label', bulletLabel(sec, e, i, j)); });
+      box.querySelectorAll('[data-act^="delb|"]').forEach(function (x, j) {
+        x.setAttribute('aria-label', 'Remove ' + bulletLabel(sec, e, i, j));
+        x.title = x.getAttribute('aria-label');
+      });
+    }
   }
+  if (ev.target.tagName === 'TEXTAREA') autosize(ev.target);
   ev.target.classList.remove('flag');
   changed();
 });
+
+// After the form is rebuilt, put focus on the first of these that still exists, keeping it where the
+// clicked button was on screen.
+function refocus(keys, y, flash) {
+  for (var n = 0; n < keys.length; n++) {
+    var el = control(keys[n]);
+    if (!el || el.disabled) continue;
+    if (y !== null) window.scrollBy(0, el.getBoundingClientRect().top - y);
+    el.focus({ preventScroll: true });
+    var box = flash && el.closest(flash);
+    if (box) box.classList.add('moved');
+    return;
+  }
+}
 
 formEl.addEventListener('click', function (ev) {
   var b = ev.target.closest('[data-act]');
   if (!b) return;
   var p = b.getAttribute('data-act').split('|'), act = p[0], sec = p[1], i = +p[2], j = +p[3];
-  var items = state.entries[sec], focus = null;
+  var items = state.entries[sec], y = b.getBoundingClientRect().top, after;
   if (act === 'add') {
     items.push(blankEntry(sec));
-    focus = 'e|' + sec + '|' + (items.length - 1) + '|' + SECTIONS[sec].fields[0].f;
+    after = function () { focusKey('e|' + sec + '|' + (items.length - 1) + '|' + SECTIONS[sec].fields[0].f); };
   } else if (act === 'del') {
     if (entryHasContent(items[i]) && !confirm('Remove "' + entryTitle(sec, items[i], i) + '" and everything in it?')) return;
+    if (undoEntry === items[i]) hideUndo();
     items.splice(i, 1);
+    after = function () { refocus(['del|' + sec + '|' + i, 'del|' + sec + '|' + (i - 1), 'add|' + sec], y); };
   } else if (act === 'up' || act === 'down') {
     var t = act === 'up' ? i - 1 : i + 1;
     items.splice(t, 0, items.splice(i, 1)[0]);
+    after = function () {
+      refocus([act + '|' + sec + '|' + t, (act === 'up' ? 'down|' : 'up|') + sec + '|' + t], y, '.entry');
+    };
   } else if (act === 'addb') {
     items[i].bullets.push('');
-    focus = 'b|' + sec + '|' + i + '|' + (items[i].bullets.length - 1);
+    after = function () { focusKey('b|' + sec + '|' + i + '|' + (items[i].bullets.length - 1)); };
   } else if (act === 'delb') {
-    items[i].bullets.splice(j, 1);
+    var entry = items[i], text = entry.bullets.splice(j, 1)[0];
+    if (hasText(text)) {
+      offerUndo('Bullet removed.', entry, function () {
+        if (state.entries[sec].indexOf(entry) < 0) return;
+        var at = Math.min(j, entry.bullets.length);
+        entry.bullets.splice(at, 0, text);
+        render();
+        changed(true);
+        focusKey('b|' + sec + '|' + state.entries[sec].indexOf(entry) + '|' + at);
+      });
+    }
+    after = function () {
+      refocus(['delb|' + sec + '|' + i + '|' + j, 'delb|' + sec + '|' + i + '|' + (j - 1), 'addb|' + sec + '|' + i], y);
+    };
   } else if (act === 'secup' || act === 'secdown') {
     var o = state.order, at = o.indexOf(sec), to = act === 'secup' ? at - 1 : at + 1;
     o.splice(to, 0, o.splice(at, 1)[0]);
-  }
-  var y = b.getBoundingClientRect().top;
+    after = function () {
+      refocus([act + '|' + sec, (act === 'secup' ? 'secdown|' : 'secup|') + sec], y, '[data-unit]');
+    };
+  } else return;
   render();
-  changed();
-  if (focus) focusKey(focus);
-  else if (act === 'secup' || act === 'secdown') {
-    // Keep the moved section under the pointer.
-    var nb = formEl.querySelector('[data-act="' + act + '|' + sec + '"]') ||
-             formEl.querySelector('[data-act="' + (act === 'secup' ? 'secdown' : 'secup') + '|' + sec + '"]');
-    if (nb) window.scrollBy(0, nb.getBoundingClientRect().top - y);
-  }
+  changed(true);
+  after();
 });
 
-// Enter in a bullet starts the next bullet, like a word processor.
+// Enter in a bullet starts the next bullet.
+formEl.addEventListener('focusin', function (ev) {
+  if (/^(INPUT|TEXTAREA)$/.test(ev.target.tagName)) { typing = true; updateMini(); }
+});
+formEl.addEventListener('focusout', function () { typing = false; setTimeout(updateMini, 50); });
+
 formEl.addEventListener('keydown', function (ev) {
   var k = ev.target.getAttribute && ev.target.getAttribute('data-k');
   if (ev.key !== 'Enter' || ev.shiftKey || ev.isComposing || !k || k.charAt(0) !== 'b') return;
@@ -937,13 +1137,31 @@ formEl.addEventListener('keydown', function (ev) {
   var p = k.split('|'), e = state.entries[p[1]][+p[2]], j = +p[3];
   e.bullets.splice(j + 1, 0, '');
   render();
-  changed();
+  changed(true);
   focusKey('b|' + p[1] + '|' + p[2] + '|' + (j + 1));
+});
+
+// A short "Undo" message after removing a bullet.
+var toast = document.getElementById('toast'), undoFn = null, undoEntry = null, toastTimer = null;
+function offerUndo(text, entry, fn) {
+  undoFn = fn;
+  undoEntry = entry;
+  document.getElementById('toast-txt').textContent = text;
+  toast.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(hideUndo, 8000);
+}
+function hideUndo() { toast.hidden = true; undoFn = undoEntry = null; }
+document.getElementById('toast-undo').addEventListener('click', function () {
+  var fn = undoFn;
+  hideUndo();
+  if (fn) fn();
 });
 
 // ---- Form -> CSV ----
 
 var lineKey = [];      // CSV line number -> the form field it came from
+var genIndex = {};     // section -> form index of the generator's entry 1, 2, ...
 var formProblems = []; // things the form left out, shown with the generator's warnings
 
 function csvCell(v) { return /[",\r\n]/.test(v) || /^\s|\s$/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
@@ -951,6 +1169,7 @@ function csvCell(v) { return /[",\r\n]/.test(v) || /^\s|\s$/.test(v) ? '"' + v.r
 function buildCsv() {
   var rows = [['Section', 'Field', 'Value']];
   lineKey = [null, null];
+  genIndex = {};
   formProblems = [];
   function add(sec, f, v, key) {
     v = String(v || '').replace(/\s*[\r\n]+\s*/g, ' ').trim();
@@ -959,12 +1178,16 @@ function buildCsv() {
     lineKey[rows.length] = key;
   }
   CONTACT_FIELDS.forEach(function (x) { add('CONTACT', x.f, state.contact[x.f], 'c|' + x.f); });
-  ['EDUCATION'].concat(state.order).forEach(function (sec) {
+  var secs = ['EDUCATION'];
+  state.order.forEach(function (u) { secs = secs.concat(secsOf(u)); });
+  secs.forEach(function (sec) {
     var S = SECTIONS[sec];
+    genIndex[sec] = [];
     state.entries[sec].forEach(function (e, i) {
       if (!entryHasContent(e)) return;
       var w = entryWarn(sec, e);
       if (w) { formProblems.push({ key: 'e|' + sec + '|' + i + '|' + S.fields[0].f, text: w }); return; }
+      genIndex[sec].push(i);
       S.fields.forEach(function (x) { add(sec, x.f, e.fields[x.f], 'e|' + sec + '|' + i + '|' + x.f); });
       e.bullets.forEach(function (b, j) { add(sec, 'Bullet', b, 'b|' + sec + '|' + i + '|' + j); });
     });
@@ -973,34 +1196,73 @@ function buildCsv() {
   return '\uFEFF' + rows.map(function (r) { return r.map(csvCell).join(','); }).join('\r\n') + '\r\n';
 }
 
-// Where a form field is, in words: "Experience > Goldman Sachs > Dates".
+function fieldDef(list, f) { return list.filter(function (x) { return x.f === f; })[0]; }
+function fieldLabel(key) {
+  var p = key.split('|'), x;
+  if (p[0] === 'c') x = fieldDef(CONTACT_FIELDS, p[1]);
+  else if (p[0] === 's') x = fieldDef(SKILLS_FIELDS, p[1]);
+  else x = fieldDef(SECTIONS[p[1]].fields, p[3]);
+  return x ? x.label.replace(/ \(.*\)$/, '') : p[p.length - 1];
+}
+// Where a form control is, in words: "Experience > Job 1: Goldman Sachs > Dates".
 function placeName(key) {
   var p = key.split('|');
-  if (p[0] === 'c') return 'Contact > ' + p[1];
-  if (p[0] === 's') return 'Skills > ' + p[1];
-  var S = SECTIONS[p[1]], e = state.entries[p[1]][+p[2]];
+  if (p[0] === 'c') return 'Contact > ' + fieldLabel(key);
+  if (p[0] === 's') return 'Skills > ' + fieldLabel(key);
+  var S = SECTIONS[p[1]];
+  if (p[0] === 'add') return S.title;
+  var e = state.entries[p[1]][+p[2]];
   if (!e) return S.title;
   var where = S.title + ' > ' + entryTitle(p[1], e, +p[2]);
+  if (p[0] === 'addb') return where;
   if (p[0] === 'b') return where + ' > bullet ' + (+p[3] + 1);
-  var x = S.fields.filter(function (f) { return f.f === p[3]; })[0];
-  return where + ' > ' + (x ? x.label : p[3]);
+  return where + ' > ' + fieldLabel(key);
 }
-// A generator message ("Line 7: ...") as a link to the form field it is about.
-function formMsg(m) {
-  if (typeof m === 'object') {
-    return '<button type="button" class="linkish" data-goto="' + esc(m.key) + '">' + esc(placeName(m.key)) + '</button>: ' + esc(m.text);
+// The form control a generator message is about, and the message in plain words. Null if unknown.
+function locate(m) {
+  if (typeof m === 'object') return m;
+  var r = /^Line (\d+): /.exec(m), key;
+  if (r && lineKey[+r[1]]) {
+    var t = m.slice(r[0].length).replace(/^[A-Z]+(?: \d+)? \/ \w+ /, '').replace(/^[A-Z]+ \d+ Dates /, 'Dates ');
+    return { key: lineKey[+r[1]], text: t.charAt(0).toUpperCase() + t.slice(1) };
   }
-  var mm = /^Line (\d+): /.exec(m), key = mm && lineKey[+mm[1]];
-  if (!key) return esc(m);
-  return '<button type="button" class="linkish" data-goto="' + esc(key) + '">' + esc(placeName(key)) + '</button>: ' +
-    esc(m.slice(mm[0].length));
+  function entry(sec, n) { var i = (genIndex[sec] || [])[n - 1]; return i === undefined ? null : sec + '|' + i; }
+  if ((r = /^CONTACT is missing required field: (\w+)/.exec(m))) {
+    key = 'c|' + r[1];
+    return { key: key, text: fieldLabel(key) + ' is required.' };
+  }
+  if (/^No EDUCATION entries/.test(m)) return { key: 'add|EDUCATION', text: 'Add your school.' };
+  if (/^Need at least one EXPERIENCE/.test(m)) {
+    return { key: 'add|EXPERIENCE', place: 'Experience, Research, Leadership, or Projects',
+             text: 'Add at least one job, research position, organization, or project.' };
+  }
+  if (/^Email "/.test(m)) return { key: 'c|Email', text: m.replace(/^Email /, '') };
+  if ((r = /^EDUCATION (\d+) GPA is (\d\.\d+)/.exec(m)) && (key = entry('EDUCATION', +r[1]))) {
+    return { key: 'e|' + key + '|GPA', text: 'A GPA of ' + r[2] + ' is below 3.4, so the template says to leave it out.' };
+  }
+  if ((r = /^([A-Z]+) (\d+) \(.*\) has no bullet points/.exec(m)) && (key = entry(r[1], +r[2]))) {
+    return { key: 'addb|' + key, text: 'Add at least one bullet point.' };
+  }
+  if ((r = /^([A-Z]+) (\d+) is missing (.+)\.$/.exec(m)) && SECTIONS[r[1]] && (key = entry(r[1], +r[2]))) {
+    var f = r[3];
+    if (/^Company\//.test(f)) f = SECTIONS[r[1]].fields[0].f;
+    else if (/^Title\//.test(f)) f = r[1] === 'PROJECTS' ? 'Technologies' : 'Title';
+    key = 'e|' + key + '|' + f;
+    return { key: key, text: 'Fill in ' + fieldLabel(key) + '.' };
+  }
+  return null;
+}
+function formMsg(m) {
+  var L = locate(m);
+  if (!L) return esc(m);
+  return '<button type="button" class="linkish" data-goto="' + esc(L.key) + '">' + esc(L.place || placeName(L.key)) +
+    '</button>: ' + esc(L.text);
 }
 function markFields(out) {
   formEl.querySelectorAll('.flag').forEach(function (el) { el.classList.remove('flag'); });
-  (out.warnings || []).concat(out.errors || []).forEach(function (m) {
-    var mm = /^Line (\d+): /.exec(m), key = mm && lineKey[+mm[1]];
-    var el = key && formEl.querySelector('[data-k="' + key.replace(/["\\]/g, '\\$&') + '"]');
-    if (el) el.classList.add('flag');
+  (out.warnings || []).concat(out.errors || [], formProblems).forEach(function (m) {
+    var L = locate(m), el = L && control(L.key);
+    if (el && el.hasAttribute('data-k')) el.classList.add('flag');
   });
 }
 resultEl.addEventListener('click', function (ev) {
@@ -1011,11 +1273,18 @@ resultEl.addEventListener('click', function (ev) {
 });
 
 var timer = null, saveTimer = null;
-function changed() {
+function saveDraft() { clearTimeout(saveTimer); saveTimer = null; store(DRAFT, JSON.stringify(state)); }
+// Save right away if the tab is closed or hidden before the timer runs.
+window.addEventListener('pagehide', function () { if (saveTimer) saveDraft(); });
+document.addEventListener('visibilitychange', function () { if (document.hidden && saveTimer) saveDraft(); });
+// fast: a button changed the form's structure, so refresh the warnings' links right away.
+function changed(fast) {
+  if (!started && !isPristine()) { started = true; updateMini(); }
   if (saved.pdf || saved.csv) { saved = { pdf: null, csv: null }; showSaved(); }
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(function () { store(DRAFT, JSON.stringify(state)); }, 300);
-  schedulePreview(400);
+  saveTimer = setTimeout(saveDraft, 300);
+  updateDownload();
+  schedulePreview(fast ? 30 : 400);
 }
 function schedulePreview(ms) {
   clearTimeout(timer);
@@ -1024,6 +1293,7 @@ function schedulePreview(ms) {
     check(new TextEncoder().encode(buildCsv()), 'form.csv', 'form');
   }, ms);
 }
+function updateDownload() { document.getElementById('download-csv').disabled = isPristine(); }
 
 function csvName() { return (lastPdfName || 'Lastname_Firstname.pdf').replace(/\.pdf$/i, '') + '.csv'; }
 document.getElementById('download-csv').addEventListener('click', function () {
@@ -1040,10 +1310,13 @@ document.getElementById('download-csv').addEventListener('click', function () {
 function clearForm(atEnd) {
   if (!isPristine() && !confirm('Clear everything in the form? Download your CSV first if you want to keep it.')) return;
   state = defaultState();
+  lastPdfName = null;
+  hideUndo();
   document.getElementById('import-status').innerHTML = '';
   render();
   changed();
   clearTimeout(saveTimer);
+  saveTimer = null;
   store(DRAFT, null);
   if (atEnd) {
     // Hide their resume too, until someone types again.
@@ -1053,7 +1326,7 @@ function clearForm(atEnd) {
     frame.srcdoc = '';
     setSave(false, 'Save as PDF (fill in the form first)');
     show('<strong class="head">The form is cleared.</strong>Nothing of yours is left in this browser. ' +
-         'Your PDF and CSV are still wherever you saved them.', 'ok');
+         'Your PDF and CSV are still wherever you saved them.', 'ok', 'The form is cleared.');
   } else window.scrollTo(0, formEl.getBoundingClientRect().top + window.scrollY - 80);
 }
 document.getElementById('clear-form').addEventListener('click', function () { clearForm(false); });
@@ -1098,14 +1371,12 @@ function fromParsed(p) {
       return e;
     });
   });
-  var seen = p.order.filter(function (k) { return MOVABLE.indexOf(k) >= 0; });
-  s.order = seen.concat(MOVABLE.filter(function (k) { return seen.indexOf(k) < 0; }));
+  s.order = unitOrder(p.order);
   return { state: s, left: left };
 }
 
 async function importCsv(bytes, name) {
   var st = document.getElementById('import-status');
-  if (pageMode !== 'form') setMode('form');
   st.innerHTML = '<div class="status">Opening ' + esc(name) + '…</div>';
   var api;
   try { api = await ready; } catch (e) { st.innerHTML = '<div class="status bad">The generator did not load.</div>'; return; }
@@ -1115,12 +1386,15 @@ async function importCsv(bytes, name) {
   try { p = JSON.parse(api.load(path)); } catch (e) { p = { fatal: e.message }; }
   try { pyFS.unlink(path); } catch (e) {}
   if (p.fatal) {
+    if (pageMode !== 'form') setMode('form');
     st.innerHTML = '<div class="status bad"><strong class="head">Could not open ' + esc(name) + '.</strong>' + esc(p.fatal) + '</div>';
     return;
   }
   if (!isPristine() && !confirm('Replace what is in the form with ' + name + '?')) { st.innerHTML = ''; return; }
   var r = fromParsed(p);
   state = r.state;
+  hideUndo();
+  if (pageMode !== 'form') setMode('form');
   render();
   changed();
   var notes = p.problems.concat(r.left.map(function (x) { return 'Not in the form, so left out: ' + x; }));
@@ -1149,10 +1423,12 @@ function setMode(m) {
   wrap.style.display = 'none';
   saved = { pdf: null, csv: null };
   showSaved();
+  setMini('');
   if (m === 'form') {
     setSave(false, 'Save as PDF (fill in the form first)');
     if (!loaded) show('<strong class="head">Loading the generator (about 10 MB, first visit only)…</strong>' +
-                      'Start filling in the form; your preview appears here.');
+                      'Start filling in the form; your preview appears here.', '', 'Loading the preview…');
+    autosizeAll();
     schedulePreview(0);
   } else {
     setSave(false, 'Save as PDF (add your CSV first)');
@@ -1162,6 +1438,7 @@ document.getElementById('mode-form').addEventListener('click', function () { set
 document.getElementById('mode-csv').addEventListener('click', function () { setMode('csv'); });
 
 render();
+started = !isPristine();
 setMode(recall('resume-mode') === 'csv' ? 'csv' : 'form');
 </script>
 </body>

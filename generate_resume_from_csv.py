@@ -33,7 +33,7 @@ import sys
 import webbrowser
 from collections import defaultdict
 
-VERSION = "0.6.1 (Fall 2026)"  # matches the GitHub release tag
+VERSION = "0.6.2 (Fall 2026)"  # matches the GitHub release tag
 
 # --------------------------------------------------------------------------- #
 # CSV reading
@@ -190,7 +190,8 @@ class ResumeData:
 
 
 def read_csv_rows(path):
-    """Read the CSV, tolerating Excel's BOM, Windows encoding, and ; delimiters."""
+    """Read the CSV, tolerating Excel's BOM, Windows encoding, and ; delimiters.
+    Returns (rows, encoding used)."""
     ext = os.path.splitext(path)[1].lower()
     with open(path, "rb") as f:
         head = f.read(4096)
@@ -198,11 +199,12 @@ def read_csv_rows(path):
         raise ValueError(
             "This is not a CSV file (it looks like an Excel or Numbers file). "
             "Save it again as a CSV (in Excel: CSV UTF-8), then use the .csv file.")
-    raw = None
+    raw = encoding = None
     for enc in ("utf-8-sig", "cp1252", "latin-1"):
         try:
             with open(path, "r", encoding=enc, newline="") as f:
                 raw = f.read()
+            encoding = enc
             break
         except UnicodeDecodeError:
             continue
@@ -221,10 +223,10 @@ def read_csv_rows(path):
 
     header = [h.strip().lower() for h in rows[0]]
     if header[:3] == ["section", "field", "value"]:
-        return rows[1:]
+        return rows[1:], encoding
     if header[:4] == ["section", "entry", "field", "value"]:
         # Older template with an Entry column: drop it, blocks are inferred anyway.
-        return [r[:1] + r[2:] for r in rows[1:]]
+        return [r[:1] + r[2:] for r in rows[1:]], encoding
     raise ValueError(
         "The first row must be exactly: Section,Field,Value "
         f"(found: {','.join(rows[0])})"
@@ -232,13 +234,17 @@ def read_csv_rows(path):
 
 
 # Characters that appear when a Mac-Roman-encoded file (Excel for Mac,
-# plain "CSV" format) is read as Windows-1252: é->Ž  á->‡  ó->—  ñ->–  ü->Ÿ
-MOJIBAKE_RE = re.compile(r"[Ž‡Ÿ¸ˆ˜]|\w[–—]\w")
+# plain "CSV" format) is read as Windows-1252: é->Ž  á->‡  ó->—  ñ->–  ü->Ÿ.
+# Only checked when the file was not valid UTF-8: in a UTF-8 file these are
+# real characters (a Czech Ž, an en dash in "10–20%"). A dash between digits
+# is a real en dash in a Windows file too, so only one between letters counts.
+MOJIBAKE_RE = re.compile(r"[Ž‡Ÿ¸ˆ˜]|[^\W\d_][–—][^\W\d_]")
 
 
 def parse_csv(path):
     data = ResumeData()
-    for line_no, row in enumerate(read_csv_rows(path), start=2):
+    rows, encoding = read_csv_rows(path)
+    for line_no, row in enumerate(rows, start=2):
         # Excel pads rows with empty trailing cells; drop them.
         while row and not row[-1].strip():
             row.pop()
@@ -253,7 +259,7 @@ def parse_csv(path):
         # Alt+Enter line breaks inside a cell become spaces.
         value = re.sub(r"\s*[\r\n]+\s*", " ", value)
         data.add(section, field, value, line_no)
-        if MOJIBAKE_RE.search(value):
+        if encoding != "utf-8-sig" and MOJIBAKE_RE.search(value):
             data.problems.append(
                 f'Line {line_no}: "{value}" contains characters that usually mean the file was saved '
                 'with the wrong encoding. In Excel use File > Save As > "CSV UTF-8"; in Numbers use '
@@ -774,8 +780,8 @@ class HTMLGenerator:
   }}
   .page-end::after {{
     content: "end of page 1 – anything below this line will not fit";
-    position: absolute; right: 0.3in; bottom: 2px;
-    font: 9pt Arial, sans-serif; color: #d33;
+    position: absolute; right: 0.3in; top: 2px; padding: 0 4px;
+    font: 9pt Arial, sans-serif; color: #d33; background: #fff;
   }}
   @media print {{
     body {{ background: #fff; }}
