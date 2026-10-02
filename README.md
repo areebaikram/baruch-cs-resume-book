@@ -4,7 +4,7 @@ Fill in a spreadsheet, get a one-page PDF in the Baruch College CS Resume Book f
 
 ## Students
 
-1. Download the zip from the **Releases** page on the right and unzip it.
+1. **[Download the toolkit (zip)](https://github.com/areebaikram/baruch-cs-resume-book/releases/latest/download/baruch-cs-resume-book.zip)** and unzip it. (Not the green Code button; that is the source, not the toolkit.)
 2. Open `INSTRUCTIONS.html` inside the folder. It has the full instructions.
 3. Fill in `Lastname, Firstname (GUIDED).csv` (or `Lastname, Firstname (FULL).csv` if you have publications or need a rarer field), run the script, submit the PDF and the CSV.
 
