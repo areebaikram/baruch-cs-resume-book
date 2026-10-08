@@ -566,12 +566,15 @@ def tidy_degree(s):
     return s
 
 
-def tidy_list(s):
-    """'HTML,CSS' -> 'HTML, CSS' and 'C | Linux' -> 'C, Linux'. A comma between digits
-    (10,000), or anything inside a [text](url) link or math, is left alone. A final
-    period is dropped, except after an abbreviation (C.S., etc.)."""
+def tidy_list(s, pipes=False):
+    """'HTML,CSS' -> 'HTML, CSS'. A comma between digits (10,000), or anything inside a
+    [text](url) link or math, is left alone. A final period is dropped, except after an
+    abbreviation (C.S., etc.). With pipes=True (a project's Technologies), 'C | Linux'
+    -> 'C, Linux'; elsewhere a pipe may separate groups ('Languages: ... | Tools: ...')."""
     def fix(t):
-        return re.sub(r",(?=[^\s\d])", ", ", re.sub(r"\s+\|\s+", ", ", t))
+        if pipes:
+            t = re.sub(r"\s+\|\s+", ", ", t)
+        return re.sub(r",(?=[^\s\d])", ", ", t)
     keep = re.compile(MD_LINK_RE.pattern + "|" + MATH_RE.pattern, re.DOTALL)
     out, pos = [], 0
     for m in keep.finditer(s):
@@ -867,7 +870,7 @@ class HTMLGenerator:
             h.append('  <div class="row"><span class="title">%s</span><span class="right">%s</span></div>'
                      % (rich(f.get("Company", "")), right_html))
             h.append('  <div class="row"><span class="subtitle">%s</span><span class="right dates">%s</span></div>'
-                     % (rich(tidy_list(f.get("Title", ""))), esc(tidy_dates(f.get("Dates", "")))))
+                     % (rich(tidy_list(f.get("Title", ""), pipes=True)), esc(tidy_dates(f.get("Dates", "")))))
             b = bullets_of(f)
             if b:
                 h.append("  <ul>")
