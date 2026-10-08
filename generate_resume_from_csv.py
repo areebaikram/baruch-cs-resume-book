@@ -33,7 +33,7 @@ import sys
 import webbrowser
 from collections import defaultdict
 
-VERSION = "0.6.4 (Fall 2026)"  # matches the GitHub release tag
+VERSION = "0.6.5 (Fall 2026)"  # matches the GitHub release tag
 
 # --------------------------------------------------------------------------- #
 # CSV reading
@@ -366,6 +366,38 @@ def validate(data):
             if not fields.get(k):
                 warnings.append(f"AWARDS {entry} is missing {k}.")
 
+    # Links: "Github" alone becomes https://github/, which goes nowhere.
+    links = [(data.line("CONTACT", "1", k) + f"CONTACT / {k}", v, 0)
+             for k, v in data.contact.items() if k in ("LinkedIn", "GitHub", "Website")]
+    # A project link shares a line with the project name; past about 95 characters together, the name wraps.
+    links += [(data.line("PROJECTS", entry, "Website") + f"PROJECTS {entry} / Website", f["Website"],
+               len(f.get("Company", "")))
+              for entry, f in data.projects.items() if f.get("Website")]
+    for where, value, name_len in links:
+        _, url = split_link(value)
+        display = link_parts(value)[1]
+        if "." not in re.sub(r"^https?://", "", url, flags=re.I):
+            warnings.append(f'{where} "{value}" is not a web address. Type the whole address, '
+                            "e.g. github.com/you/project, or [GitHub](github.com/you/project) to show shorter text.")
+        elif name_len and name_len + len(display) > 95:
+            warnings.append(f'{where} "{value}" prints as a long address that pushes the project name onto '
+                            f"two lines. Show shorter text: [GitHub]({display}).")
+
+    for name in ("education", "experience", "research", "leadership"):
+        for entry, fields in getattr(data, name).items():
+            loc = tidy_location(fields.get("Location", ""))
+            if loc and "," not in loc and loc.lower() not in PLACELESS:
+                warnings.append(f'{data.line(name.upper(), entry, "Location")}{name.upper()} {entry} / Location '
+                                f'"{loc}" should be "City, State", e.g. New York, NY (or Remote).')
+
+    for entry, fields in data.education.items():
+        if (re.search(r"community college", fields.get("Institution", ""), re.I)
+                and tidy_degree(fields.get("Degree", "")).lower().startswith("bachelor")):
+            warnings.append(
+                f'{data.line("EDUCATION", entry, "Degree")}EDUCATION {entry} / Degree "{fields["Degree"]}" is a '
+                "bachelor's degree, but community colleges award associate degrees, e.g. Associate of Science "
+                'in Computer Science. If you transferred before finishing, write "Transferred after 2 years".')
+
     email = data.contact.get("Email", "")
     if email and not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", email):
         warnings.append(f'Email "{email}" does not look like a valid address.')
@@ -433,6 +465,7 @@ def tidy_dates(s):
     # Any hyphen/dash between the two halves -> spaced en dash.
     s = re.sub(r"\s*(?:-{1,2}|–|—)\s*", " – ", s)
     s = re.sub(r"\b(present|current|expected)\b", lambda m: m.group(1).capitalize(), s, flags=re.I)
+    s = s.replace("Current", "Present")
     return s
 
 
@@ -442,6 +475,83 @@ def tidy_bullet(s):
     if s.endswith(".") and not s.endswith(".."):
         s = s[:-1]
     return s
+
+
+def tidy_phone(s):
+    """A US number, however typed, prints as 212-555-1234. Anything else is left alone."""
+    digits = re.sub(r"\D", "", s)
+    if len(digits) == 11 and digits[0] == "1":
+        digits = digits[1:]
+    if len(digits) == 10 and not re.search(r"[A-Za-z]", s):
+        return f"{digits[:3]}-{digits[3:6]}-{digits[6:]}"
+    return s.strip()
+
+
+def tidy_gpa(s):
+    """'3.8', '3.94/4.00', 'GPA: 3.52' -> '3.8/4.0', '3.94/4.0', '3.52/4.0'. The digits stay as typed."""
+    s = re.sub(r"^\s*GPA\s*:?\s*", "", s, flags=re.I)
+    m = re.fullmatch(r"\s*(\d\.\d{1,3})\s*(?:/\s*4(?:\.0+)?)?\s*", s)
+    return f"{m.group(1)}/4.0" if m else s.strip()
+
+
+US_STATES = {
+    "alabama": "AL", "alaska": "AK", "arizona": "AZ", "arkansas": "AR", "california": "CA",
+    "colorado": "CO", "connecticut": "CT", "delaware": "DE", "florida": "FL", "georgia": "GA",
+    "hawaii": "HI", "idaho": "ID", "illinois": "IL", "indiana": "IN", "iowa": "IA", "kansas": "KS",
+    "kentucky": "KY", "louisiana": "LA", "maine": "ME", "maryland": "MD", "massachusetts": "MA",
+    "michigan": "MI", "minnesota": "MN", "mississippi": "MS", "missouri": "MO", "montana": "MT",
+    "nebraska": "NE", "nevada": "NV", "new hampshire": "NH", "new jersey": "NJ", "new mexico": "NM",
+    "new york": "NY", "north carolina": "NC", "north dakota": "ND", "ohio": "OH", "oklahoma": "OK",
+    "oregon": "OR", "pennsylvania": "PA", "rhode island": "RI", "south carolina": "SC",
+    "south dakota": "SD", "tennessee": "TN", "texas": "TX", "utah": "UT", "vermont": "VT",
+    "virginia": "VA", "washington": "WA", "west virginia": "WV", "wisconsin": "WI", "wyoming": "WY",
+    "district of columbia": "DC",
+}
+STATE_RE = re.compile(r"^(.+?),?\s+(" + "|".join(sorted(US_STATES, key=len, reverse=True)) + r")$", re.I)
+STATE_CODE_RE = re.compile(r"^(.+?)\s+(" + "|".join(sorted(set(US_STATES.values()))) + r")$")
+# Locations that need no "City, ST".
+PLACELESS = ("remote", "online", "hybrid", "virtual")
+
+
+def tidy_location(s):
+    """'Knoxville Tennessee', 'Knoxville, Tennessee', 'Knoxville TN' -> 'Knoxville, TN'."""
+    s = s.strip()
+    m = STATE_RE.match(s)
+    if m and s.lower() not in US_STATES:   # a bare "West Virginia" is not "West, VA"
+        return f"{m.group(1).strip()}, {US_STATES[m.group(2).lower()]}"
+    m = STATE_CODE_RE.match(s)
+    if m and "," not in s:
+        return f"{m.group(1).strip()}, {m.group(2)}"
+    return s
+
+
+# Abbreviated degree names at the start of Degree, spelled out the way the template writes them.
+DEGREE_WORDS = [
+    (r"B\.\s?S\.?|BS", "Bachelor of Science"), (r"B\.\s?A\.?|BA", "Bachelor of Arts"),
+    (r"A\.\s?S\.?|AS", "Associate of Science"), (r"A\.\s?A\.?|AA", "Associate of Arts"),
+    (r"Bachelor'?s of", "Bachelor of"), (r"Associate'?s of", "Associate of"),
+]
+
+
+def tidy_degree(s):
+    """'B.S. Computer Science' -> 'Bachelor of Science in Computer Science'."""
+    s = s.strip()
+    for pat, full in DEGREE_WORDS:
+        s, n = re.subn(rf"^(?:{pat})(?=\s)", full, s)
+        if n:
+            if not full.endswith(" of"):
+                s = re.sub(rf"^{full}\s+(?!in\b)(?=\w)", f"{full} in ", s)
+            break
+    return s
+
+
+def tidy_list(s):
+    """'HTML,CSS' -> 'HTML, CSS'. A comma between digits (10,000) is left alone."""
+    return re.sub(r",(?=[^\s\d])", ", ", s.strip())
+
+
+def tidy_honors(s):
+    return re.sub(r"^\s*Honors\s*:\s*", "", s, flags=re.I)
 
 
 # [display text](url), as in Markdown. The URL may omit https://.
@@ -457,16 +567,24 @@ def split_link(value):
     return None, value.strip()
 
 
+def link_parts(value):
+    """(href, display text) for a bare URL or [display text](url). A bare URL is
+    shown without https://www., and a GitHub repo link without /tree/main."""
+    text, value = split_link(value)
+    value = re.sub(r"(github\.com/[^/\s]+/[^/\s]+)/tree/(?:main|master)/?$", r"\1", value, flags=re.I)
+    href = value if re.match(r"^https?://", value, re.I) else "https://" + value
+    return href, text or re.sub(r"^https?://(www\.)?", "", value, flags=re.I).rstrip("/")
+
+
 def link_html(value, kind):
     """Turn a URL or email into a real hyperlink (kept when saving to PDF).
 
     Accepts either a bare URL (shown without the https://www. prefix) or
     [display text](url) to show shorter text in place of a long URL."""
-    text, value = split_link(value)
     if kind == "email":
+        text, value = split_link(value)
         return f'<a href="mailto:{esc(value)}">{esc(text or value)}</a>'
-    href = value if re.match(r"^https?://", value, re.I) else "https://" + value
-    display = text or re.sub(r"^https?://(www\.)?", "", value, flags=re.I).rstrip("/")
+    href, display = link_parts(value)
     return f'<a href="{esc(href)}">{esc(display)}</a>'
 
 
@@ -629,7 +747,7 @@ class HTMLGenerator:
         c = self.d.contact
         items = []
         if c.get("Phone"):
-            items.append(esc(c["Phone"]))
+            items.append(esc(tidy_phone(c["Phone"])))
         if c.get("Email"):
             items.append(link_html(c["Email"], "email"))
         for k in ("LinkedIn", "GitHub", "Website"):
@@ -643,17 +761,17 @@ class HTMLGenerator:
     def education(self):
         h = ["<h2>Education</h2>"]
         for _, f in sorted_entries(self.d.education):
-            degree = f.get("Degree", "")
+            degree = tidy_degree(f.get("Degree", ""))
             if f.get("Minor"):
                 degree += f", Minor in {f['Minor']}"
             extra = []
             if f.get("GPA"):
-                extra.append(f"GPA: {esc(f['GPA'])}")
+                extra.append(f"GPA: {esc(tidy_gpa(f['GPA']))}")
             if f.get("Coursework"):
-                extra.append(f"Relevant Coursework: {rich(f['Coursework'])}")
+                extra.append(f"Relevant Coursework: {rich(tidy_list(f['Coursework']))}")
             if f.get("Honors"):
-                extra.append(rich(f["Honors"]))
-            h.append(entry_block(f.get("Institution", ""), f.get("Location", ""),
+                extra.append(f"Honors: {rich(tidy_honors(f['Honors']))}")
+            h.append(entry_block(f.get("Institution", ""), tidy_location(f.get("Location", "")),
                                  degree, tidy_dates(f.get("Dates", "")),
                                  bullets_of(f), extra))
         return "\n".join(h)
@@ -672,7 +790,7 @@ class HTMLGenerator:
     def work(self, heading, entries):
         h = [f"<h2>{heading}</h2>"]
         for _, f in sorted_entries(entries):
-            h.append(entry_block(f.get("Company", ""), f.get("Location", ""),
+            h.append(entry_block(f.get("Company", ""), tidy_location(f.get("Location", "")),
                                  f.get("Title", ""), tidy_dates(f.get("Dates", "")),
                                  bullets_of(f)))
         return "\n".join(h)
@@ -700,13 +818,13 @@ class HTMLGenerator:
             heading = "Projects"
         h = [f"<h2>{heading}</h2>"]
         for _, f in sorted_entries(self.d.leadership):
-            h.append(entry_block(f.get("Company", ""), f.get("Location", ""),
+            h.append(entry_block(f.get("Company", ""), tidy_location(f.get("Location", "")),
                                  f.get("Title", ""), tidy_dates(f.get("Dates", "")),
                                  bullets_of(f)))
         for _, f in sorted_entries(self.d.projects):
             # Projects: name on the left, link (if any) on the right,
             # technologies in italics where a job title would go.
-            right = f.get("Location", "")
+            right = tidy_location(f.get("Location", ""))
             link = f.get("Website", "")
             right_html = esc(right)
             if link:
@@ -715,7 +833,7 @@ class HTMLGenerator:
             h.append('  <div class="row"><span class="title">%s</span><span class="right">%s</span></div>'
                      % (rich(f.get("Company", "")), right_html))
             h.append('  <div class="row"><span class="subtitle">%s</span><span class="right dates">%s</span></div>'
-                     % (rich(f.get("Title", "")), esc(tidy_dates(f.get("Dates", "")))))
+                     % (rich(tidy_list(f.get("Title", ""))), esc(tidy_dates(f.get("Dates", "")))))
             b = bullets_of(f)
             if b:
                 h.append("  <ul>")
@@ -729,7 +847,7 @@ class HTMLGenerator:
         for label in ("Skills", "Certifications", "Languages", "Strengths", "Interests"):
             v = self.d.skills.get(label, "")
             if v:
-                h.append(f'<div class="line"><span class="label">{label}:</span> {rich(v)}</div>')
+                h.append(f'<div class="line"><span class="label">{label}:</span> {rich(tidy_list(v))}</div>')
         return "\n".join(h)
 
     # ---- page chrome ---------------------------------------------------- #
@@ -863,7 +981,7 @@ class HTMLGenerator:
       '<ul>' +
       '<li>Open this file in <b>Chrome or Edge</b> (Safari and Firefox add their own margins and headers).</li>' +
       '<li>Press <b>Ctrl+P</b> (Windows) or <b>Cmd+P</b> (Mac).</li>' +
-      '<li>Destination: <b>Save as PDF</b>.</li>' +
+      '<li>Destination: <b>Save as PDF</b>. Not "Print using system dialog" or "Open PDF in Preview".</li>' +
       '<li>Paper size: <b>Letter</b>. Margins: <b>Default</b>. Scale: <b>100%</b>.</li>' +
       '<li>Keep the suggested file name (<i>Lastname_Firstname.pdf</i>).</li>' +
       '</ul>';

@@ -193,6 +193,9 @@
       <li>Every bullet: <b>Did X by doing Y, which resulted in Z.</b> Use numbers where you honestly can.<br>
         <span class="weak">Weak:</span> Cashier at a grocery store<br>
         <span class="good">Better:</span> Reorganized the stockroom by grouping high-turnover items near the floor, which cut restocking time by 20%; trained 3 coworkers on the new layout</li>
+      <li><b>Start every bullet with a verb:</b> past tense (<i>Built</i>, <i>Led</i>), or present tense (<i>Build</i>, <i>Lead</i>)
+        only for a role you still have. Not <i>Analyzing</i> or <i>Responsible for</i>.</li>
+      <li><b>2 to 4 bullets</b> per job, project, or club; fewer for older or minor ones.</li>
       <li><b>Stay truthful.</b> You may be asked about anything on the page.</li>
       <li><b>Proofread.</b> Wording and grammar count, so have someone else read it.</li>
     </ul>
@@ -204,6 +207,12 @@
       <li><b>Coursework:</b> only courses you are comfortable being asked about, or leave it out.</li>
       <li><b>Interests must be specific.</b> Not "reading, chess" but "Russian literature (Dostoevsky, Gogol); chess (club tournament director)".</li>
       <li><b>Email:</b> use a professional address, such as your Baruch one.</li>
+      <li><b>Degree:</b> spell it out (<i>Bachelor of Science</i>, not <i>B.S.</i>). A community college degree is an
+        <i>Associate of Science</i> (or Arts); if you transferred before finishing, write <i>Transferred after 2 years</i>.
+        A concentration goes after a comma: <i>Bachelor of Science in Computer Science, Concentration in Financial Mathematics</i>.</li>
+      <li><b>Location:</b> where the work happened, as <i>City, State</i>: <i>New York, NY</i>, or <i>Remote</i>.</li>
+      <li><b>Skills:</b> languages, frameworks, and tools. Topics like <i>Data Structures</i> belong in Coursework.
+        Don't repeat a project's Technologies line word for word in its bullets.</li>
     </ul>
     <p style="margin:12px 0 4px"><b>Which section does it go in?</b></p>
     <ul>
@@ -241,6 +250,7 @@
         <li>Dates: <code>Jun. 2025 - Aug. 2025</code>, <code>Sep. 2024 - Present</code>, or <code>Expected May 2027</code>.</li>
         <li>No periods at the end of bullets. No bold, italics, or bullet symbols; the generator does the formatting.</li>
         <li>Write your name in Latin letters.</li>
+        <li>A project link needs the whole address (<code>github.com/you/project</code>), not just the word GitHub.</li>
         <li>Links can be typed with or without <code>https://</code>. To show shorter text, write
           <code>[GitHub repo](github.com/you/project)</code>: square brackets around the text, then the address in round
           brackets, with no space between. This also works inside a bullet.</li>
@@ -321,7 +331,8 @@
       <summary>Making a link show shorter text</summary>
       <p>LinkedIn, GitHub, Website, and a project's Website become clickable links; type them with or without
         <code>https://</code>. To show shorter text, write <code>[GitHub repo](github.com/you/project)</code>: square brackets
-        around the text, then the address in round brackets, with no space between. This also works inside a bullet.</p>
+        around the text, then the address in round brackets, with no space between. This also works inside a bullet.
+        A link needs the whole address (<code>github.com/you/project</code>), not just the word GitHub.</p>
     </details>
     <details>
       <summary>Formatting math</summary>
@@ -376,8 +387,11 @@
         <li class="only-form"><b>Download your CSV</b> and keep it. To make changes later, open it here with
             <b>Open a CSV</b>.</li>
         <li><b>Save as PDF</b> opens your resume in a new tab with the print window. Set Destination to <b>Save as PDF</b>
-            and leave everything else as it is. Keep the suggested file name (<i>Lastname_Firstname.pdf</i>).</li>
-        <li>Open the PDF and check that it is <b>one page</b>.</li>
+            and leave everything else as it is. Keep the suggested file name (<i>Lastname_Firstname.pdf</i>).
+            Use Chrome's own print window: don't click <b>Print using system dialog</b> or <b>Open PDF in Preview</b>,
+            which save the wrong paper size.</li>
+        <li>Open the PDF and check that it is <b>one page</b>, with no date or web address printed at the top or bottom.
+            If you see one, save it again from Chrome's print window.</li>
         <li><b>Submit both files</b>, <i>Lastname_Firstname.pdf</i> and <i>Lastname_Firstname.csv</i>, by uploading
             them with the <b>Dropbox link in the email</b> (no Dropbox account needed).</li>
       </ol>
@@ -747,7 +761,8 @@ function showSaved() {
   items.push(saved.pdf
     ? '<span class="tick">&#10003; PDF:</span> the print window is open in a new tab. Set Destination to <b>Save as PDF</b> ' +
       'and click <b>Save</b>. The file is <b>' + esc(saved.pdf) + '</b>, usually in your <b>Downloads</b> folder. ' +
-      'Open it to check it is one page.'
+      'Don\'t use "Print using system dialog" or "Open PDF in Preview". ' +
+      'Open the PDF to check it is one page, with no date or web address printed at the top or bottom.'
     : '<span class="todo">&#9744; PDF:</span> not saved yet. Click <b>Save as PDF</b>.');
   if (form) {
     items.push(saved.csv
@@ -796,7 +811,8 @@ var CONTACT_FIELDS = [
     hint: 'To show shorter text: [Portfolio](your-site.com/long/path)' },
 ];
 var SKILLS_FIELDS = [
-  { f: 'Skills', label: 'Technical skills', ph: 'Python, Java, SQL, React, Git, AWS', wide: true },
+  { f: 'Skills', label: 'Technical skills', ph: 'Python, Java, SQL, React, Git, AWS', wide: true,
+    hint: 'Languages, frameworks, and tools. Course topics go in Coursework.' },
   { f: 'Certifications', label: 'Certifications (optional)', ph: 'AWS Certified Cloud Practitioner', wide: true },
   { f: 'Languages', label: 'Spoken languages (optional)', ph: 'Spanish (fluent), Mandarin (conversational)', wide: true },
   { f: 'Interests', label: 'Interests', wide: true,
@@ -810,7 +826,8 @@ var SECTIONS = {
     fields: [
       { f: 'Institution', label: 'School', ph: 'CUNY Baruch College' },
       { f: 'Location', label: 'Location', ph: 'New York, NY' },
-      { f: 'Degree', label: 'Degree', ph: 'Bachelor of Science in Computer Science' },
+      { f: 'Degree', label: 'Degree', ph: 'Bachelor of Science in Computer Science',
+        hint: 'Spelled out. At a community college: Associate of Science in ...' },
       { f: 'Dates', label: 'Dates', ph: 'Expected May 2027' },
       { f: 'Minor', label: 'Minor (optional)', ph: 'Mathematics' },
       { f: 'GPA', label: 'GPA (only if 3.4 or higher)', ph: '3.70/4.0' },
@@ -826,7 +843,8 @@ var SECTIONS = {
       { f: 'Details', label: 'One line of context (optional)', wide: true, ph: 'Awarded to the top 2% of the incoming class' },
     ] },
   EXPERIENCE: { title: 'Experience', item: 'job', a: 'a', bullets: true,
-    blurb: 'Jobs, internships, fellowships, tutoring, teaching or course assistant work. Include non-tech jobs. Most recent first.',
+    blurb: 'Jobs, internships, fellowships, tutoring, teaching or course assistant work. Include non-tech jobs. Most recent first. ' +
+           'Bullets start with a verb: past tense, or present tense for a job you still have.',
     fields: [
       { f: 'Company', label: 'Company', ph: 'Goldman Sachs' },
       { f: 'Location', label: 'Location', ph: 'New York, NY' },
@@ -850,7 +868,7 @@ var SECTIONS = {
       { f: 'Authors', label: 'Authors (optional)', wide: true, ph: 'J. Smith, A. Lee', hint: 'As they appear on the paper.' },
     ] },
   LEADERSHIP: { title: 'Leadership', item: 'organization', a: 'an', bullets: true,
-    blurb: 'Clubs, executive boards, volunteering where you had a role.',
+    blurb: 'Clubs, executive boards, volunteering where you had a role. Most recent first.',
     fields: [
       { f: 'Organization', label: 'Organization', ph: 'Baruch Computer Science Club' },
       { f: 'Location', label: 'Location', ph: 'New York, NY' },
@@ -858,11 +876,11 @@ var SECTIONS = {
       { f: 'Dates', label: 'Dates', ph: 'Sep. 2025 - Present' },
     ] },
   PROJECTS: { title: 'Projects', item: 'project', a: 'a', bullets: true,
-    blurb: 'Personal, class, and hackathon projects.',
+    blurb: 'Personal, class, and hackathon projects. Most recent first.',
     fields: [
       { f: 'Project', label: 'Project name', ph: 'NYC Subway Shortest Path' },
       { f: 'Website', label: 'Link (optional)', ph: 'github.com/you/project',
-        hint: 'Shorter text: [GitHub repo](github.com/you/project)' },
+        hint: 'The whole address. Shorter text: [GitHub](github.com/you/project)' },
       { f: 'Technologies', label: 'Technologies', ph: 'Python, Flask, JavaScript' },
       { f: 'Dates', label: 'Dates', ph: 'Mar. 2026' },
     ] },
