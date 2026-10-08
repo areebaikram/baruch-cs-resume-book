@@ -33,7 +33,7 @@ import sys
 import webbrowser
 from collections import defaultdict
 
-VERSION = "0.6.5 (Fall 2026)"  # matches the GitHub release tag
+VERSION = "0.6.6 (Fall 2026)"  # matches the GitHub release tag
 
 # --------------------------------------------------------------------------- #
 # CSV reading
@@ -383,16 +383,10 @@ def validate(data):
             warnings.append(f'{where} "{value}" prints as a long address that pushes the project name onto '
                             f"two lines. Show shorter text: [GitHub]({display}).")
 
-    for name in ("education", "experience", "research", "leadership"):
-        for entry, fields in getattr(data, name).items():
-            loc = tidy_location(fields.get("Location", ""))
-            if loc and "," not in loc and loc.lower() not in PLACELESS:
-                warnings.append(f'{data.line(name.upper(), entry, "Location")}{name.upper()} {entry} / Location '
-                                f'"{loc}" should be "City, State", e.g. New York, NY (or Remote).')
-
     for entry, fields in data.education.items():
         if (re.search(r"community college", fields.get("Institution", ""), re.I)
-                and tidy_degree(fields.get("Degree", "")).lower().startswith("bachelor")):
+                and tidy_degree(fields.get("Degree", "")).lower().startswith("bachelor")
+                and "applied" not in fields.get("Degree", "").lower()):   # some award a B.A.S.
             warnings.append(
                 f'{data.line("EDUCATION", entry, "Degree")}EDUCATION {entry} / Degree "{fields["Degree"]}" is a '
                 "bachelor's degree, but community colleges award associate degrees, e.g. Associate of Science "
@@ -465,7 +459,7 @@ def tidy_dates(s):
     # Any hyphen/dash between the two halves -> spaced en dash.
     s = re.sub(r"\s*(?:-{1,2}|–|—)\s*", " – ", s)
     s = re.sub(r"\b(present|current|expected)\b", lambda m: m.group(1).capitalize(), s, flags=re.I)
-    s = s.replace("Current", "Present")
+    s = re.sub(r"\bCurrent\b", "Present", s)
     return s
 
 
@@ -480,6 +474,8 @@ def tidy_bullet(s):
 def tidy_phone(s):
     """A US number, however typed, prints as 212-555-1234. Anything else is left alone."""
     digits = re.sub(r"\D", "", s)
+    if s.strip().startswith("+") and not digits.startswith("1"):
+        return s.strip()   # another country's code, e.g. +65
     if len(digits) == 11 and digits[0] == "1":
         digits = digits[1:]
     if len(digits) == 10 and not re.search(r"[A-Za-z]", s):
@@ -507,10 +503,10 @@ US_STATES = {
     "virginia": "VA", "washington": "WA", "west virginia": "WV", "wisconsin": "WI", "wyoming": "WY",
     "district of columbia": "DC",
 }
-STATE_RE = re.compile(r"^(.+?),?\s+(" + "|".join(sorted(US_STATES, key=len, reverse=True)) + r")$", re.I)
+# Georgia is left out: "Tbilisi, Georgia" is the country.
+STATE_RE = re.compile(r"^(.+?),?\s+(" + "|".join(sorted((k for k in US_STATES if k != "georgia"), key=len, reverse=True))
+                      + r")$", re.I)
 STATE_CODE_RE = re.compile(r"^(.+?)\s+(" + "|".join(sorted(set(US_STATES.values()))) + r")$")
-# Locations that need no "City, ST".
-PLACELESS = ("remote", "online", "hybrid", "virtual")
 
 
 def tidy_location(s):
@@ -534,20 +530,27 @@ DEGREE_WORDS = [
 
 
 def tidy_degree(s):
-    """'B.S. Computer Science' -> 'Bachelor of Science in Computer Science'."""
+    """'B.S. in Computer Science' -> 'Bachelor of Science in Computer Science'. Only an
+    abbreviation followed by "in" is spelled out, so no words are added or reordered."""
     s = s.strip()
     for pat, full in DEGREE_WORDS:
-        s, n = re.subn(rf"^(?:{pat})(?=\s)", full, s)
+        after = r"(?=\s)" if full.endswith(" of") else r"(?=\s+in\b)"
+        s, n = re.subn(rf"^(?:{pat}){after}", full, s)
         if n:
-            if not full.endswith(" of"):
-                s = re.sub(rf"^{full}\s+(?!in\b)(?=\w)", f"{full} in ", s)
             break
     return s
 
 
 def tidy_list(s):
-    """'HTML,CSS' -> 'HTML, CSS'. A comma between digits (10,000) is left alone."""
-    return re.sub(r",(?=[^\s\d])", ", ", s.strip())
+    """'HTML,CSS' -> 'HTML, CSS'. A comma between digits (10,000), or inside a
+    [text](url) link or math, is left alone."""
+    keep = re.compile(MD_LINK_RE.pattern + "|" + MATH_RE.pattern, re.DOTALL)
+    out, pos = [], 0
+    for m in keep.finditer(s):
+        out.append(re.sub(r",(?=[^\s\d])", ", ", s[pos:m.start()]) + m.group(0))
+        pos = m.end()
+    out.append(re.sub(r",(?=[^\s\d])", ", ", s[pos:]))
+    return "".join(out).strip()
 
 
 def tidy_honors(s):
