@@ -8,7 +8,7 @@ CONTACT,GitHub,[github.com/your-username - delete this row if none]
 CONTACT,Website,[your-site.com or [Portfolio](your-site.com/long/path) to show shorter text - delete this row if none]
 EDUCATION,Institution,CUNY Baruch College
 EDUCATION,Location,"New York, NY"
-EDUCATION,Degree,[Bachelor of Science in Computer Science]
+EDUCATION,Degree,"[Bachelor of Science in Computer Science - spelled out, not B.S., BS, or Bachelors]"
 EDUCATION,Minor,"[Minor name, e.g. Mathematics - delete this row if none]"
 EDUCATION,Dates,[Expected May 20XX]
 EDUCATION,GPA,[X.XX/4.0 - delete this row if below 3.4]
