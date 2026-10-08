@@ -249,6 +249,7 @@
       <ul>
         <li>Dates: <code>Jun. 2025 - Aug. 2025</code>, <code>Sep. 2024 - Present</code>, or <code>Expected May 2027</code>.</li>
         <li>No periods at the end of bullets. No bold, italics, or bullet symbols; the generator does the formatting.</li>
+        <li>Use the name you want employers to call you; it doesn't have to be your legal name. To show both, put the one you go by in parentheses, e.g. <code>Katherine (Kate) Smith</code>.</li>
         <li>Write your name in Latin letters. If your full name has more than two words, fill in Last name with your whole last name.</li>
         <li>A project link needs the whole address (<code>github.com/you/project</code>), not just the word GitHub.</li>
         <li>Links can be typed with or without <code>https://</code>. To show shorter text, write
@@ -323,6 +324,7 @@
       <ul>
         <li>Dates: <code>Jun. 2025 - Aug. 2025</code>, <code>Sep. 2024 - Present</code>, or <code>Expected May 2027</code>.</li>
         <li>No periods at the end of bullets. No bold, italics, or bullet symbols; the generator does the formatting.</li>
+        <li>Use the name you want employers to call you; it doesn't have to be your legal name. To show both, put the one you go by in parentheses, e.g. <code>Katherine (Kate) Smith</code>.</li>
         <li>Write your name in Latin letters. Full name more than two words (a middle name, or a last name like
           <code>Van Der Berg</code> or <code>Garcia Lopez</code>)? Fill in the Last Name row with your whole last name, so
           your PDF is named correctly (<code>Van-Der-Berg_Mary.pdf</code>). Otherwise delete that row.</li>
@@ -801,7 +803,9 @@ drop.addEventListener('drop', function (e) {
 // =========================================================================== //
 
 var CONTACT_FIELDS = [
-  { f: 'Name', label: 'Full name', ph: 'Areeba Ikram', req: true, ac: 'name' },
+  { f: 'Name', label: 'Full name', ph: 'Areeba Ikram', req: true, ac: 'name',
+    hint: 'The name you want employers to call you; it does not have to be your legal name. ' +
+          'To show both: Katherine (Kate) Smith.' },
   { f: 'Last Name', label: 'Last name (needed if your full name has more than two words)', ph: 'Van Der Berg',
     hint: 'Your whole last name, e.g. Van Der Berg or Garcia Lopez. It names your files (Van-Der-Berg_Mary.pdf).' },
   { f: 'Phone', label: 'Phone', ph: '212-555-1234', req: true, ac: 'tel' },
