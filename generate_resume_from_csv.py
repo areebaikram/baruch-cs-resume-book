@@ -157,7 +157,8 @@ class ResumeData:
                 f'Line {line_no}: "{field.strip()}" is not a valid field in {section}, so the row was ignored. '
                 f"Fields allowed in {section}: {FIELD_NAMES_SHOWN[section]}.")
             return
-        value = value.strip()
+        # A stray "| " left over from a resume template ("| AHRC Nassau").
+        value = re.sub(r"^\|\s+|\s+\|$", "", value.strip())
         if section not in self.order:
             self.order.append(section)
         if section in ("CONTACT", "SKILLS"):
@@ -396,7 +397,13 @@ def validate(data):
                 'in Computer Science. If you transferred before finishing, write "Transferred after 2 years".')
 
     name = data.contact.get("Name", "")
-    if len(name.split()) >= 3 and not data.contact.get("LastName"):
+    last = data.contact.get("LastName", "")
+    if last and last.lower() == name.lower():
+        warnings.append(f'CONTACT / Last Name: write only your last name, not your full name "{name}".')
+    elif last and not re.search(r"\s" + re.escape(last) + r"$", name, re.I):
+        warnings.append(f'CONTACT / Last Name: "{last}" should be how your full name "{name}" ends, '
+                        "so your files are named correctly. Check both for typos.")
+    if len(name.split()) >= 3 and not last:
         warnings.append(
             f'CONTACT / Last Name: your name "{name}" has more than two words, so fill in Last Name with your '
             'whole last name, e.g. "Van Der Berg" or "Garcia Lopez". It names your files. '
@@ -581,7 +588,7 @@ def tidy_list(s, pipes=False):
         out.append(fix(s[pos:m.start()]) + m.group(0))
         pos = m.end()
     out.append(fix(s[pos:]))
-    s = "".join(out).strip()
+    s = "".join(out).strip().rstrip(",;").strip()
     if s.endswith(".") and not re.search(r"(?:\.\w+|\betc)\.$", s):
         s = s[:-1]
     return s
@@ -609,6 +616,7 @@ def link_parts(value):
     shown without https://www., and a GitHub repo link without /tree/main."""
     text, value = split_link(value)
     value = re.sub(r"(github\.com/[^/\s]+/[^/\s]+)/tree/(?:main|master)/?$", r"\1", value, flags=re.I)
+    value = re.sub(r"(linkedin\.com/\S*?)\?\S*$", r"\1", value, flags=re.I)   # ?isSelfProfile=true etc.
     href = value if re.match(r"^https?://", value, re.I) else "https://" + value
     return href, text or re.sub(r"^(?:https?://)?(?:www\.)?", "", value, flags=re.I).rstrip("/")
 

@@ -1250,7 +1250,8 @@ function locate(m) {
   }
   function entry(sec, n) { var i = (genIndex[sec] || [])[n - 1]; return i === undefined ? null : sec + '|' + i; }
   if (/^CONTACT \/ Last Name: /.test(m)) {
-    return { key: 'c|Last Name', text: m.replace(/^CONTACT \/ Last Name: y/, 'Y') };
+    var t = m.replace(/^CONTACT \/ Last Name: /, '');
+    return { key: 'c|Last Name', text: t.charAt(0).toUpperCase() + t.slice(1) };
   }
   if ((r = /^CONTACT is missing required field: (\w+)/.exec(m))) {
     key = 'c|' + r[1];
