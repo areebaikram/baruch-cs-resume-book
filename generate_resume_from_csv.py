@@ -33,7 +33,7 @@ import sys
 import webbrowser
 from collections import defaultdict
 
-VERSION = "0.6.6 (Fall 2026)"  # matches the GitHub release tag
+VERSION = "0.6.7 (Fall 2026)"  # matches the GitHub release tag
 
 # --------------------------------------------------------------------------- #
 # CSV reading
@@ -352,11 +352,14 @@ def validate(data):
         for entry, fields in getattr(data, name).items():
             if not any(k.startswith("Bullet") for k in fields):
                 warnings.append(f"{name.upper()} {entry} ({fields.get('Company', '?')}) has no bullet points.")
-            for k in ("Company", "Title", "Dates"):
+            for k in ("Company", "Title", "Dates") + (() if name == "projects" else ("Location",)):
                 if not fields.get(k):
                     label = {"Company": "Company/Organization/Project",
-                             "Title": "Title/Technologies", "Dates": "Dates"}[k]
+                             "Title": "Title/Technologies", "Dates": "Dates", "Location": "Location"}[k]
                     warnings.append(f"{name.upper()} {entry} is missing {label}.")
+    for entry, fields in data.education.items():
+        if not fields.get("Location"):
+            warnings.append(f"EDUCATION {entry} is missing Location.")
     for entry, fields in data.publications.items():
         for k in ("Title", "Venue", "Dates"):
             if not fields.get(k):
@@ -391,6 +394,21 @@ def validate(data):
                 f'{data.line("EDUCATION", entry, "Degree")}EDUCATION {entry} / Degree "{fields["Degree"]}" is a '
                 "bachelor's degree, but community colleges award associate degrees, e.g. Associate of Science "
                 'in Computer Science. If you transferred before finishing, write "Transferred after 2 years".')
+
+    name = data.contact.get("Name", "")
+    if len(name.split()) >= 3 and not data.contact.get("LastName"):
+        warnings.append(
+            f'CONTACT / Last Name: your name "{name}" has more than two words, so fill in Last Name with your '
+            'whole last name, e.g. "Van Der Berg" or "Garcia Lopez". It names your files. '
+            "If your last name is one word, write just that word.")
+
+    for entry, fields in data.education.items():
+        degree = tidy_degree(fields.get("Degree", ""))
+        if DEGREE_SHORT_RE.match(degree):
+            warnings.append(
+                f'{data.line("EDUCATION", entry, "Degree")}EDUCATION {entry} / Degree "{fields["Degree"]}": '
+                "spell the degree out, e.g. Bachelor of Science in Computer Science "
+                "(not B.S., BS, Bachelors, or Bachelor in).")
 
     email = data.contact.get("Email", "")
     if email and not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", email):
@@ -529,6 +547,13 @@ DEGREE_WORDS = [
 ]
 
 
+# A degree still abbreviated or misspelled after tidy_degree. "Associate in Applied
+# Science" is a real degree name, so only "Associates" and "Associate's" count.
+DEGREE_SHORT_RE = re.compile(
+    r"^(?:(?:[AB]\.?\s?[AS]\.?|A\.?A\.?S\.?|B\.?B\.?A\.?)(?=[\s,]|$)"
+    r"|Bachelor(?!\s+of\b)|Associates\b|Associate's)")
+
+
 def tidy_degree(s):
     """'B.S. in Computer Science' -> 'Bachelor of Science in Computer Science'. Only an
     abbreviation followed by "in" is spelled out, so no words are added or reordered."""
@@ -542,15 +567,21 @@ def tidy_degree(s):
 
 
 def tidy_list(s):
-    """'HTML,CSS' -> 'HTML, CSS'. A comma between digits (10,000), or inside a
-    [text](url) link or math, is left alone."""
+    """'HTML,CSS' -> 'HTML, CSS' and 'C | Linux' -> 'C, Linux'. A comma between digits
+    (10,000), or anything inside a [text](url) link or math, is left alone. A final
+    period is dropped, except after an abbreviation (C.S., etc.)."""
+    def fix(t):
+        return re.sub(r",(?=[^\s\d])", ", ", re.sub(r"\s+\|\s+", ", ", t))
     keep = re.compile(MD_LINK_RE.pattern + "|" + MATH_RE.pattern, re.DOTALL)
     out, pos = [], 0
     for m in keep.finditer(s):
-        out.append(re.sub(r",(?=[^\s\d])", ", ", s[pos:m.start()]) + m.group(0))
+        out.append(fix(s[pos:m.start()]) + m.group(0))
         pos = m.end()
-    out.append(re.sub(r",(?=[^\s\d])", ", ", s[pos:]))
-    return "".join(out).strip()
+    out.append(fix(s[pos:]))
+    s = "".join(out).strip()
+    if s.endswith(".") and not re.search(r"(?:\.\w+|\betc)\.$", s):
+        s = s[:-1]
+    return s
 
 
 def tidy_honors(s):
@@ -576,7 +607,7 @@ def link_parts(value):
     text, value = split_link(value)
     value = re.sub(r"(github\.com/[^/\s]+/[^/\s]+)/tree/(?:main|master)/?$", r"\1", value, flags=re.I)
     href = value if re.match(r"^https?://", value, re.I) else "https://" + value
-    return href, text or re.sub(r"^https?://(www\.)?", "", value, flags=re.I).rstrip("/")
+    return href, text or re.sub(r"^(?:https?://)?(?:www\.)?", "", value, flags=re.I).rstrip("/")
 
 
 def link_html(value, kind):

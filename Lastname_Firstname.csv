@@ -1,6 +1,6 @@
 ﻿Section,Field,Value
 CONTACT,Name,[First Last]
-CONTACT,Last Name,[Van Der Berg - only if your last name is more than one word; otherwise delete this row]
+CONTACT,Last Name,"[Your whole last name, e.g. Van Der Berg or Garcia Lopez - needed if your full name has more than two words; otherwise delete this row]"
 CONTACT,Phone,[123-456-7890]
 CONTACT,Email,[first.last@baruchmail.cuny.edu]
 CONTACT,LinkedIn,[linkedin.com/in/your-profile - delete this row if none]

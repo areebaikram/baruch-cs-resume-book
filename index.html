@@ -249,7 +249,7 @@
       <ul>
         <li>Dates: <code>Jun. 2025 - Aug. 2025</code>, <code>Sep. 2024 - Present</code>, or <code>Expected May 2027</code>.</li>
         <li>No periods at the end of bullets. No bold, italics, or bullet symbols; the generator does the formatting.</li>
-        <li>Write your name in Latin letters.</li>
+        <li>Write your name in Latin letters. If your full name has more than two words, fill in Last name with your whole last name.</li>
         <li>A project link needs the whole address (<code>github.com/you/project</code>), not just the word GitHub.</li>
         <li>Links can be typed with or without <code>https://</code>. To show shorter text, write
           <code>[GitHub repo](github.com/you/project)</code>: square brackets around the text, then the address in round
@@ -323,8 +323,9 @@
       <ul>
         <li>Dates: <code>Jun. 2025 - Aug. 2025</code>, <code>Sep. 2024 - Present</code>, or <code>Expected May 2027</code>.</li>
         <li>No periods at the end of bullets. No bold, italics, or bullet symbols; the generator does the formatting.</li>
-        <li>Write your name in Latin letters. Last name more than one word? Fill in the Last Name row
-          (e.g. <code>Van Der Berg</code>) so your PDF is named correctly (<code>Van-Der-Berg_Mary.pdf</code>); otherwise delete that row.</li>
+        <li>Write your name in Latin letters. Full name more than two words (a middle name, or a last name like
+          <code>Van Der Berg</code> or <code>Garcia Lopez</code>)? Fill in the Last Name row with your whole last name, so
+          your PDF is named correctly (<code>Van-Der-Berg_Mary.pdf</code>). Otherwise delete that row.</li>
       </ul>
     </details>
     <details>
@@ -801,8 +802,8 @@ drop.addEventListener('drop', function (e) {
 
 var CONTACT_FIELDS = [
   { f: 'Name', label: 'Full name', ph: 'Areeba Ikram', req: true, ac: 'name' },
-  { f: 'Last Name', label: 'Last name, only if it is more than one word', ph: 'Van Der Berg',
-    hint: 'Names your PDF correctly (Van-Der-Berg_Mary.pdf). Otherwise leave it blank.' },
+  { f: 'Last Name', label: 'Last name (needed if your full name has more than two words)', ph: 'Van Der Berg',
+    hint: 'Your whole last name, e.g. Van Der Berg or Garcia Lopez. It names your files (Van-Der-Berg_Mary.pdf).' },
   { f: 'Phone', label: 'Phone', ph: '212-555-1234', req: true, ac: 'tel' },
   { f: 'Email', label: 'Email', ph: 'first.last@baruchmail.cuny.edu', req: true, ac: 'email' },
   { f: 'LinkedIn', label: 'LinkedIn (optional)', ph: 'linkedin.com/in/your-profile' },
@@ -1248,6 +1249,9 @@ function locate(m) {
     return { key: lineKey[+r[1]], text: t.charAt(0).toUpperCase() + t.slice(1) };
   }
   function entry(sec, n) { var i = (genIndex[sec] || [])[n - 1]; return i === undefined ? null : sec + '|' + i; }
+  if (/^CONTACT \/ Last Name: /.test(m)) {
+    return { key: 'c|Last Name', text: m.replace(/^CONTACT \/ Last Name: y/, 'Y') };
+  }
   if ((r = /^CONTACT is missing required field: (\w+)/.exec(m))) {
     key = 'c|' + r[1];
     return { key: key, text: fieldLabel(key) + ' is required.' };
