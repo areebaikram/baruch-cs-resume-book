@@ -536,7 +536,7 @@ STATE_CODE_RE = re.compile(r"^(.+?)\s+(" + "|".join(sorted(set(US_STATES.values(
 
 def tidy_location(s):
     """'Knoxville Tennessee', 'Knoxville, Tennessee', 'Knoxville TN' -> 'Knoxville, TN'."""
-    s = s.strip()
+    s = re.sub(r"\s*,\s*", ", ", s.strip())   # 'New York,NY' -> 'New York, NY'
     m = STATE_RE.match(s)
     if m and s.lower() not in US_STATES:   # a bare "West Virginia" is not "West, VA"
         return f"{m.group(1).strip()}, {US_STATES[m.group(2).lower()]}"
