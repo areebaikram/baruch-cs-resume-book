@@ -1316,6 +1316,9 @@ function changed(fast) {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(saveDraft, 300);
   updateDownload();
+  // Save as PDF prints the last finished preview, so it waits until the preview has caught up.
+  current = null;
+  setSave(false, 'Save as PDF (updating the preview…)');
   schedulePreview(fast ? 30 : 400);
 }
 function schedulePreview(ms) {
