@@ -936,13 +936,14 @@ class HTMLGenerator:
     background: #fff;
     box-shadow: 0 2px 12px rgba(0,0,0,0.25);
   }}
-  /* Dashed line marks the bottom of page one on screen only. */
+  /* Dashed line marks where text on page one must end (the bottom margin), on screen only.
+     The page-length check uses the same limit, so text crossing the line is too long. */
   .page-end {{
-    position: absolute; left: 0; right: 0; top: calc(11in - 2px);
+    position: absolute; left: 0; right: 0; top: calc(11in - 0.45in);
     border-top: 2px dashed #d33;
   }}
   .page-end::after {{
-    content: "end of page 1 – anything below this line will not fit";
+    content: "bottom margin of page 1 – text must end above this line";
     position: absolute; right: 0.3in; top: 2px; padding: 0 4px;
     font: 9pt Arial, sans-serif; color: #d33; background: #fff;
   }}
@@ -1245,7 +1246,7 @@ def main():
     elif pages != 1:
         print(f"\nNOT DONE: the PDF is {pages} pages long. Resumes must be exactly one page.")
         print("Shorten or remove bullets in your CSV, then run this script again.")
-        print("The HTML preview shows a red dashed line where page 1 ends.")
+        print("The HTML preview shows a red dashed line where the text on page 1 must end.")
         if not quiet:
             webbrowser.open(html_url)
         sys.exit(2)
