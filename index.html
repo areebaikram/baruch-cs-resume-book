@@ -678,11 +678,12 @@ function afterRender() {
     var over = overflowInches(doc);
     var form = c.mode === 'form', msgs = [], short;
     if (over > 2 / 96) {
-      msgs.push('<b>The resume runs about ' + (Math.round(over * 100) / 100) + ' inches past one page.</b> ' +
-                'Resumes must be exactly one page. ' +
-                (form ? 'Shorten or remove bullets until it fits; the preview updates as you type. '
-                      : 'Shorten or remove bullets in your CSV. ') +
-                'In the preview below, everything under the red dashed line will be cut off.');
+      msgs.push('<b>The resume runs about ' + (Math.round(over * 100) / 100) + ' inches too long.</b> ' +
+                'Resumes must be exactly one page. Every page keeps a half-inch blank margin at the bottom, ' +
+                'and the red dashed line in the preview below marks where that margin starts: all text must end above it. ' +
+                'Anything that crosses the line moves to a second page when you save the PDF. ' +
+                (form ? 'Shorten or remove bullets until it fits; the preview updates as you type.'
+                      : 'Shorten or remove bullets in your CSV.'));
     }
     if (c.warnings.length) {
       msgs.push(form ? 'Fix the ' + plural(c.warnings.length, 'warning') + ' above. Click one to jump to it.'

@@ -1033,10 +1033,11 @@ class HTMLGenerator:
       '</ul>';
     if (overflow > 2) {
       banner.className = 'banner bad';
-      banner.innerHTML = '<strong>Too long: your resume runs about ' +
+      banner.innerHTML = '<strong>Your resume runs about ' +
         Math.round(overflow / 96 * 100) / 100 +
-        ' inches past one page.</strong> Shorten or remove bullets in your CSV, ' +
-        'run the script again, and reload this page. Everything below the red dashed line will be cut off. ' +
+        ' inches too long.</strong> Every page keeps a half-inch blank margin at the bottom, and the red dashed line ' +
+        'marks where that margin starts: all text must end above it. Anything that crosses the line moves to a second ' +
+        'page. Shorten or remove bullets in your CSV, run the script again, and reload this page. ' +
         'Once it fits, save it as a PDF:' + settings;
     } else {
       banner.className = 'banner ok';
