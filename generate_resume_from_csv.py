@@ -676,7 +676,9 @@ def rich_math(text):
         out = re.sub(r"\x00(\d+)\x00", lambda m: math_html(maths[int(m.group(1))]), esc(chunk))
         return f'<span class="nobr">{out}</span>' if "\x00" in chunk else out
 
-    return "".join(word(c) for c in re.split(r"(\s+)", MATH_RE.sub(stash, text)))
+    # Outside math, a LaTeX-style escape like "10\%" or "R\&D" means just the character.
+    text = re.sub(r"\\([%&#_$])", r"\1", MATH_RE.sub(stash, text))
+    return "".join(word(c) for c in re.split(r"(\s+)", text))
 
 
 def strip_math(text):
