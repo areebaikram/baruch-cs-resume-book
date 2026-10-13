@@ -894,7 +894,8 @@ var SECTIONS = {
 };
 // Leadership and Projects print under one heading, so the form moves them as one group ('LP').
 var UNITS = ['AWARDS', 'EXPERIENCE', 'RESEARCH', 'PUBLICATIONS', 'LP'];
-function secsOf(u) { return u === 'LP' ? ['LEADERSHIP', 'PROJECTS'] : [u]; }
+function lpSecs() { return state.projectsFirst ? ['PROJECTS', 'LEADERSHIP'] : ['LEADERSHIP', 'PROJECTS']; }
+function secsOf(u) { return u === 'LP' ? lpSecs() : [u]; }
 function unitOf(sec) { return sec === 'LEADERSHIP' || sec === 'PROJECTS' ? 'LP' : sec; }
 // The generator's name for a field, where it differs from the template's.
 var CANON = { CONTACT: { 'Last Name': 'LastName' }, LEADERSHIP: { Organization: 'Company' },
@@ -912,7 +913,7 @@ function formSpec() {
 
 function blankEntry(sec) { return { fields: {}, bullets: SECTIONS[sec].bullets ? ['', ''] : [] }; }
 function defaultState() {
-  var s = { contact: {}, skills: {}, order: UNITS.slice(), entries: {} };
+  var s = { contact: {}, skills: {}, order: UNITS.slice(), projectsFirst: false, entries: {} };
   Object.keys(SECTIONS).forEach(function (k) { s.entries[k] = []; });
   s.entries.EDUCATION.push({ fields: { Institution: 'CUNY Baruch College', Location: 'New York, NY' }, bullets: [] });
   s.entries.EXPERIENCE.push(blankEntry('EXPERIENCE'));
@@ -938,7 +939,8 @@ function normalize(raw) {
     return r;
   }
   var s = obj(raw), d = defaultState(), ents = obj(s.entries);
-  var out = { contact: strs(s.contact), skills: strs(s.skills), order: unitOrder(s.order), entries: {} };
+  var out = { contact: strs(s.contact), skills: strs(s.skills), order: unitOrder(s.order),
+              projectsFirst: s.projectsFirst === true, entries: {} };
   Object.keys(SECTIONS).forEach(function (k) {
     var items = Array.isArray(ents[k]) ? ents[k] : (k in ents ? [] : d.entries[k]);
     out.entries[k] = items.filter(function (e) { return e && typeof e === 'object'; }).map(function (e) {
@@ -1025,10 +1027,13 @@ function sectionHtml(sec, pos, inGroup) {
     (items.length ? 'another ' : S.a + ' ') + S.item + '</button></section>';
 }
 function groupHtml(pos) {
-  return '<section class="card group" data-unit="LP"><div class="card-head"><h3>Leadership and Projects</h3>' +
-    moveTools('LP', 'Leadership and Projects', pos) + '</div><p class="blurb">These print together under one heading, ' +
-    'Leadership first. If you fill in only one of them, the heading is just "Leadership" or "Projects".</p>' +
-    sectionHtml('LEADERSHIP', -1, true) + sectionHtml('PROJECTS', -1, true) + '</section>';
+  var secs = lpSecs(), first = SECTIONS[secs[0]].title, second = SECTIONS[secs[1]].title;
+  var title = first + ' and ' + second;
+  return '<section class="card group" data-unit="LP"><div class="card-head"><h3>' + title + '</h3>' +
+    moveTools('LP', title, pos) + '</div><p class="blurb">These print together under one heading, ' +
+    first + ' first. If you fill in only one of them, the heading is just "Leadership" or "Projects". ' +
+    icon('lpswap|LP', '&#8645; Put ' + second + ' first', 'Put ' + second + ' above ' + first) + '</p>' +
+    sectionHtml(secs[0], -1, true) + sectionHtml(secs[1], -1, true) + '</section>';
 }
 
 function render() {
@@ -1140,6 +1145,9 @@ formEl.addEventListener('click', function (ev) {
     after = function () {
       refocus(['delb|' + sec + '|' + i + '|' + j, 'delb|' + sec + '|' + i + '|' + (j - 1), 'addb|' + sec + '|' + i], y);
     };
+  } else if (act === 'lpswap') {
+    state.projectsFirst = !state.projectsFirst;
+    after = function () { refocus(['lpswap|LP'], y, '[data-unit]'); };
   } else if (act === 'secup' || act === 'secdown') {
     var o = state.order, at = o.indexOf(sec), to = act === 'secup' ? at - 1 : at + 1;
     o.splice(to, 0, o.splice(at, 1)[0]);
@@ -1407,6 +1415,9 @@ function fromParsed(p) {
     });
   });
   s.order = unitOrder(p.order);
+  var order = Array.isArray(p.order) ? p.order : [];
+  s.projectsFirst = order.indexOf('PROJECTS') >= 0 && order.indexOf('LEADERSHIP') >= 0 &&
+    order.indexOf('PROJECTS') < order.indexOf('LEADERSHIP');
   return { state: s, left: left };
 }
 

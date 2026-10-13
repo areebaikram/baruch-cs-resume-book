@@ -857,17 +857,21 @@ class HTMLGenerator:
         return "\n".join(h)
 
     def leadership_and_projects(self):
+        # Leadership prints first unless Projects comes first in the CSV; the heading follows.
+        order = self.d.order
+        projects_first = ("PROJECTS" in order and "LEADERSHIP" in order
+                          and order.index("PROJECTS") < order.index("LEADERSHIP"))
         if self.d.leadership and self.d.projects:
-            heading = "Leadership and Projects"
+            heading = "Projects and Leadership" if projects_first else "Leadership and Projects"
         elif self.d.leadership:
             heading = "Leadership"
         else:
             heading = "Projects"
-        h = [f"<h2>{heading}</h2>"]
+        lead, proj = [], []
         for _, f in sorted_entries(self.d.leadership):
-            h.append(entry_block(f.get("Company", ""), tidy_location(f.get("Location", "")),
-                                 f.get("Title", ""), tidy_dates(f.get("Dates", "")),
-                                 bullets_of(f)))
+            lead.append(entry_block(f.get("Company", ""), tidy_location(f.get("Location", "")),
+                                    f.get("Title", ""), tidy_dates(f.get("Dates", "")),
+                                    bullets_of(f)))
         for _, f in sorted_entries(self.d.projects):
             # Projects: name on the left, link (if any) on the right,
             # technologies in italics where a job title would go.
@@ -876,18 +880,19 @@ class HTMLGenerator:
             right_html = esc(right)
             if link:
                 right_html = link_html(link, "url")
-            h.append('<div class="entry">')
-            h.append('  <div class="row"><span class="title">%s</span><span class="right">%s</span></div>'
-                     % (rich(f.get("Company", "")), right_html))
-            h.append('  <div class="row"><span class="subtitle">%s</span><span class="right dates">%s</span></div>'
-                     % (rich(tidy_list(f.get("Title", ""), pipes=True)), esc(tidy_dates(f.get("Dates", "")))))
+            proj.append('<div class="entry">')
+            proj.append('  <div class="row"><span class="title">%s</span><span class="right">%s</span></div>'
+                        % (rich(f.get("Company", "")), right_html))
+            proj.append('  <div class="row"><span class="subtitle">%s</span><span class="right dates">%s</span></div>'
+                        % (rich(tidy_list(f.get("Title", ""), pipes=True)), esc(tidy_dates(f.get("Dates", "")))))
             b = bullets_of(f)
             if b:
-                h.append("  <ul>")
-                h.extend(f"    <li>{rich(x)}</li>" for x in b)
-                h.append("  </ul>")
-            h.append("</div>")
-        return "\n".join(h)
+                proj.append("  <ul>")
+                proj.extend(f"    <li>{rich(x)}</li>" for x in b)
+                proj.append("  </ul>")
+            proj.append("</div>")
+        blocks = proj + lead if projects_first else lead + proj
+        return "\n".join([f"<h2>{heading}</h2>"] + blocks)
 
     def skills(self):
         h = ["<h2>Skills, Interests, and Certifications</h2>"]
