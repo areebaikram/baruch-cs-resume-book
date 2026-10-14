@@ -1034,7 +1034,7 @@ class HTMLGenerator:
       '<ul>' +
       '<li>Open this file in <b>Chrome or Edge</b> (Safari and Firefox add their own margins and headers).</li>' +
       '<li>Press <b>Ctrl+P</b> (Windows) or <b>Cmd+P</b> (Mac).</li>' +
-      '<li>Destination: <b>Save as PDF</b>. Not "Print using system dialog" or "Open PDF in Preview".</li>' +
+      '<li>Destination: <b>Save as PDF</b>. Not "Microsoft Print to PDF", "Print using system dialog", or "Open PDF in Preview".</li>' +
       '<li>Paper size: <b>Letter</b>. Margins: <b>Default</b>. Scale: <b>100%</b>.</li>' +
       '<li>Keep the suggested file name (<i>Lastname_Firstname.pdf</i>).</li>' +
       '</ul>';

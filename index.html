@@ -392,8 +392,8 @@
             <b>Open a CSV</b>.</li>
         <li><b>Save as PDF</b> opens your resume in a new tab with the print window. Set Destination to <b>Save as PDF</b>
             and leave everything else as it is. Keep the suggested file name (<i>Lastname_Firstname.pdf</i>).
-            Use Chrome's own print window: don't click <b>Print using system dialog</b> or <b>Open PDF in Preview</b>,
-            which save the wrong paper size.</li>
+            Use Chrome's own print window: don't pick <b>Microsoft Print to PDF</b>, which turns the text into
+            pictures, or click <b>Print using system dialog</b> or <b>Open PDF in Preview</b>, which save the wrong paper size.</li>
         <li>Open the PDF and check that it is <b>one page</b>, with no date or web address printed at the top or bottom.
             If you see one, save it again from Chrome's print window.</li>
         <li><b>Submit both files</b>, <i>Lastname_Firstname.pdf</i> and <i>Lastname_Firstname.csv</i>, by uploading
@@ -766,7 +766,7 @@ function showSaved() {
   items.push(saved.pdf
     ? '<span class="tick">&#10003; PDF:</span> the print window is open in a new tab. Set Destination to <b>Save as PDF</b> ' +
       'and click <b>Save</b>. The file is <b>' + esc(saved.pdf) + '</b>, usually in your <b>Downloads</b> folder. ' +
-      'Don\'t use "Print using system dialog" or "Open PDF in Preview". ' +
+      'Don\'t use "Microsoft Print to PDF", "Print using system dialog", or "Open PDF in Preview". ' +
       'Open the PDF to check it is one page, with no date or web address printed at the top or bottom.'
     : '<span class="todo">&#9744; PDF:</span> not saved yet. Click <b>Save as PDF</b>.');
   if (form) {
