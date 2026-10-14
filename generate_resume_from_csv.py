@@ -956,7 +956,9 @@ class HTMLGenerator:
   }}
   @media print {{
     body {{ background: #fff; }}
-    .page {{ margin: 0; box-shadow: none; min-height: 0; width: auto; }}
+    /* No bottom padding in print: the page-length check already keeps text above the margin,
+       and trailing padding that doesn't quite fit would push the last line onto a second page. */
+    .page {{ margin: 0; box-shadow: none; min-height: 0; width: auto; padding-bottom: 0; }}
     .page-end, .banner {{ display: none !important; }}
   }}
 

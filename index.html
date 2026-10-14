@@ -738,9 +738,23 @@ function fit() {
 window.addEventListener('resize', fit);
 
 // Print the resume as its own page in a new tab, the same way the script prints it.
-// Its <title> becomes the suggested PDF file name.
+// Its <title> becomes the suggested PDF file name. The tab measures the page once more
+// (the same check as the preview) and refuses to print a resume that runs past one page.
 var PRINT_ON_LOAD = '<script>addEventListener("load", function () {' +
-  ' (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () { setTimeout(print, 300); });' +
+  ' (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () {' +
+  '  var page = document.querySelector(".page"), top = page.getBoundingClientRect().top, bottom = 0;' +
+  '  for (var i = 0; i < page.children.length; i++) {' +
+  '   var k = page.children[i]; if (k.classList.contains("page-end")) continue;' +
+  '   bottom = Math.max(bottom, k.getBoundingClientRect().bottom - top); }' +
+  '  var over = (bottom + parseFloat(getComputedStyle(page).paddingBottom) - 11 * 96) / 96;' +
+  '  if (over > 2 / 96) {' +
+  '   var d = document.createElement("div");' +
+  '   d.setAttribute("style", "max-width:7.5in;margin:24px auto 0;padding:14px 18px;border:2px solid #c62828;' +
+  'background:#fdecea;font:16px/1.4 Arial,sans-serif;color:#000;border-radius:6px");' +
+  '   d.textContent = "Not saved: this resume runs about " + Math.round(over * 100) / 100 + " inches past one page. " +' +
+  '    "Close this tab, shorten it on the resume page until the preview says it fits, then click Save as PDF again.";' +
+  '   document.body.insertBefore(d, document.body.firstChild); return; }' +
+  '  setTimeout(print, 300); });' +
   ' });<\/script>\n</body>';
 document.getElementById('save').addEventListener('click', function () {
   if (!current || !CHROMIUM) return;
